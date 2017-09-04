@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G12b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="9Qa-YB-rI6">
+                                <rect key="frame" x="0.0" y="19" width="375" height="648"/>
+                            </mapView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NYZ-uP-wCv">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="AiI-VI-QeX">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="pTG-r3-rP6"/>
+                                </constraints>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fox-bb-4Os">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="urK-sf-oA1">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="m3I-Re-7xn">
+                                            <rect key="frame" x="169" y="315" width="37" height="37"/>
+                                            <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                                        </activityIndicatorView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u2F-Sa-ffv">
+                                            <rect key="frame" x="150" y="360" width="75" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="u2F-Sa-ffv" firstAttribute="top" secondItem="m3I-Re-7xn" secondAttribute="bottom" constant="8" id="58o-Ke-xcQ"/>
+                                        <constraint firstItem="m3I-Re-7xn" firstAttribute="centerX" secondItem="urK-sf-oA1" secondAttribute="centerX" id="AON-wG-CCh"/>
+                                        <constraint firstItem="u2F-Sa-ffv" firstAttribute="centerX" secondItem="urK-sf-oA1" secondAttribute="centerX" id="sp1-Bn-hnl"/>
+                                        <constraint firstItem="m3I-Re-7xn" firstAttribute="centerY" secondItem="urK-sf-oA1" secondAttribute="centerY" id="wXq-Jm-ihz"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="fox-bb-4Os" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="1Vh-BQ-Wj3"/>
+                            <constraint firstAttribute="trailing" secondItem="fox-bb-4Os" secondAttribute="trailing" id="81X-oi-MPO"/>
+                            <constraint firstItem="9Qa-YB-rI6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="HZH-Tf-aUd"/>
+                            <constraint firstItem="NYZ-uP-wCv" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="O3w-rE-wzM"/>
+                            <constraint firstItem="NYZ-uP-wCv" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="R8H-U4-Rpe"/>
+                            <constraint firstAttribute="trailing" secondItem="NYZ-uP-wCv" secondAttribute="trailing" id="UxA-7E-y75"/>
+                            <constraint firstAttribute="trailing" secondItem="9Qa-YB-rI6" secondAttribute="trailing" id="Zdg-68-JN3"/>
+                            <constraint firstItem="fox-bb-4Os" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Zqq-90-XFu"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="9Qa-YB-rI6" secondAttribute="bottom" id="esR-xp-iIX"/>
+                            <constraint firstItem="9Qa-YB-rI6" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="gLT-IK-jSw"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fox-bb-4Os" secondAttribute="bottom" id="wOc-59-ozX"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="effectOverlay" destination="fox-bb-4Os" id="W2y-Cx-dB3"/>
+                        <outlet property="loader" destination="m3I-Re-7xn" id="Svd-1A-dEu"/>
+                        <outlet property="map" destination="9Qa-YB-rI6" id="b4X-GS-B4E"/>
+                        <outlet property="overlayView" destination="urK-sf-oA1" id="csW-9t-07l"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="138.98050974512745"/>
+        </scene>
+    </scenes>
+</document>
