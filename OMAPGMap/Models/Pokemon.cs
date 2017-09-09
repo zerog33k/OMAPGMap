@@ -30,8 +30,8 @@ namespace OMAPGMap.Models
         public DateTime ExpiresDate {get { return _expires; } }
         public PokeGender gender { get; set; }
         public int atk { get; set; }
-        public int damage1 { get; set; }
-        public int damage2 { get; set; }
+        public string damage1 { get; set; }
+        public string damage2 { get; set; }
         public int def { get; set; }
         public string move1 { get; set; }
         public string move2 { get; set; }

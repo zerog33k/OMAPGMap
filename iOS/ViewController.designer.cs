@@ -19,10 +19,22 @@ namespace OMAPGMap.iOS
 		UIKit.UIActivityIndicatorView loader { get; set; }
 
 		[Outlet]
+		UIKit.UILabel loadingLabel { get; set; }
+
+		[Outlet]
 		MapKit.MKMapView map { get; set; }
 
 		[Outlet]
 		UIKit.UIView overlayView { get; set; }
+
+		[Outlet]
+		UIKit.UITextField password { get; set; }
+
+		[Outlet]
+		UIKit.UIButton signInButton { get; set; }
+
+		[Outlet]
+		UIKit.UITextField username { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -44,6 +56,26 @@ namespace OMAPGMap.iOS
 			if (overlayView != null) {
 				overlayView.Dispose ();
 				overlayView = null;
+			}
+
+			if (username != null) {
+				username.Dispose ();
+				username = null;
+			}
+
+			if (password != null) {
+				password.Dispose ();
+				password = null;
+			}
+
+			if (signInButton != null) {
+				signInButton.Dispose ();
+				signInButton = null;
+			}
+
+			if (loadingLabel != null) {
+				loadingLabel.Dispose ();
+				loadingLabel = null;
 			}
 		}
 	}

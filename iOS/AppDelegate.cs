@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using Security;
 using UIKit;
 
 namespace OMAPGMap.iOS
@@ -18,8 +19,14 @@ namespace OMAPGMap.iOS
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
-            // Override point for customization after application launch.
-            // If not required for your application you can safely delete this method
+
+            var helper = new KeychainHelper();
+            var user = helper.ValueForKey("user");
+			if (!string.IsNullOrEmpty(user))
+            {
+                ServiceLayer.SharedInstance.Password = helper.ValueForKey("password");
+                ServiceLayer.SharedInstance.Username = user;
+            }
 
             return true;
         }

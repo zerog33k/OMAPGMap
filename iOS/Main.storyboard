@@ -51,10 +51,38 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aJm-Ni-AXi">
+                                            <rect key="frame" x="37" y="171" width="300" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="300" id="QkY-p5-Jyc"/>
+                                            </constraints>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        </textField>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yPe-Xd-kbK">
+                                            <rect key="frame" x="37" y="219" width="300" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="300" id="gR3-m6-x6B"/>
+                                            </constraints>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" returnKeyType="go" secureTextEntry="YES"/>
+                                        </textField>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0xN-I7-Erv">
+                                            <rect key="frame" x="164" y="257" width="47" height="30"/>
+                                            <state key="normal" title="Sign In"/>
+                                        </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="0xN-I7-Erv" firstAttribute="top" secondItem="yPe-Xd-kbK" secondAttribute="bottom" constant="8" id="2rE-Cx-5iy"/>
                                         <constraint firstItem="u2F-Sa-ffv" firstAttribute="top" secondItem="m3I-Re-7xn" secondAttribute="bottom" constant="8" id="58o-Ke-xcQ"/>
                                         <constraint firstItem="m3I-Re-7xn" firstAttribute="centerX" secondItem="urK-sf-oA1" secondAttribute="centerX" id="AON-wG-CCh"/>
+                                        <constraint firstItem="yPe-Xd-kbK" firstAttribute="centerX" secondItem="urK-sf-oA1" secondAttribute="centerX" id="JBp-sI-wLD"/>
+                                        <constraint firstItem="aJm-Ni-AXi" firstAttribute="centerX" secondItem="urK-sf-oA1" secondAttribute="centerX" id="NEl-r4-WoR"/>
+                                        <constraint firstItem="0xN-I7-Erv" firstAttribute="centerY" secondItem="urK-sf-oA1" secondAttribute="centerY" constant="-61.5" id="bBM-Ii-s9X"/>
+                                        <constraint firstItem="yPe-Xd-kbK" firstAttribute="top" secondItem="aJm-Ni-AXi" secondAttribute="bottom" constant="18" id="oHr-52-t14"/>
+                                        <constraint firstItem="0xN-I7-Erv" firstAttribute="centerX" secondItem="urK-sf-oA1" secondAttribute="centerX" id="rpb-Cj-1cH"/>
                                         <constraint firstItem="u2F-Sa-ffv" firstAttribute="centerX" secondItem="urK-sf-oA1" secondAttribute="centerX" id="sp1-Bn-hnl"/>
                                         <constraint firstItem="m3I-Re-7xn" firstAttribute="centerY" secondItem="urK-sf-oA1" secondAttribute="centerY" id="wXq-Jm-ihz"/>
                                     </constraints>
@@ -80,8 +108,12 @@
                     <connections>
                         <outlet property="effectOverlay" destination="fox-bb-4Os" id="W2y-Cx-dB3"/>
                         <outlet property="loader" destination="m3I-Re-7xn" id="Svd-1A-dEu"/>
+                        <outlet property="loadingLabel" destination="u2F-Sa-ffv" id="H96-QK-c7z"/>
                         <outlet property="map" destination="9Qa-YB-rI6" id="b4X-GS-B4E"/>
                         <outlet property="overlayView" destination="urK-sf-oA1" id="csW-9t-07l"/>
+                        <outlet property="password" destination="yPe-Xd-kbK" id="zzf-is-ueX"/>
+                        <outlet property="signInButton" destination="0xN-I7-Erv" id="l2A-RG-qFn"/>
+                        <outlet property="username" destination="aJm-Ni-AXi" id="sBL-xc-zVq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
