@@ -15,7 +15,7 @@ namespace OMAPGMap.iOS
 			var match = SecKeyChain.QueryAsRecord(record, out resultCode);
 
 			if (resultCode == SecStatusCode.Success)
-				return NSString.FromData(match.ValueData, NSStringEncoding.UTF8);
+                return NSString.FromData(match.Generic, NSStringEncoding.UTF8);
 			else
 				return String.Empty;
 		}
@@ -25,15 +25,14 @@ namespace OMAPGMap.iOS
 			var record = ExistingRecordForKey(key);
 			if (string.IsNullOrEmpty(value))
 			{
-				if (!string.IsNullOrEmpty(ValueForKey(key)))
-					RemoveRecord(record);
-
-				return;
+                return;
 			}
 
-			// if the key already exists, remove it
+            // if the key already exists, remove it
             if (!string.IsNullOrEmpty(ValueForKey(key)))
-				RemoveRecord(record);
+            {
+                RemoveRecord(record);
+            }
 
 			var result = SecKeyChain.Add(CreateRecordForNewKeyValue(key, value));
 			if (result != SecStatusCode.Success)
@@ -46,10 +45,8 @@ namespace OMAPGMap.iOS
 		{
 			return new SecRecord(SecKind.GenericPassword)
 			{
-				Account = key,
-				Service = ServiceName,
 				Label = key,
-				ValueData = NSData.FromString(value, NSStringEncoding.UTF8),
+                Generic = NSData.FromString(value, NSStringEncoding.UTF8),
 			};
 		}
 
@@ -57,8 +54,6 @@ namespace OMAPGMap.iOS
 		{
 			return new SecRecord(SecKind.GenericPassword)
 			{
-				Account = key,
-				Service = ServiceName,
 				Label = key,
 			};
 		}

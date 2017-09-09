@@ -6,8 +6,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using KeyChain.Net;
 using MoreLinq;
 using Newtonsoft.Json;
+
 using OMAPGMap.Models;
 
 namespace OMAPGMap
@@ -29,6 +31,8 @@ namespace OMAPGMap
 
         public string Username { get; set; } = "";
         public string Password { get; set; } = "";
+
+        public IKeyChainHelper KeyHelper { get; set; }
 
         public async Task<bool> VerifyCredentials()
         {

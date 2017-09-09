@@ -186,9 +186,18 @@ namespace OMAPGMap.iOS
                 loader.StartAnimating();
                 loadingLabel.Alpha = 1.0f;
                 var helper = new KeychainHelper();
-                helper.SetValueForKey(username.Text, "user");
-                helper.SetValueForKey(password.Text, "password");
-                await LoggedIn();
+                try
+                {
+                    helper.SetValueForKey(username.Text, "user");
+                    helper.SetValueForKey(password.Text, "password");
+                    await LoggedIn();
+                } catch(Exception)
+                {
+                    errorMessage = "An error occured when attempting to log in";
+					var alert = UIAlertController.Create("Error", errorMessage, UIAlertControllerStyle.Alert);
+					alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, null));
+					PresentViewController(alert, true, null);
+                }
             } else
             {
                 var alert = UIAlertController.Create("Error", errorMessage, UIAlertControllerStyle.Alert);

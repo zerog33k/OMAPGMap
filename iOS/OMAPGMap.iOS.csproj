@@ -90,6 +90,12 @@
     <Reference Include="MoreLinq">
       <HintPath>..\packages\morelinq.2.7.0\lib\netstandard2.0\MoreLinq.dll</HintPath>
     </Reference>
+    <Reference Include="KeyChain.Net">
+      <HintPath>..\packages\KeyChain.Net.0.0.4\lib\Xamarin.iOS10\KeyChain.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="KeyChain.Net.XamarinIOS">
+      <HintPath>..\packages\KeyChain.Net.0.0.4\lib\Xamarin.iOS10\KeyChain.Net.XamarinIOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
