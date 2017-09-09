@@ -3,10 +3,22 @@ using OMAPGMap;
 
 namespace OMAPGMap.Models
 {
-    public partial class Pokemon
+    public partial class Pokemon : IComparable
     {
         public string name { get; set; }
         public string id { get; set; }
+        private int _id = -1;
+        public int idValue 
+        { 
+            get
+            {
+                if(_id == -1)
+                {
+                    _id = int.Parse(id.Split('-')[1]);
+                }
+                return _id;
+            } 
+        }
         public double lat { get; set; }
         public double lon { get; set; }
         public int pokemon_id { get; set; }
@@ -24,6 +36,11 @@ namespace OMAPGMap.Models
         public string move1 { get; set; }
         public string move2 { get; set; }
         public int sta { get; set; }
+
+        public int CompareTo(object obj)
+        {
+            return idValue.CompareTo(obj);
+        }
     }
 
     public enum PokeGender { Male = 1, Female = 2}

@@ -17,7 +17,8 @@ namespace OMAPGMap.iOS
     public partial class ViewController : UIViewController, IMKMapViewDelegate
     {
         CLLocationManager locationManager;
-        Timer timer;
+        Timer secondTimer;
+        Timer minuteTimer;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -38,7 +39,7 @@ namespace OMAPGMap.iOS
             await ServiceLayer.SharedInstance.LoadPokemon();
             loader.StopAnimating();
             map.Delegate = this;
-            map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !p.trash).ToArray());
+            map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).ToArray());
             UIView.Animate(0.3, () => 
             {
                 overlayView.Alpha = 0.0f;
@@ -47,7 +48,8 @@ namespace OMAPGMap.iOS
                 effectOverlay.Hidden = true;
             });
 
-            timer = new Timer(HandleTimerCallback, null, 1000, 1000);
+            secondTimer = new Timer(HandleTimerCallback, null, 1000, 1000);
+            minuteTimer = new Timer(refreshMap, null, 60000, 60000);
         }
 
         void LocationManager_LocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
@@ -79,6 +81,7 @@ namespace OMAPGMap.iOS
 
         void HandleTimerCallback(object state)
         {
+
             InvokeOnMainThread(() =>
             {
                 try
@@ -95,14 +98,32 @@ namespace OMAPGMap.iOS
                             {
                                 annotateView.UpdateTime(now);
                             }
+                            if (a2.ExpiresDate < now)
+                            {
+                                map.RemoveAnnotation(a2);
+                                Pokemon p;
+                                ServiceLayer.SharedInstance.Pokemon.TryRemove(a2.id, out p);
+                            }
                         }
                     }
-                } catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
 
             });
+            
+        }
+
+        async void refreshMap(object state)
+        {
+            await ServiceLayer.SharedInstance.LoadPokemon();
+			InvokeOnMainThread(() =>
+            {
+                var onMap = map.Annotations;
+
+            }
         }
     }
 }
