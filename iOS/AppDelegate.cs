@@ -20,12 +20,13 @@ namespace OMAPGMap.iOS
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
 
-            var helper = new KeychainHelper();
-            var user = helper.ValueForKey("user");
-			if (!string.IsNullOrEmpty(user))
+            //var helper = new KeychainHelper();
+            var user = NSUserDefaults.StandardUserDefaults.StringForKey("user");
+            var pass = NSUserDefaults.StandardUserDefaults.StringForKey("pass");
+            if (!string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(pass))
             {
-                ServiceLayer.SharedInstance.Password = helper.ValueForKey("password");
                 ServiceLayer.SharedInstance.Username = user;
+                ServiceLayer.SharedInstance.Password = pass;
             }
 
             return true;

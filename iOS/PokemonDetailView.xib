@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G12b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1" customClass="PokemonDetailView">
+            <rect key="frame" x="0.0" y="0.0" width="281" height="193"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="RW6-lE-WoM">
+                    <rect key="frame" x="0.0" y="0.0" width="281" height="193"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pokemon Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7vC-4Z-0Ui">
+                            <rect key="frame" x="84" y="0.0" width="113.5" height="35.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Dzx-QM-vkR">
+                            <rect key="frame" x="0.0" y="39.5" width="281" height="35.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Distance: 2.7 miles" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m3c-EQ-bl8">
+                                    <rect key="frame" x="0.0" y="0.0" width="140.5" height="35.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RAJ-oP-vSY">
+                                    <rect key="frame" x="140.5" y="0.0" width="140.5" height="35.5"/>
+                                    <state key="normal" title="Directions"/>
+                                </button>
+                            </subviews>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move 1:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZB-6l-G7e">
+                            <rect key="frame" x="116.5" y="79" width="48.5" height="35"/>
+                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move 2:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A2p-ju-9PX" userLabel="Move 2:">
+                            <rect key="frame" x="115.5" y="118" width="50.5" height="35.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="vkh-cv-Tr6">
+                            <rect key="frame" x="0.0" y="157.5" width="281" height="35.5"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pwT-lO-sdz">
+                                    <rect key="frame" x="0.0" y="3" width="138" height="30"/>
+                                    <state key="normal" title="Hide"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="myw-C8-2BK">
+                                    <rect key="frame" x="143" y="3" width="138" height="30"/>
+                                    <state key="normal" title="Notify"/>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="vkh-cv-Tr6" firstAttribute="leading" secondItem="RW6-lE-WoM" secondAttribute="leading" id="8h3-zJ-Szn"/>
+                        <constraint firstAttribute="trailing" secondItem="Dzx-QM-vkR" secondAttribute="trailing" id="Vqr-y1-TaV"/>
+                        <constraint firstAttribute="trailing" secondItem="vkh-cv-Tr6" secondAttribute="trailing" id="Wft-qc-eop"/>
+                        <constraint firstItem="Dzx-QM-vkR" firstAttribute="leading" secondItem="RW6-lE-WoM" secondAttribute="leading" id="jIx-Pj-7Qa"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="RW6-lE-WoM" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="3if-yt-PoV"/>
+                <constraint firstItem="RW6-lE-WoM" firstAttribute="top" secondItem="1" secondAttribute="top" id="OFt-v5-VK6"/>
+                <constraint firstAttribute="bottom" secondItem="RW6-lE-WoM" secondAttribute="bottom" id="qUh-rY-Yfs"/>
+                <constraint firstAttribute="trailing" secondItem="RW6-lE-WoM" secondAttribute="trailing" id="znM-mz-oX0"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="16.5" y="-183.5"/>
+        </view>
+    </objects>
+</document>

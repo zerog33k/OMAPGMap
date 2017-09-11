@@ -74,7 +74,7 @@ namespace OMAPGMap
         public IList<Pokemon> CleanUpExpired()
         {
             var rval = new List<Pokemon>();
-			var now = DateTime.Now;
+            var now = DateTime.UtcNow;
 			foreach (var p in Pokemon.Values) //remove all expired
 			{
 				if (p.ExpiresDate < now)

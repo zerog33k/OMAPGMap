@@ -98,10 +98,16 @@ namespace OMAPGMap.iOS
                 annotateView = new PokemonAnnotationView(annotation, "Pokemon");
             }
             var pokemon = annotation as Pokemon;
-            annotateView.Pokemon = pokemon;
-            annotateView.Frame = new CoreGraphics.CGRect(0, 0, 40, 55);
-            annotateView.UpdateTime(DateTime.Now);
-            return annotateView;
+            if (pokemon != null)
+            {
+                annotateView.Pokemon = pokemon;
+                annotateView.Frame = new CoreGraphics.CGRect(0, 0, 40, 55);
+                annotateView.UpdateTime(DateTime.Now);
+                annotateView.Map = mapView;
+                return annotateView;
+            } else{
+                return null;
+            }
         }
 
 
@@ -118,7 +124,7 @@ namespace OMAPGMap.iOS
                     }
                     Console.WriteLine($"Removed {toRemove.Count()} pokemon");
                     var annotations = map.GetAnnotations(map.VisibleMapRect);
-                    var now = DateTime.Now;
+                    var now = DateTime.UtcNow;
                     foreach (var a in annotations)
                     {
                         var a2 = a as Pokemon;
@@ -188,8 +194,9 @@ namespace OMAPGMap.iOS
                 var helper = new KeychainHelper();
                 try
                 {
-                    helper.SetValueForKey(username.Text, "user");
-                    helper.SetValueForKey(password.Text, "password");
+                    NSUserDefaults.StandardUserDefaults.SetString(username.Text, "user");
+                    NSUserDefaults.StandardUserDefaults.SetString(password.Text, "pass");
+                    //helper.SetValueForKey(password.Text, username.Text);
                     await LoggedIn();
                 } catch(Exception)
                 {

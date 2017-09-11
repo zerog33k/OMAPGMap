@@ -45,8 +45,8 @@ namespace OMAPGMap.iOS
 		{
 			return new SecRecord(SecKind.GenericPassword)
 			{
-				Label = key,
-                Generic = NSData.FromString(value, NSStringEncoding.UTF8),
+				Account = key,
+                Generic = NSData.FromString(value, NSStringEncoding.UTF8)
 			};
 		}
 
@@ -54,7 +54,7 @@ namespace OMAPGMap.iOS
 		{
 			return new SecRecord(SecKind.GenericPassword)
 			{
-				Label = key,
+				Account = key
 			};
 		}
 

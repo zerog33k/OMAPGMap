@@ -855,18 +855,22 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60%403x.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-76.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-76%402x.png" />
+    <ImageAsset Include="Assets.xcassets\201.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\201.imageset\unown.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Assets.xcassets\201.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <InterfaceDefinition Include="Main.storyboard" />
+    <InterfaceDefinition Include="PokemonCalloutView.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="Entitlements.plist" />
     <None Include="packages.config" />
+    <None Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -878,6 +882,10 @@
     <Compile Include="PokemonAnnotationView.cs" />
     <Compile Include="Pokemon.cs" />
     <Compile Include="KeychainHelper.cs" />
+    <Compile Include="PokemonCalloutView.cs" />
+    <Compile Include="PokemonCalloutView.designer.cs">
+      <DependentUpon>PokemonCalloutView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="..\OMAPGMap\OMAPGMap.projitems" Label="Shared" Condition="Exists('..\OMAPGMap\OMAPGMap.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
