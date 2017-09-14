@@ -7,6 +7,8 @@ using OMAPGMap.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ObjCRuntime;
+using CoreGraphics;
 
 namespace OMAPGMap.iOS
 {
@@ -44,17 +46,24 @@ namespace OMAPGMap.iOS
             };
             if (ServiceLayer.SharedInstance.Username == "")
             {
-                loader.Alpha = 0.0f;
-                loadingLabel.Alpha = 0.0f;
-                username.BecomeFirstResponder();
-
+                
             }
             else
             {
-                username.Alpha = 0.0f;
-                password.Alpha = 0.0f;
-                signInButton.Alpha = 0.0f;
-                await LoggedIn();
+                var loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
+                if (loggedIn)
+                {
+                    username.Alpha = 0.0f;
+                    password.Alpha = 0.0f;
+                    signInButton.Alpha = 0.0f;
+                    await LoggedIn();
+                }
+                else
+                {
+					loader.Alpha = 0.0f;
+					loadingLabel.Alpha = 0.0f;
+					username.BecomeFirstResponder();
+                }
             }
             signInButton.TouchUpInside += SignInButton_TouchUpInside;
         }
@@ -101,9 +110,42 @@ namespace OMAPGMap.iOS
             if (pokemon != null)
             {
                 annotateView.Pokemon = pokemon;
-                annotateView.Frame = new CoreGraphics.CGRect(0, 0, 40, 55);
+                annotateView.Frame = new CGRect(0, 0, 40, 55);
                 annotateView.UpdateTime(DateTime.Now);
                 annotateView.Map = mapView;
+
+				var view = Runtime.GetNSObject<PokemonCalloutView>(NSBundle.MainBundle.LoadNib("PokemonCalloutView", null, null).ValueAt(0));
+				view.Frame = new CGRect(0, 0, 220, 200);
+				var gender = pokemon.gender == PokeGender.Male ? "Male" : "Female";
+				view.NameLabel.Text = $"{pokemon.name} ({gender}) - #{pokemon.pokemon_id}";
+                if (mapView.UserLocation != null)
+				{
+                    var userPoint = MKMapPoint.FromCoordinate(mapView.UserLocation.Location.Coordinate);
+					var pokePoint = new MKMapPoint(pokemon.lat, pokemon.lon);
+					var dist = MKGeometry.MetersBetweenMapPoints(userPoint, pokePoint);
+					var distMiles = dist * 0.00062137;
+					view.DistanceLabel.Text = $"{distMiles.ToString("F1")} miles away";
+				}
+				if (string.IsNullOrEmpty(pokemon.move1))
+				{
+					view.Stack.RemoveArrangedSubview(view.Move1Label);
+					view.Stack.RemoveArrangedSubview(view.Move2Label);
+					view.Stack.RemoveArrangedSubview(view.IVLabl);
+					view.Move1Label.RemoveFromSuperview();
+					view.Move2Label.RemoveFromSuperview();
+					view.IVLabl.RemoveFromSuperview();
+				}
+				else
+				{
+					view.Move1Label.Text = $"Move 1: {pokemon.move1} ({pokemon.damage1} dps)";
+					view.Move2Label.Text = $"Move 2: {pokemon.move1} ({pokemon.damage2} dps)";
+					view.IVLabl.Text = $"IV: {pokemon.atk}atk {pokemon.def}def {pokemon.sta}sta";
+					var iv = (pokemon.atk + pokemon.def + pokemon.sta) / 45.0f;
+					view.NameLabel.Text = $"{view.NameLabel.Text} - {iv.ToString("F1")}%";
+				}
+                annotateView.DetailCalloutAccessoryView = view;
+                annotateView.CanShowCallout = true;
+
                 return annotateView;
             } else{
                 return null;

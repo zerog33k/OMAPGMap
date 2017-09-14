@@ -13,5 +13,7 @@ namespace OMAPGMap.Models
 
         public CLLocationCoordinate2D Coordinate => new CLLocationCoordinate2D(lat, lon);
 
+        public string title { get 
+            { return $"{name} ({gender}) - #{pokemon_id}"; } }
     }
 }
