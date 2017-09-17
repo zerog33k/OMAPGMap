@@ -20,13 +20,20 @@ namespace OMAPGMap
         public static ServiceLayer SharedInstance { get { return lazy.Value; } }
 
         private static string baseURL = "https://www.omahapgmap.com";
-        private static string serviceURL = $"{baseURL}/data";
+        private static string pokemonURL = $"{baseURL}/data";
+        private static string gymsURL = $"{baseURL}/gym_data";
+        private static string raidsURL = $"{baseURL}/raids";
 
         private ServiceLayer()
         {
         }
 
         public ConcurrentDictionary<string, Pokemon> Pokemon = new ConcurrentDictionary<string, Pokemon>();
+        public ConcurrentDictionary<string, Gym> Gyms = new ConcurrentDictionary<string, Gym>();
+        public ConcurrentDictionary<string, Raid> Raids = new ConcurrentDictionary<string, Raid>();
+                                        //pokemon, gyms, raids, trash
+        public bool[] LayersEnabled = { true, false, false, false, };
+
         private int lastId = 0;
 
         public string Username { get; set; } = "";
@@ -40,7 +47,9 @@ namespace OMAPGMap
             var authData = string.Format("{0}:{1}", Username, Password);
             var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
 
-            var client = new HttpClient(new NSUrlSessionHandler());
+            //var handler = new NSUrlSessionHandler();
+            var client = new HttpClient();
+
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
             var response = await client.GetAsync(baseURL);
             rval = response.IsSuccessStatusCode;
@@ -54,7 +63,7 @@ namespace OMAPGMap
 
 			var client = new HttpClient(new NSUrlSessionHandler());
 			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-            var response = await client.GetAsync($"{serviceURL}?last_id={lastId}");
+            var response = await client.GetAsync($"{pokemonURL}?last_id={lastId}");
 			if (response.IsSuccessStatusCode)
 			{
 				var content = await response.Content.ReadAsStringAsync();
@@ -70,6 +79,30 @@ namespace OMAPGMap
                 Pokemon.Clear();
 			}
         }
+
+		public async Task LoadGyms()
+		{
+			var authData = string.Format("{0}:{1}", Username, Password);
+			var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
+
+			var client = new HttpClient(new NSUrlSessionHandler());
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+            var response = await client.GetAsync(gymsURL);
+			if (response.IsSuccessStatusCode)
+			{
+				var content = await response.Content.ReadAsStringAsync();
+                var gyms = JsonConvert.DeserializeObject<List<Gym>>(content);
+				CleanUpExpired();
+                foreach (var g in gyms)
+				{
+                    Gyms.TryAdd(g.id, g);
+				}
+			}
+			else
+			{
+				Gyms.Clear();
+			}
+		}
 
         public IList<Pokemon> CleanUpExpired()
         {

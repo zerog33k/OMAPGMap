@@ -46,11 +46,18 @@ namespace OMAPGMap.iOS
             };
             if (ServiceLayer.SharedInstance.Username == "")
             {
-                
+				loader.Alpha = 0.0f;
+				loadingLabel.Alpha = 0.0f;
+				username.BecomeFirstResponder();
             }
             else
             {
-                var loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
+                var loggedIn = false;
+                try
+                {
+                    loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
+                }
+                catch(Exception){} //swallow exception
                 if (loggedIn)
                 {
                     username.Alpha = 0.0f;
@@ -114,44 +121,41 @@ namespace OMAPGMap.iOS
                 annotateView.UpdateTime(DateTime.Now);
                 annotateView.Map = mapView;
 
-				var view = Runtime.GetNSObject<PokemonCalloutView>(NSBundle.MainBundle.LoadNib("PokemonCalloutView", null, null).ValueAt(0));
-				view.Frame = new CGRect(0, 0, 220, 200);
-				var gender = pokemon.gender == PokeGender.Male ? "Male" : "Female";
-				view.NameLabel.Text = $"{pokemon.name} ({gender}) - #{pokemon.pokemon_id}";
+                var view = Runtime.GetNSObject<PokemonCalloutView>(NSBundle.MainBundle.LoadNib("PokemonCalloutView", null, null).ValueAt(0));
+                //view.Frame = new CGRect(0, 0, 220, 200);
+                var gender = pokemon.gender == PokeGender.Male ? "Male" : "Female";
                 if (mapView.UserLocation != null)
-				{
-                    var userPoint = MKMapPoint.FromCoordinate(mapView.UserLocation.Location.Coordinate);
-					var pokePoint = new MKMapPoint(pokemon.lat, pokemon.lon);
-					var dist = MKGeometry.MetersBetweenMapPoints(userPoint, pokePoint);
-					var distMiles = dist * 0.00062137;
-					view.DistanceLabel.Text = $"{distMiles.ToString("F1")} miles away";
-				}
-				if (string.IsNullOrEmpty(pokemon.move1))
-				{
-					view.Stack.RemoveArrangedSubview(view.Move1Label);
-					view.Stack.RemoveArrangedSubview(view.Move2Label);
-					view.Stack.RemoveArrangedSubview(view.IVLabl);
-					view.Move1Label.RemoveFromSuperview();
-					view.Move2Label.RemoveFromSuperview();
-					view.IVLabl.RemoveFromSuperview();
-				}
-				else
-				{
-					view.Move1Label.Text = $"Move 1: {pokemon.move1} ({pokemon.damage1} dps)";
-					view.Move2Label.Text = $"Move 2: {pokemon.move1} ({pokemon.damage2} dps)";
-					view.IVLabl.Text = $"IV: {pokemon.atk}atk {pokemon.def}def {pokemon.sta}sta";
-					var iv = (pokemon.atk + pokemon.def + pokemon.sta) / 45.0f;
-					view.NameLabel.Text = $"{view.NameLabel.Text} - {iv.ToString("F1")}%";
-				}
+                {
+                    var dist =  mapView.UserLocation.Location.DistanceFrom(new CLLocation(pokemon.lat, pokemon.lon));
+                    var distMiles = dist * 0.00062137;
+                    view.DistanceLabel.Text = $"{distMiles.ToString("F1")} miles away";
+                }
+                if (string.IsNullOrEmpty(pokemon.move1))
+                {
+                    view.Stack.RemoveArrangedSubview(view.Move1Label);
+                    view.Stack.RemoveArrangedSubview(view.Move2Label);
+                    view.Stack.RemoveArrangedSubview(view.IVLabl);
+                    view.Move1Label.RemoveFromSuperview();
+                    view.Move2Label.RemoveFromSuperview();
+                    view.IVLabl.RemoveFromSuperview();
+                }
+                else
+                {
+                    view.Move1Label.Text = $"Move 1: {pokemon.move1} ({pokemon.damage1} dps)";
+                    view.Move2Label.Text = $"Move 2: {pokemon.move1} ({pokemon.damage2} dps)";
+                    view.IVLabl.Text = $"IV: {pokemon.atk}atk {pokemon.def}def {pokemon.sta}sta";
+                    var iv = (pokemon.atk + pokemon.def + pokemon.sta) / 45.0f;
+                }
                 annotateView.DetailCalloutAccessoryView = view;
                 annotateView.CanShowCallout = true;
 
                 return annotateView;
-            } else{
+            }
+            else
+            {
                 return null;
             }
         }
-
 
         void HandleTimerCallback(object state)
         {
@@ -220,7 +224,7 @@ namespace OMAPGMap.iOS
                 {
                     errorMessage = "Username or password are incorrect";
                 }
-            } catch(Exception)
+            } catch(Exception e2)
             {
                 errorMessage = "An error occured when attempting to log in";
             }
@@ -240,7 +244,7 @@ namespace OMAPGMap.iOS
                     NSUserDefaults.StandardUserDefaults.SetString(password.Text, "pass");
                     //helper.SetValueForKey(password.Text, username.Text);
                     await LoggedIn();
-                } catch(Exception)
+                } catch(Exception a)
                 {
                     errorMessage = "An error occured when attempting to log in";
 					var alert = UIAlertController.Create("Error", errorMessage, UIAlertControllerStyle.Alert);
@@ -252,6 +256,15 @@ namespace OMAPGMap.iOS
                 var alert = UIAlertController.Create("Error", errorMessage, UIAlertControllerStyle.Alert);
                 alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, null));
                 PresentViewController(alert, true, null);
+            }
+        }
+
+        public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+        {
+            if(segue.Identifier == "LayerPopover")
+            {
+                var popVC = segue.DestinationViewController as LayerSelectorViewController;
+                popVC.ModalPresentationStyle = UIModalPresentationStyle.Popover;
             }
         }
     }
