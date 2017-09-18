@@ -20,13 +20,14 @@ namespace OMAPGMap.iOS
                 if (_pokemon != null)
                 {
                     img.Image = UIImage.FromBundle(_pokemon.pokemon_id.ToString("D3"));
+                    CountdownDate = _pokemon.ExpiresDate;
                 }
             }
         }
 
         public PokemonAnnotationView(IMKAnnotation annotate, string resueID) : base(annotate, resueID)
         {
-            _pokemon = annotate as Pokemon;
+            Pokemon = annotate as Pokemon;
         }
 
     }

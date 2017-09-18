@@ -898,13 +898,9 @@
     <Compile Include="PokemonCalloutView.designer.cs">
       <DependentUpon>PokemonCalloutView.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapCountdownAnnotationView.cs" />
     <Compile Include="Annotations\PokemonAnnotationView.cs" />
     <Compile Include="Annotations\Gym.cs" />
-    <Compile Include="LayerSelectorViewController.cs" />
-    <Compile Include="LayerSelectorViewController.designer.cs">
-      <DependentUpon>LayerSelectorViewController.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Annotations\MapCountdownAnnotationView.cs" />
   </ItemGroup>
   <Import Project="..\OMAPGMap\OMAPGMap.projitems" Label="Shared" Condition="Exists('..\OMAPGMap\OMAPGMap.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

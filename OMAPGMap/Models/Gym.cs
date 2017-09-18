@@ -13,12 +13,15 @@ namespace OMAPGMap.Models
         public string name { get; set; }
         public string url { get; set; }
         public string description { get; set; }
-        public int slots_available { get; set; }
+        public int? slots_available { get; set; }
         public bool is_in_battle { get; set; }
         private DateTime _last_modifed;
         public long last_modified { set => _last_modifed = Utility.FromUnixTime(value); }
         public DateTime LastModifedDate { get => _last_modifed; }
+
     }
 
     public enum Team { Mystic = 1, Instinct = 2, Valor = 3 }
+
+
 }

@@ -16,6 +16,9 @@ namespace OMAPGMap.iOS
 		UIKit.UIVisualEffectView effectOverlay { get; set; }
 
 		[Outlet]
+		UIKit.UIButton layerSelectButton { get; set; }
+
+		[Outlet]
 		UIKit.UIActivityIndicatorView loader { get; set; }
 
 		[Outlet]
@@ -48,6 +51,11 @@ namespace OMAPGMap.iOS
 				loader = null;
 			}
 
+			if (loadingLabel != null) {
+				loadingLabel.Dispose ();
+				loadingLabel = null;
+			}
+
 			if (map != null) {
 				map.Dispose ();
 				map = null;
@@ -56,11 +64,6 @@ namespace OMAPGMap.iOS
 			if (overlayView != null) {
 				overlayView.Dispose ();
 				overlayView = null;
-			}
-
-			if (username != null) {
-				username.Dispose ();
-				username = null;
 			}
 
 			if (password != null) {
@@ -73,9 +76,14 @@ namespace OMAPGMap.iOS
 				signInButton = null;
 			}
 
-			if (loadingLabel != null) {
-				loadingLabel.Dispose ();
-				loadingLabel = null;
+			if (username != null) {
+				username.Dispose ();
+				username = null;
+			}
+
+			if (layerSelectButton != null) {
+				layerSelectButton.Dispose ();
+				layerSelectButton = null;
 			}
 		}
 	}

@@ -36,6 +36,8 @@ namespace OMAPGMap.Models
         public string move1 { get; set; }
         public string move2 { get; set; }
         public int sta { get; set; }
+        public int level { get; set; }
+        public int cp { get; set; }
 
         public int CompareTo(object obj)
         {

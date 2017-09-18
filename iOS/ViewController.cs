@@ -12,11 +12,13 @@ using CoreGraphics;
 
 namespace OMAPGMap.iOS
 {
-    public partial class ViewController : UIViewController, IMKMapViewDelegate
+    public partial class ViewController : UIViewController, IMKMapViewDelegate, IUITableViewDelegate, IUITableViewDataSource, IUIPopoverPresentationControllerDelegate
     {
         CLLocationManager locationManager;
         Timer secondTimer;
         Timer minuteTimer;
+        string[] Layers = { "Pokemon", "Gyms", "Raids", "Trash" };
+        UITableViewController layersTableVC = null;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -73,14 +75,16 @@ namespace OMAPGMap.iOS
                 }
             }
             signInButton.TouchUpInside += SignInButton_TouchUpInside;
+            layerSelectButton.TouchUpInside += LayerSelectButton_TouchUpInside;
         }
 
         private async Task LoggedIn()
         {
-            await ServiceLayer.SharedInstance.LoadPokemon();
+            await ServiceLayer.SharedInstance.LoadData();
             loader.StopAnimating();
             map.Delegate = this;
             map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).ToArray());
+            map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
             UIView.Animate(0.3, () =>
             {
                 overlayView.Alpha = 0.0f;
@@ -108,19 +112,19 @@ namespace OMAPGMap.iOS
         [Export("mapView:viewForAnnotation:")]
         public MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
         {
-            var annotateView = mapView.DequeueReusableAnnotation("Pokemkon") as PokemonAnnotationView;
-            if(annotateView == null)
-            {
-                annotateView = new PokemonAnnotationView(annotation, "Pokemon");
-            }
+            MKAnnotationView annotateView = null;
+
             var pokemon = annotation as Pokemon;
             if (pokemon != null)
             {
-                annotateView.Pokemon = pokemon;
-                annotateView.Frame = new CGRect(0, 0, 40, 55);
-                annotateView.UpdateTime(DateTime.Now);
-                annotateView.Map = mapView;
+                annotateView = mapView.DequeueReusableAnnotation("Pokemkon") ?? new PokemonAnnotationView(annotation, "Pokemon");
+                var pokeAV = annotateView as PokemonAnnotationView;
+                pokeAV.Pokemon = pokemon;
+                pokeAV.Frame = new CGRect(0, 0, 40, 55);
+                pokeAV.UpdateTime(DateTime.Now);
+                pokeAV.Map = mapView;
 
+                //callout stuff
                 var view = Runtime.GetNSObject<PokemonCalloutView>(NSBundle.MainBundle.LoadNib("PokemonCalloutView", null, null).ValueAt(0));
                 //view.Frame = new CGRect(0, 0, 220, 200);
                 var gender = pokemon.gender == PokeGender.Male ? "Male" : "Female";
@@ -148,13 +152,15 @@ namespace OMAPGMap.iOS
                 }
                 annotateView.DetailCalloutAccessoryView = view;
                 annotateView.CanShowCallout = true;
-
-                return annotateView;
             }
-            else
+            var gym = annotation as Gym;
+            if(gym != null)
             {
-                return null;
+				annotateView = mapView.DequeueReusableAnnotation("Gym") ?? new MKAnnotationView(gym, "Gym");
+				annotateView.Image = UIImage.FromBundle($"gym{(int)gym.team}");
+				annotateView.Frame = new CGRect(0, 0, 40, 40);
             }
+            return annotateView;
         }
 
         void HandleTimerCallback(object state)
@@ -164,6 +170,7 @@ namespace OMAPGMap.iOS
             {
                 try
                 {
+                    //remove annotioans from the map
                     foreach(var p in toRemove)
                     {
                         map.RemoveAnnotation(p);
@@ -196,15 +203,27 @@ namespace OMAPGMap.iOS
 
         async void refreshMap(object state)
         {
-            await ServiceLayer.SharedInstance.LoadPokemon();
+            try
+            {
+                await ServiceLayer.SharedInstance.LoadData();
+            } catch(Exception)
+            {
+                //swallow exception
+            }
             InvokeOnMainThread(() =>
             {
-                var onMap = map.Annotations;
+                var onMap = map.Annotations.OfType<Pokemon>();
                 var toAdd = ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).Except(onMap);
                 Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                 foreach (var p in toAdd)
                 {
                     map.AddAnnotation(p);
+                }
+                var gymsOnMap = map.Annotations.OfType<Gym>();
+                if(gymsOnMap.Count() == 0)
+                {
+                    map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
+                    Console.WriteLine($"Adding {ServiceLayer.SharedInstance.Gyms.Count()} gymss to the map");
                 }
             });
         }
@@ -224,7 +243,7 @@ namespace OMAPGMap.iOS
                 {
                     errorMessage = "Username or password are incorrect";
                 }
-            } catch(Exception e2)
+            } catch(Exception)
             {
                 errorMessage = "An error occured when attempting to log in";
             }
@@ -244,7 +263,7 @@ namespace OMAPGMap.iOS
                     NSUserDefaults.StandardUserDefaults.SetString(password.Text, "pass");
                     //helper.SetValueForKey(password.Text, username.Text);
                     await LoggedIn();
-                } catch(Exception a)
+                } catch(Exception)
                 {
                     errorMessage = "An error occured when attempting to log in";
 					var alert = UIAlertController.Create("Error", errorMessage, UIAlertControllerStyle.Alert);
@@ -259,13 +278,53 @@ namespace OMAPGMap.iOS
             }
         }
 
-        public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+        void LayerSelectButton_TouchUpInside(object sender, EventArgs e)
         {
-            if(segue.Identifier == "LayerPopover")
+            if (layersTableVC == null)
             {
-                var popVC = segue.DestinationViewController as LayerSelectorViewController;
-                popVC.ModalPresentationStyle = UIModalPresentationStyle.Popover;
+                layersTableVC = new UITableViewController();
+                layersTableVC.ModalPresentationStyle = UIModalPresentationStyle.Popover;
+                layersTableVC.PreferredContentSize = new CGSize(200, 200);
+                layersTableVC.TableView.DataSource = this;
+                layersTableVC.TableView.Delegate = this;
             }
+
+
+
+            layersTableVC.PopoverPresentationController.SourceView = layerSelectButton;
+            layersTableVC.PopoverPresentationController.PermittedArrowDirections = UIPopoverArrowDirection.Any;
+            layersTableVC.PopoverPresentationController.Delegate = this;
+            layersTableVC.PopoverPresentationController.SourceRect = new CGRect(0, 0, 30.0f, 30.0f);
+            PresentViewController(layersTableVC, true, null);
+
+        }
+
+        public nint RowsInSection(UITableView tableView, nint section)
+        {
+            return Layers.Length;
+        }
+
+        public UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+        {
+            var cell = new UITableViewCell(UITableViewCellStyle.Default, "cell");
+			cell.TextLabel.Text = Layers[indexPath.Row];
+			cell.Accessory = ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row] ? UITableViewCellAccessory.Checkmark : UITableViewCellAccessory.None;
+			return cell;
+        }
+
+        [Export("tableView:didSelectRowAtIndexPath:")]
+        public void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+			ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row] = !ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row];
+			tableView.DeselectRow(indexPath, true);
+            tableView.ReloadData();
+            layersTableVC.DismissViewController(true, () => { refreshMap(null); });
+        }
+
+        [Export("adaptivePresentationStyleForPresentationController:traitCollection:")]
+        public UIModalPresentationStyle GetAdaptivePresentationStyle(UIPresentationController controller, UITraitCollection traitCollection)
+        {
+            return UIModalPresentationStyle.None;
         }
     }
 }

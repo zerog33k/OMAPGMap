@@ -32,7 +32,7 @@ namespace OMAPGMap
         public ConcurrentDictionary<string, Gym> Gyms = new ConcurrentDictionary<string, Gym>();
         public ConcurrentDictionary<string, Raid> Raids = new ConcurrentDictionary<string, Raid>();
                                         //pokemon, gyms, raids, trash
-        public bool[] LayersEnabled = { true, false, false, false, };
+        public bool[] LayersEnabled = { true, true, false, false, };
 
         private int lastId = 0;
 
@@ -54,6 +54,20 @@ namespace OMAPGMap
             var response = await client.GetAsync(baseURL);
             rval = response.IsSuccessStatusCode;
             return rval;
+        }
+
+        public async Task LoadData()
+        {
+            if(LayersEnabled[0])
+            {
+                Console.WriteLine("loading Pokemon");
+                await LoadPokemon();
+            }
+            if(LayersEnabled[1])
+            {
+                Console.WriteLine("loading Gyms");
+                await LoadGyms();
+            }
         }
 
         public async Task LoadPokemon()
@@ -92,15 +106,46 @@ namespace OMAPGMap
 			{
 				var content = await response.Content.ReadAsStringAsync();
                 var gyms = JsonConvert.DeserializeObject<List<Gym>>(content);
-				CleanUpExpired();
                 foreach (var g in gyms)
 				{
-                    Gyms.TryAdd(g.id, g);
+                    Gym thisGym;
+                    Gyms.TryGetValue(g.id, out thisGym);
+                    if(thisGym == null)
+                    {
+                        Gyms.TryAdd(g.id, g);
+                    } else //update the old one
+                    {
+                        g.CopyProperties(thisGym);
+                    }
 				}
 			}
 			else
 			{
 				Gyms.Clear();
+			}
+		}
+
+		public async Task LoadRaids()
+		{
+			var authData = string.Format("{0}:{1}", Username, Password);
+			var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
+
+			var client = new HttpClient(new NSUrlSessionHandler());
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+            var response = await client.GetAsync(raidsURL);
+			if (response.IsSuccessStatusCode)
+			{
+				var content = await response.Content.ReadAsStringAsync();
+                var raids = JsonConvert.DeserializeObject<List<Raid>>(content);
+				CleanUpExpired();
+                foreach (var r in raids)
+				{
+                    Raids.TryAdd(r.id, r);
+				}
+			}
+			else
+			{
+				Raids.Clear();
 			}
 		}
 

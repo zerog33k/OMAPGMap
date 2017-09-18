@@ -7,7 +7,7 @@ namespace OMAPGMap.Models
 {
     public partial class Pokemon : NSObject, IMKAnnotation
     {
-        public Pokemon()
+        public Pokemon() : base()
         {
         }
 

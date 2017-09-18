@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G12b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -32,11 +32,6 @@
                                     <constraint firstAttribute="width" constant="30" id="lHD-tV-DLK"/>
                                 </constraints>
                                 <state key="normal" image="layers"/>
-                                <connections>
-                                    <segue destination="4qm-Aw-Knb" kind="popoverPresentation" popoverAnchorView="HmQ-Wb-Vno" id="QdC-8n-ca3">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
-                                </connections>
                             </button>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NYZ-uP-wCv">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
@@ -123,6 +118,7 @@
                     </view>
                     <connections>
                         <outlet property="effectOverlay" destination="fox-bb-4Os" id="W2y-Cx-dB3"/>
+                        <outlet property="layerSelectButton" destination="HmQ-Wb-Vno" id="uKV-Tz-aSG"/>
                         <outlet property="loader" destination="m3I-Re-7xn" id="Svd-1A-dEu"/>
                         <outlet property="loadingLabel" destination="u2F-Sa-ffv" id="H96-QK-c7z"/>
                         <outlet property="map" destination="9Qa-YB-rI6" id="b4X-GS-B4E"/>
@@ -135,45 +131,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="138.98050974512745"/>
-        </scene>
-        <!--Layer Selector View Controller-->
-        <scene sceneID="7Tv-iZ-yyo">
-            <objects>
-                <tableViewController id="4qm-Aw-Knb" customClass="LayerSelectorViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="bhu-KQ-5Bc">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="MapLayerCell" textLabel="Zn8-vf-Rre" style="IBUITableViewCellStyleDefault" id="6nd-Ew-2sn">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6nd-Ew-2sn" id="QpQ-rE-GSK">
-                                    <rect key="frame" x="0.0" y="0.0" width="336" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Pokemon" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Zn8-vf-Rre">
-                                            <rect key="frame" x="15" y="0.0" width="321" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="4qm-Aw-Knb" id="Cx4-UW-Gz4"/>
-                            <outlet property="delegate" destination="4qm-Aw-Knb" id="VfE-eH-KhW"/>
-                        </connections>
-                    </tableView>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="667"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="G2X-ZY-7p0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1090" y="220"/>
         </scene>
     </scenes>
     <resources>
