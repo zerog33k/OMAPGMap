@@ -212,15 +212,18 @@ namespace OMAPGMap.iOS
             }
             InvokeOnMainThread(() =>
             {
-                var onMap = map.Annotations.OfType<Pokemon>();
-                var toAdd = ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).Except(onMap);
-                Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
-                foreach (var p in toAdd)
+                if (ServiceLayer.SharedInstance.LayersEnabled[0])
                 {
-                    map.AddAnnotation(p);
+                    var onMap = map.Annotations.OfType<Pokemon>();
+                    var toAdd = ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).Except(onMap);
+                    Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
+                    foreach (var p in toAdd)
+                    {
+                        map.AddAnnotation(p);
+                    }
                 }
                 var gymsOnMap = map.Annotations.OfType<Gym>();
-                if(gymsOnMap.Count() == 0)
+                if(gymsOnMap.Count() == 0 && ServiceLayer.SharedInstance.LayersEnabled[1])
                 {
                     map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
                     Console.WriteLine($"Adding {ServiceLayer.SharedInstance.Gyms.Count()} gymss to the map");
@@ -318,6 +321,41 @@ namespace OMAPGMap.iOS
 			ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row] = !ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row];
 			tableView.DeselectRow(indexPath, true);
             tableView.ReloadData();
+            switch(indexPath.Row)
+            {
+                case 0:
+                    if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
+                    {
+                        var pokesOnMap = map.Annotations.OfType<Pokemon>();
+                        map.RemoveAnnotations(pokesOnMap.ToArray());
+                    } else
+                    {
+						map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).ToArray());
+                    }
+                    break;
+                case 1:
+                    if(!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
+                    {
+						var gymsOnMap = map.Annotations.OfType<Gym>();
+						map.RemoveAnnotations(gymsOnMap.ToArray());
+                    } else
+                    {
+                        map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
+                    }
+                    break;
+                case 2: //raids not done yet
+                    break;
+                case 3:
+                    if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
+                    {
+                        var trashOnMap = map.Annotations.OfType<Pokemon>().Where(p => p.trash);
+                        map.RemoveAnnotations(trashOnMap.ToArray());
+                    } else 
+                    {
+                        map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => p.trash).ToArray());
+                    }
+                    break;
+            }
             layersTableVC.DismissViewController(true, () => { refreshMap(null); });
         }
 
