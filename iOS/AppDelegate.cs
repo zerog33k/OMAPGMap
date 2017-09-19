@@ -1,6 +1,9 @@
 ﻿using Foundation;
 using Security;
 using UIKit;
+using Microsoft.Azure.Mobile;
+using Microsoft.Azure.Mobile.Analytics;
+using Microsoft.Azure.Mobile.Crashes;
 
 namespace OMAPGMap.iOS
 {
@@ -28,6 +31,8 @@ namespace OMAPGMap.iOS
                 ServiceLayer.SharedInstance.Username = user;
                 ServiceLayer.SharedInstance.Password = pass;
             }
+
+			MobileCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes));
 
             return true;
         }
