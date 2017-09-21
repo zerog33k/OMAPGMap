@@ -14,7 +14,7 @@ using OMAPGMap;
 
 namespace OMAPGMap.iOS
 {
-    public partial class ViewController : UIViewController, IMKMapViewDelegate, IUITableViewDelegate, IUITableViewDataSource, IUIPopoverPresentationControllerDelegate
+    public partial class ViewController : UIViewController, IMKMapViewDelegate, IUITableViewDelegate, IUITableViewDataSource
     {
         CLLocationManager locationManager;
         Timer secondTimer;
@@ -78,7 +78,7 @@ namespace OMAPGMap.iOS
             }
             signInButton.TouchUpInside += SignInButton_TouchUpInside;
             layerSelectButton.TouchUpInside += LayerSelectButton_TouchUpInside;
-        }
+        }   
 
         private async Task LoggedIn()
         {
@@ -323,7 +323,6 @@ namespace OMAPGMap.iOS
 
             layersTableVC.PopoverPresentationController.SourceView = layerSelectButton;
             layersTableVC.PopoverPresentationController.PermittedArrowDirections = UIPopoverArrowDirection.Any;
-            layersTableVC.PopoverPresentationController.Delegate = this;
             layersTableVC.PopoverPresentationController.SourceRect = new CGRect(0, 0, 30.0f, 30.0f);
             PresentViewController(layersTableVC, true, null);
 
