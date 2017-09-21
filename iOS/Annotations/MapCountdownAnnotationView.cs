@@ -3,7 +3,7 @@ using CoreGraphics;
 using MapKit;
 using UIKit;
 
-namespace OMAPGMap.iOS
+namespace OMAPGMap.iOS.Annotations
 {
     public class MapCountdownAnnotationView : MKAnnotationView
     {

@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ObjCRuntime;
 using CoreGraphics;
+using OMAPGMap.iOS.Annotations;
+using OMAPGMap;
 
 namespace OMAPGMap.iOS
 {
@@ -110,7 +112,7 @@ namespace OMAPGMap.iOS
         }
 
         [Export("mapView:viewForAnnotation:")]
-        public MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
+        protected internal MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
         {
             MKAnnotationView annotateView = null;
 
@@ -122,7 +124,6 @@ namespace OMAPGMap.iOS
                 pokeAV.Pokemon = pokemon;
                 pokeAV.Frame = new CGRect(0, 0, 40, 55);
                 pokeAV.UpdateTime(DateTime.Now);
-                pokeAV.Map = mapView;
 
                 //callout stuff
                 var view = Runtime.GetNSObject<PokemonCalloutView>(NSBundle.MainBundle.LoadNib("PokemonCalloutView", null, null).ValueAt(0));
@@ -159,6 +160,33 @@ namespace OMAPGMap.iOS
 				annotateView = mapView.DequeueReusableAnnotation("Gym") ?? new MKAnnotationView(gym, "Gym");
 				annotateView.Image = UIImage.FromBundle($"gym{(int)gym.team}");
 				annotateView.Frame = new CGRect(0, 0, 40, 40);
+
+                var stack = new UIStackView(new CGRect(0, 0, 200, 200));
+                stack.Axis = UILayoutConstraintAxis.Vertical;
+                stack.Spacing = 3.0f;
+                var line1 = new UILabel();
+                line1.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+                line1.Text = $"Last modified {Utility.TimeAgo(gym.LastModifedDate)}";
+                stack.AddArrangedSubview(line1);
+				var line2 = new UILabel();
+				line2.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+                line2.Text = $"Slots Available: {gym.slots_available}";
+                stack.AddArrangedSubview(line2);
+				var line3 = new UILabel();
+				line3.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+                line3.Text = $"Guarding Pokemon: {gym.pokemon_name}({gym.pokemon_id})";
+				stack.AddArrangedSubview(line3);
+				if (mapView.UserLocation != null)
+				{
+					var dist = mapView.UserLocation.Location.DistanceFrom(new CLLocation(gym.lat, gym.lon));
+					var distMiles = dist * 0.00062137;
+					var distLabel = new UILabel();
+					distLabel.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+					distLabel.Text = $"{distMiles.ToString("F1")} miles away";
+                    stack.AddArrangedSubview(distLabel);
+				}
+                annotateView.DetailCalloutAccessoryView = stack;
+				annotateView.CanShowCallout = true;
             }
             return annotateView;
         }
@@ -188,7 +216,6 @@ namespace OMAPGMap.iOS
                             {
                                 annotateView.UpdateTime(now);
                             }
-
                         }
                     }
                 }
@@ -208,7 +235,7 @@ namespace OMAPGMap.iOS
                 await ServiceLayer.SharedInstance.LoadData();
             } catch(Exception)
             {
-                //swallow exception
+                //swallow exception because it tastes good
             }
             InvokeOnMainThread(() =>
             {

@@ -6,11 +6,10 @@ using ObjCRuntime;
 using OMAPGMap.Models;
 using UIKit;
 
-namespace OMAPGMap.iOS
+namespace OMAPGMap.iOS.Annotations
 {
     public class PokemonAnnotationView : MapCountdownAnnotationView
     {
-        public MKMapView Map { get; set; }
 
         private Pokemon _pokemon;
         public Pokemon Pokemon

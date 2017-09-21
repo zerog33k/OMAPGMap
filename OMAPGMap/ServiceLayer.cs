@@ -164,5 +164,21 @@ namespace OMAPGMap
 			}
             return rval;
         }
+
+        public IList<Raid> CleanUpExpiredRaids()
+		{
+            var rval = new List<Raid>();
+			var now = DateTime.UtcNow;
+            foreach (var r in Raids.Values) //remove all expired
+			{
+                if (r.TimeEnd < now)
+				{
+                    Raid r2;
+                    Raids.TryRemove(r.id, out r2);
+					rval.Add(r2);
+				}
+			}
+			return rval;
+		}
     }
 }
