@@ -11,9 +11,16 @@ namespace OMAPGMap.iOS.Annotations
 
         public RaidAnnotationView(IMKAnnotation annotate, string resueID) : base(annotate, resueID)
         {
+            var raid = annotate as Raid;
+            if(raid != null)
+            {
+                Raid = raid;
+            }
+
         }
 
-        public Raid Raid {
+        public Raid Raid 
+        {
 			set
 			{
                 _raid = value;
@@ -25,12 +32,28 @@ namespace OMAPGMap.iOS.Annotations
                         CountdownDate = _raid.TimeSpawn;
                     } else
                     {
-                        
+                        img.Image = UIImage.FromBundle($"raid{_raid.pokemon_id.ToString("D3")}");
+                        CountdownDate = _raid.TimeEnd;
                     }
-					
-					
 				}
 			}
         }
+
+        public override void UpdateTime(DateTime now)
+        {
+			if (_raid.pokemon_id == 0 && CountdownDate != _raid.TimeSpawn)
+			{
+				img.Image = UIImage.FromBundle($"egg{_raid.level.ToString("D3")}");
+				CountdownDate = _raid.TimeSpawn;
+			}
+            else if(_raid.pokemon_id != 0 && CountdownDate != _raid.TimeEnd )
+			{
+				img.Image = UIImage.FromBundle($"raid{_raid.pokemon_id.ToString("D3")}");
+				CountdownDate = _raid.TimeEnd;
+			}
+
+            base.UpdateTime(now);
+        }
+
     }
 }

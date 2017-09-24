@@ -14,7 +14,7 @@ using OMAPGMap;
 
 namespace OMAPGMap.iOS
 {
-    public partial class ViewController : UIViewController, IMKMapViewDelegate, IUITableViewDelegate, IUITableViewDataSource
+    public partial class ViewController : UIViewController, IMKMapViewDelegate, IUITableViewDelegate, IUITableViewDataSource, IUIPopoverPresentationControllerDelegate
     {
         CLLocationManager locationManager;
         Timer secondTimer;
@@ -85,8 +85,14 @@ namespace OMAPGMap.iOS
             await ServiceLayer.SharedInstance.LoadData();
             loader.StopAnimating();
             map.Delegate = this;
-            map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).ToArray());
+            if (ServiceLayer.SharedInstance.LayersEnabled[3])
+            {
+                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.ToArray());
+            } else{
+                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !p.trash).ToArray());
+            }
             map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
+            map.AddAnnotations(ServiceLayer.SharedInstance.Raids.Values.ToArray());
             UIView.Animate(0.3, () =>
             {
                 overlayView.Alpha = 0.0f;
@@ -188,28 +194,34 @@ namespace OMAPGMap.iOS
                 annotateView.DetailCalloutAccessoryView = stack;
 				annotateView.CanShowCallout = true;
             }
+
+            var raid = annotation as Raid;
+            if(raid != null)
+            {
+                annotateView = mapView.DequeueReusableAnnotation("Raid") ?? new RaidAnnotationView(annotation, "Raid");
+                var raidAV = annotateView as RaidAnnotationView;
+                raidAV.Raid = raid;
+				raidAV.Frame = new CGRect(0, 0, 40, 55);
+				raidAV.UpdateTime(DateTime.Now);
+            }
             return annotateView;
         }
 
         void HandleTimerCallback(object state)
         {
-            var toRemove = ServiceLayer.SharedInstance.CleanUpExpired();
             InvokeOnMainThread(() =>
             {
                 try
                 {
-                    //remove annotioans from the map
-                    foreach(var p in toRemove)
-                    {
-                        map.RemoveAnnotation(p);
-                    }
-                    Console.WriteLine($"Removed {toRemove.Count()} pokemon");
-                    var annotations = map.GetAnnotations(map.VisibleMapRect);
                     var now = DateTime.UtcNow;
+                    var pokes = map.Annotations.OfType<Pokemon>().Where(p => p.ExpiresDate < now);
+                    map.RemoveAnnotations(pokes.ToArray());
+                    Console.WriteLine($"Removed {pokes.Count()} pokemon");
+                    var annotations = map.GetAnnotations(map.VisibleMapRect);
                     foreach (var a in annotations)
                     {
-                        var a2 = a as Pokemon;
-                        if (a2 != null)
+                        var a2 = a as IMKAnnotation;
+                        if (a is Pokemon || a is Raid)
                         {
                             var annotateView = map.ViewForAnnotation(a2) as PokemonAnnotationView;
                             if (annotateView != null)
@@ -230,31 +242,46 @@ namespace OMAPGMap.iOS
 
         async void refreshMap(object state)
         {
-            try
+            
+            InvokeOnMainThread(async () => 
             {
-                await ServiceLayer.SharedInstance.LoadData();
-            } catch(Exception)
-            {
-                //swallow exception because it tastes good
-            }
-            InvokeOnMainThread(() =>
-            {
+				try
+				{
+					await ServiceLayer.SharedInstance.LoadData();
+				}
+				catch (Exception)
+				{
+					//swallow exception because it tastes good
+				}
                 if (ServiceLayer.SharedInstance.LayersEnabled[0])
                 {
                     var onMap = map.Annotations.OfType<Pokemon>();
-                    var toAdd = ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).Except(onMap);
+                    var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !p.trash).Except(onMap);
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
-                    foreach (var p in toAdd)
-                    {
-                        map.AddAnnotation(p);
-                    }
+                    map.AddAnnotations(toAdd.ToArray());
                 }
                 var gymsOnMap = map.Annotations.OfType<Gym>();
                 if(gymsOnMap.Count() == 0 && ServiceLayer.SharedInstance.LayersEnabled[1])
                 {
                     map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
-                    Console.WriteLine($"Adding {ServiceLayer.SharedInstance.Gyms.Count()} gymss to the map");
+                    Console.WriteLine($"Adding {ServiceLayer.SharedInstance.Gyms.Count()} gyms to the map");
                 }
+
+				if (ServiceLayer.SharedInstance.LayersEnabled[2])
+				{
+                    var raidsOnMap = map.Annotations.OfType<Raid>();
+                    var toAdd = ServiceLayer.SharedInstance.Raids.Values.Except(raidsOnMap);
+                    foreach (var r in toAdd)
+                    {
+                        Raid thisRaid;
+                        if(ServiceLayer.SharedInstance.Raids.TryGetValue(r.id, out thisRaid))
+                        {
+                            map.AddAnnotation(thisRaid);
+                        }
+                        //map.AddAnnotations(toAdd.ToArray());
+                    }
+					Console.WriteLine($"Adding {toAdd.Count()} raids to the map");
+				}
             });
         }
 
@@ -319,8 +346,7 @@ namespace OMAPGMap.iOS
                 layersTableVC.TableView.Delegate = this;
             }
 
-
-
+            layersTableVC.PopoverPresentationController.Delegate = this;
             layersTableVC.PopoverPresentationController.SourceView = layerSelectButton;
             layersTableVC.PopoverPresentationController.PermittedArrowDirections = UIPopoverArrowDirection.Any;
             layersTableVC.PopoverPresentationController.SourceRect = new CGRect(0, 0, 30.0f, 30.0f);
@@ -345,6 +371,9 @@ namespace OMAPGMap.iOS
         public void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
 			ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row] = !ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row];
+            var layers = ServiceLayer.SharedInstance.LayersEnabled.Select(l => l.ToString()).ToArray();
+            NSUserDefaults.StandardUserDefaults.SetValueForKey(NSArray.FromStrings(layers), new NSString("layers"));
+            NSUserDefaults.StandardUserDefaults.Synchronize();
 			tableView.DeselectRow(indexPath, true);
             tableView.ReloadData();
             switch(indexPath.Row)
@@ -356,7 +385,7 @@ namespace OMAPGMap.iOS
                         map.RemoveAnnotations(pokesOnMap.ToArray());
                     } else
                     {
-						map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !p.trash).ToArray());
+						map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !p.trash).ToArray());
                     }
                     break;
                 case 1:
@@ -369,7 +398,16 @@ namespace OMAPGMap.iOS
                         map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
                     }
                     break;
-                case 2: //raids not done yet
+                case 2:
+					if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
+					{
+						var raidsOnMap = map.Annotations.OfType<Raid>();
+                        map.RemoveAnnotations(raidsOnMap.ToArray());
+					}
+					else
+					{
+						map.AddAnnotations(ServiceLayer.SharedInstance.Raids.Values.ToArray());
+					}
                     break;
                 case 3:
                     if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
@@ -378,7 +416,7 @@ namespace OMAPGMap.iOS
                         map.RemoveAnnotations(trashOnMap.ToArray());
                     } else 
                     {
-                        map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => p.trash).ToArray());
+                        map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => p.trash).ToArray());
                     }
                     break;
             }

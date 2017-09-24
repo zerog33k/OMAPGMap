@@ -16,10 +16,32 @@ namespace OMAPGMap.Models
         public int? slots_available { get; set; }
         public bool is_in_battle { get; set; }
         private DateTime _last_modifed;
-        public long last_modified { set => _last_modifed = Utility.FromUnixTime(value); }
+        private long _modified;
+        public long last_modified
+        {
+            set
+            {
+                _last_modifed = Utility.FromUnixTime(value);
+                _modified = value;
+            }
+            get => _modified;
+        }
+
         public DateTime LastModifedDate { get => _last_modifed; }
 
+		public void update(Gym gym)
+		{
+            pokemon_id = gym.pokemon_id;
+            pokemon_name = gym.pokemon_name;
+            team = gym.team;
+            slots_available = gym.slots_available;
+            is_in_battle = gym.is_in_battle;
+            last_modified = gym.last_modified;
+		}
+
     }
+
+
 
     public enum Team { Mystic = 1, Instinct = 2, Valor = 3, None = 0 }
 

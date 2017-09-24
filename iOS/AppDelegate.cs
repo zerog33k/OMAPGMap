@@ -4,6 +4,7 @@ using UIKit;
 using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
+using System.Linq;
 
 namespace OMAPGMap.iOS
 {
@@ -30,6 +31,12 @@ namespace OMAPGMap.iOS
             {
                 ServiceLayer.SharedInstance.Username = user;
                 ServiceLayer.SharedInstance.Password = pass;
+            }
+            var layers = NSUserDefaults.StandardUserDefaults.StringArrayForKey("layers");
+            if(layers != null)
+            {
+                var layersBool = layers.Select(l => bool.Parse(l));
+                ServiceLayer.SharedInstance.LayersEnabled = layersBool.ToArray();
             }
 
 			MobileCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes));

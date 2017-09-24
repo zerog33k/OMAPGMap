@@ -9,6 +9,11 @@ namespace OMAPGMap.Models
     {
         public Pokemon() : base()
         {
+            
+        }
+
+        public Pokemon(IntPtr ptr) : base(ptr)
+        {
         }
 
         public CLLocationCoordinate2D Coordinate => new CLLocationCoordinate2D(lat, lon);

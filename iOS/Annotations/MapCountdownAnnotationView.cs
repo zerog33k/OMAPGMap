@@ -5,7 +5,7 @@ using UIKit;
 
 namespace OMAPGMap.iOS.Annotations
 {
-    public class MapCountdownAnnotationView : MKAnnotationView
+    public abstract class MapCountdownAnnotationView : MKAnnotationView
     {
 		protected UIImageView img = new UIImageView(new CGRect(0, 0, 40, 40));
 		protected UILabel label = new UILabel(new CGRect(0, 40, 40, 15));
@@ -21,7 +21,7 @@ namespace OMAPGMap.iOS.Annotations
 			label.Font = UIFont.SystemFontOfSize(12.0f, UIFontWeight.Light);
         }
 
-		public void UpdateTime(DateTime now)
+		public virtual void UpdateTime(DateTime now)
 		{
 			if (CountdownDate != null)
 			{

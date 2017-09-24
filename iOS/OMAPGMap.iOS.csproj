@@ -895,6 +895,75 @@
     <ImageAsset Include="Assets.xcassets\egg5.imageset\Unknown-9.png" />
     <ImageAsset Include="Assets.xcassets\gym0.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\gym0.imageset\Unknown-1.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid103.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid103.imageset\raid103.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid110.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid110.imageset\raid110.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid112.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid112.imageset\raid112.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid125.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid125.imageset\raid125.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid126.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid126.imageset\raid126.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid129.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid129.imageset\raid129.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid131.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid131.imageset\raid131.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid134.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid134.imageset\raid134.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid135.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid135.imageset\raid135.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid136.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid136.imageset\raid136.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid143.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid143.imageset\raid143.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid144.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid144.imageset\raid144.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid145.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid145.imageset\raid145.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid146.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid146.imageset\raid146.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid150.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid150.imageset\raid150.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid151.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid151.imageset\raid151.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid153.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid153.imageset\raid153.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid156.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid156.imageset\raid156.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid159.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid159.imageset\raid159.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid243.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid243.imageset\raid243.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid244.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid244.imageset\raid244.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid245.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid245.imageset\raid245.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid248.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid248.imageset\raid248.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid249.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid249.imageset\raid249.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid250.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid250.imageset\raid250.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid251.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid251.imageset\raid251.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid3.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid3.imageset\raid3.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid59.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid59.imageset\raid59.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid6.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid6.imageset\raid6.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid65.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid65.imageset\raid65.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid68.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid68.imageset\raid68.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid89.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid89.imageset\raid89.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid9.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid9.imageset\raid9.png" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid94.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid94.imageset\raid94.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -911,6 +980,7 @@
     <Folder Include="Assets.xcassets\egg4.imageset\" />
     <Folder Include="Assets.xcassets\egg5.imageset\" />
     <Folder Include="Assets.xcassets\gym0.imageset\" />
+    <Folder Include="Assets.xcassets\Raids.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -939,6 +1009,7 @@
     <Compile Include="Annotations\Gym.cs" />
     <Compile Include="Annotations\MapCountdownAnnotationView.cs" />
     <Compile Include="Annotations\RaidAnnotationView.cs" />
+    <Compile Include="Annotations\Raid.cs" />
   </ItemGroup>
   <Import Project="..\OMAPGMap\OMAPGMap.projitems" Label="Shared" Condition="Exists('..\OMAPGMap\OMAPGMap.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

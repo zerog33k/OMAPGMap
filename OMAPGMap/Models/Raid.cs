@@ -1,7 +1,7 @@
 ﻿using System;
 namespace OMAPGMap.Models
 {
-    public class Raid
+    public partial class Raid
     {
         public string id { get; set; }
         public int level { get; set; }
@@ -23,6 +23,16 @@ namespace OMAPGMap.Models
         private DateTime _time_end;
         public long time_end { set => _time_end = Utility.FromUnixTime(value); }
         public DateTime TimeEnd { get => _time_end; }
+
+        public void Update(Raid raid)
+        {
+            pokemon_id = raid.pokemon_id;
+            pokemon_name = raid.pokemon_name;
+            team = raid.team;
+            cp = raid.cp;
+            move_1 = raid.move_1;
+            move_2 = raid.move_2;
+        }
 
     }
 }

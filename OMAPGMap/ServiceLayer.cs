@@ -28,11 +28,11 @@ namespace OMAPGMap
         {
         }
 
-        public ConcurrentDictionary<string, Pokemon> Pokemon = new ConcurrentDictionary<string, Pokemon>();
-        public ConcurrentDictionary<string, Gym> Gyms = new ConcurrentDictionary<string, Gym>();
-        public ConcurrentDictionary<string, Raid> Raids = new ConcurrentDictionary<string, Raid>();
+        public List<Pokemon> Pokemon = new List<Pokemon>();
+        public Dictionary<string, Gym> Gyms = new Dictionary<string, Gym>();
+        public Dictionary<string, Raid> Raids = new Dictionary<string, Raid>();
                                         //pokemon, gyms, raids, trash
-        public bool[] LayersEnabled = { true, true, false, false, };
+        public bool[] LayersEnabled = { true, false, true, false, };
 
         private int lastId = 0;
 
@@ -68,7 +68,13 @@ namespace OMAPGMap
                 Console.WriteLine("loading Gyms");
                 await LoadGyms();
             }
-        }
+			if (LayersEnabled[2])
+			{
+				Console.WriteLine("loading Raids");
+                await LoadRaids();
+			}
+
+		}
 
         public async Task LoadPokemon()
         {
@@ -83,14 +89,7 @@ namespace OMAPGMap
 				var content = await response.Content.ReadAsStringAsync();
                 var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
                 CleanUpExpired();
-                foreach (var p in pokes)
-                {
-                    Pokemon.TryAdd(p.id, p);
-                }
-			}
-			else
-			{
-                Pokemon.Clear();
+                Pokemon.AddRange(pokes);
 			}
         }
 
@@ -115,13 +114,9 @@ namespace OMAPGMap
                         Gyms.TryAdd(g.id, g);
                     } else //update the old one
                     {
-                        g.CopyProperties(thisGym);
+                        thisGym.update(g);
                     }
 				}
-			}
-			else
-			{
-				Gyms.Clear();
 			}
 		}
 
@@ -137,48 +132,36 @@ namespace OMAPGMap
 			{
 				var content = await response.Content.ReadAsStringAsync();
                 var raids = JsonConvert.DeserializeObject<List<Raid>>(content);
-				CleanUpExpired();
+                CleanUpExpiredRaids();
+
                 foreach (var r in raids)
 				{
-                    Raids.TryAdd(r.id, r);
+                    if (Raids[r.id] == null)
+                    {
+                        Raids.Add(r.id, r);
+                    }
+                    else //update the old one
+                    {
+                        Raids[r.id].Update(r);
+                    }
 				}
-			}
-			else
-			{
-				Raids.Clear();
 			}
 		}
 
-        public IList<Pokemon> CleanUpExpired()
+        public void CleanUpExpired()
         {
-            var rval = new List<Pokemon>();
             var now = DateTime.UtcNow;
-			foreach (var p in Pokemon.Values) //remove all expired
-			{
-				if (p.ExpiresDate < now)
-				{
-					Pokemon p2;
-					Pokemon.TryRemove(p.id, out p2);
-                    rval.Add(p2);
-				}
-			}
-            return rval;
+            Pokemon.RemoveAll(p => p.ExpiresDate < now);
         }
 
-        public IList<Raid> CleanUpExpiredRaids()
+        public void CleanUpExpiredRaids()
 		{
-            var rval = new List<Raid>();
 			var now = DateTime.UtcNow;
-            foreach (var r in Raids.Values) //remove all expired
-			{
-                if (r.TimeEnd < now)
-				{
-                    Raid r2;
-                    Raids.TryRemove(r.id, out r2);
-					rval.Add(r2);
-				}
-			}
-			return rval;
+            var toRemove = Raids.Values.Where(r => r.TimeEnd < now);
+            foreach(var r in toRemove)
+            {
+                Raids.Remove(r.id);
+            }
 		}
     }
 }

@@ -7,8 +7,14 @@ namespace OMAPGMap.Models
 {
     public partial class Gym : NSObject, IMKAnnotation
     {
-        public Gym()
+        public Gym() : base()
         {
+            
+        }
+
+        public Gym(IntPtr ptr) : base(ptr)
+        {
+            
         }
 
         public CLLocationCoordinate2D Coordinate => new CLLocationCoordinate2D(lat, lon);
