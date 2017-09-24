@@ -31,7 +31,7 @@ namespace OMAPGMap
 
 		public static string TimeAgo(DateTime dt)
 		{
-			TimeSpan span = DateTime.Now - dt;
+            TimeSpan span = DateTime.UtcNow - dt;
 			if (span.Days > 365)
 			{
 				int years = (span.Days / 365);

@@ -19,7 +19,7 @@ namespace OMAPGMap
 		private static readonly Lazy<ServiceLayer> lazy = new Lazy<ServiceLayer>(() => new ServiceLayer());
         public static ServiceLayer SharedInstance { get { return lazy.Value; } }
 
-        private static string baseURL = "https://www.omahapgmap.com";
+        private static string baseURL = "http://zerogeek.net/map";
         private static string pokemonURL = $"{baseURL}/data";
         private static string gymsURL = $"{baseURL}/gym_data";
         private static string raidsURL = $"{baseURL}/raids";
@@ -107,14 +107,12 @@ namespace OMAPGMap
                 var gyms = JsonConvert.DeserializeObject<List<Gym>>(content);
                 foreach (var g in gyms)
 				{
-                    Gym thisGym;
-                    Gyms.TryGetValue(g.id, out thisGym);
-                    if(thisGym == null)
+                    if(!Gyms.ContainsKey(g.id))
                     {
-                        Gyms.TryAdd(g.id, g);
+                        Gyms[g.id] = g;
                     } else //update the old one
                     {
-                        thisGym.update(g);
+                        Gyms[g.id].update(g);
                     }
 				}
 			}
@@ -136,7 +134,7 @@ namespace OMAPGMap
 
                 foreach (var r in raids)
 				{
-                    if (Raids[r.id] == null)
+                    if (!Raids.ContainsKey(r.id))
                     {
                         Raids.Add(r.id, r);
                     }

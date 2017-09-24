@@ -28,8 +28,8 @@ namespace OMAPGMap.iOS.Annotations
 				{
                     if(_raid.pokemon_id == 0)
                     {
-                        img.Image = UIImage.FromBundle($"egg{_raid.level.ToString("D3")}");
-                        CountdownDate = _raid.TimeSpawn;
+                        img.Image = UIImage.FromBundle($"egg{_raid.level}");
+                        CountdownDate = _raid.TimeBattle;
                     } else
                     {
                         img.Image = UIImage.FromBundle($"raid{_raid.pokemon_id.ToString("D3")}");
@@ -41,10 +41,10 @@ namespace OMAPGMap.iOS.Annotations
 
         public override void UpdateTime(DateTime now)
         {
-			if (_raid.pokemon_id == 0 && CountdownDate != _raid.TimeSpawn)
+            if (_raid.pokemon_id == 0 && CountdownDate != _raid.TimeBattle)
 			{
-				img.Image = UIImage.FromBundle($"egg{_raid.level.ToString("D3")}");
-				CountdownDate = _raid.TimeSpawn;
+				img.Image = UIImage.FromBundle($"egg{_raid.level}");
+				CountdownDate = _raid.TimeBattle;
 			}
             else if(_raid.pokemon_id != 0 && CountdownDate != _raid.TimeEnd )
 			{

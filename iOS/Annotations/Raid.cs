@@ -20,6 +20,18 @@ namespace OMAPGMap.Models
 		public CLLocationCoordinate2D Coordinate => new CLLocationCoordinate2D(lat, lon);
 
 		[Export("title")]
-		public string title { get => name; }
+		public string title 
+        { 
+            get
+            {
+                if(pokemon_id == 0)
+                {
+                    return $"Upcoming raid level {level}";
+                } else
+                {
+                    return $"{pokemon_name} (#${pokemon_id}) Raid - Level {level}";
+                }
+            }
+        }
     }
 }

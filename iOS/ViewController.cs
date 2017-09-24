@@ -61,7 +61,10 @@ namespace OMAPGMap.iOS
                 {
                     loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
                 }
-                catch(Exception){} //swallow exception
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                } //swallow exception
                 if (loggedIn)
                 {
                     username.Alpha = 0.0f;
@@ -203,6 +206,41 @@ namespace OMAPGMap.iOS
                 raidAV.Raid = raid;
 				raidAV.Frame = new CGRect(0, 0, 40, 55);
 				raidAV.UpdateTime(DateTime.Now);
+
+				var stack = new UIStackView(new CGRect(0, 0, 200, 200));
+				stack.Axis = UILayoutConstraintAxis.Vertical;
+				stack.Spacing = 3.0f;
+				var line1 = new UILabel();
+				line1.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+                line1.Text = $"CP: {raid.cp}";
+				stack.AddArrangedSubview(line1);
+				var line2 = new UILabel();
+				line2.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+                line2.Text = $"Move 1: {raid.move_1}";
+				stack.AddArrangedSubview(line2);
+				var line3 = new UILabel();
+				line3.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+				line3.Text = $"Move 2: {raid.move_2}";
+				stack.AddArrangedSubview(line3);
+				var line4 = new UILabel();
+				line4.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+                line4.Text = $"Gym Name: {raid.name}";
+				stack.AddArrangedSubview(line4);
+				var line5 = new UILabel();
+				line5.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+                line5.Text = $"Gym Control: {Enum.GetName(typeof(Team), raid.team)}";
+				stack.AddArrangedSubview(line5);
+				if (mapView.UserLocation != null)
+				{
+					var dist = mapView.UserLocation.Location.DistanceFrom(new CLLocation(raid.lat, raid.lon));
+					var distMiles = dist * 0.00062137;
+					var distLabel = new UILabel();
+					distLabel.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
+					distLabel.Text = $"{distMiles.ToString("F1")} miles away";
+					stack.AddArrangedSubview(distLabel);
+				}
+                annotateView.DetailCalloutAccessoryView = stack;
+                annotateView.CanShowCallout = true;
             }
             return annotateView;
         }
@@ -223,7 +261,7 @@ namespace OMAPGMap.iOS
                         var a2 = a as IMKAnnotation;
                         if (a is Pokemon || a is Raid)
                         {
-                            var annotateView = map.ViewForAnnotation(a2) as PokemonAnnotationView;
+                            var annotateView = map.ViewForAnnotation(a2) as MapCountdownAnnotationView;
                             if (annotateView != null)
                             {
                                 annotateView.UpdateTime(now);
