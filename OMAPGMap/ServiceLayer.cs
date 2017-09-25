@@ -33,6 +33,8 @@ namespace OMAPGMap
         public Dictionary<string, Raid> Raids = new Dictionary<string, Raid>();
                                         //pokemon, gyms, raids, trash
         public bool[] LayersEnabled = { true, false, true, false, };
+        public bool[] TrashEnabled = new bool[0];
+        public bool[] PokemonEnabled = new bool[0];
 
         private int lastId = 0;
 
@@ -91,6 +93,24 @@ namespace OMAPGMap
                 CleanUpExpired();
                 Pokemon.AddRange(pokes);
 			}
+            if(TrashEnabled.Count() == 0)
+            {
+                TrashEnabled = new bool[251];
+                PokemonEnabled = new bool[251];
+                var distinctMons = Pokemon.GroupBy(p => p.id).Select(y => y.First());
+                for (var i = 0; i < 251; i++)
+                {
+                    var mon = distinctMons.Where(p => p.pokemon_id == i).FirstOrDefault();
+                    if(mon != null)
+                    {
+                        TrashEnabled[i] = mon.trash;
+                        PokemonEnabled[i] = true;
+                    } else
+                    {
+                        PokemonEnabled[i] = false;
+                    }
+                }
+            }
         }
 
 		public async Task LoadGyms()

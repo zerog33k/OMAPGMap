@@ -133,34 +133,7 @@ namespace OMAPGMap.iOS
                 pokeAV.Pokemon = pokemon;
                 pokeAV.Frame = new CGRect(0, 0, 40, 55);
                 pokeAV.UpdateTime(DateTime.Now);
-
-                //callout stuff
-                var view = Runtime.GetNSObject<PokemonCalloutView>(NSBundle.MainBundle.LoadNib("PokemonCalloutView", null, null).ValueAt(0));
-                //view.Frame = new CGRect(0, 0, 220, 200);
-                var gender = pokemon.gender == PokeGender.Male ? "Male" : "Female";
-                if (mapView.UserLocation != null)
-                {
-                    var dist =  mapView.UserLocation.Location.DistanceFrom(new CLLocation(pokemon.lat, pokemon.lon));
-                    var distMiles = dist * 0.00062137;
-                    view.DistanceLabel.Text = $"{distMiles.ToString("F1")} miles away";
-                }
-                if (string.IsNullOrEmpty(pokemon.move1))
-                {
-                    view.Stack.RemoveArrangedSubview(view.Move1Label);
-                    view.Stack.RemoveArrangedSubview(view.Move2Label);
-                    view.Stack.RemoveArrangedSubview(view.IVLabl);
-                    view.Move1Label.RemoveFromSuperview();
-                    view.Move2Label.RemoveFromSuperview();
-                    view.IVLabl.RemoveFromSuperview();
-                }
-                else
-                {
-                    view.Move1Label.Text = $"Move 1: {pokemon.move1} ({pokemon.damage1} dps)";
-                    view.Move2Label.Text = $"Move 2: {pokemon.move1} ({pokemon.damage2} dps)";
-                    view.IVLabl.Text = $"IV: {pokemon.atk}atk {pokemon.def}def {pokemon.sta}sta";
-                    var iv = (pokemon.atk + pokemon.def + pokemon.sta) / 45.0f;
-                }
-                annotateView.DetailCalloutAccessoryView = view;
+                pokeAV.Map = mapView;
                 annotateView.CanShowCallout = true;
             }
             var gym = annotation as Gym;
@@ -169,32 +142,9 @@ namespace OMAPGMap.iOS
 				annotateView = mapView.DequeueReusableAnnotation("Gym") ?? new MKAnnotationView(gym, "Gym");
 				annotateView.Image = UIImage.FromBundle($"gym{(int)gym.team}");
 				annotateView.Frame = new CGRect(0, 0, 40, 40);
+                var gymAV = annotateView as GymAnnotationView;
+                gymAV.Map = mapView;
 
-                var stack = new UIStackView(new CGRect(0, 0, 200, 200));
-                stack.Axis = UILayoutConstraintAxis.Vertical;
-                stack.Spacing = 3.0f;
-                var line1 = new UILabel();
-                line1.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-                line1.Text = $"Last modified {Utility.TimeAgo(gym.LastModifedDate)}";
-                stack.AddArrangedSubview(line1);
-				var line2 = new UILabel();
-				line2.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-                line2.Text = $"Slots Available: {gym.slots_available}";
-                stack.AddArrangedSubview(line2);
-				var line3 = new UILabel();
-				line3.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-                line3.Text = $"Guarding Pokemon: {gym.pokemon_name}({gym.pokemon_id})";
-				stack.AddArrangedSubview(line3);
-				if (mapView.UserLocation != null)
-				{
-					var dist = mapView.UserLocation.Location.DistanceFrom(new CLLocation(gym.lat, gym.lon));
-					var distMiles = dist * 0.00062137;
-					var distLabel = new UILabel();
-					distLabel.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-					distLabel.Text = $"{distMiles.ToString("F1")} miles away";
-                    stack.AddArrangedSubview(distLabel);
-				}
-                annotateView.DetailCalloutAccessoryView = stack;
 				annotateView.CanShowCallout = true;
             }
 
@@ -205,41 +155,8 @@ namespace OMAPGMap.iOS
                 var raidAV = annotateView as RaidAnnotationView;
                 raidAV.Raid = raid;
 				raidAV.Frame = new CGRect(0, 0, 40, 55);
+                raidAV.Map = mapView;
 				raidAV.UpdateTime(DateTime.Now);
-
-				var stack = new UIStackView(new CGRect(0, 0, 200, 200));
-				stack.Axis = UILayoutConstraintAxis.Vertical;
-				stack.Spacing = 3.0f;
-				var line1 = new UILabel();
-				line1.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-                line1.Text = $"CP: {raid.cp}";
-				stack.AddArrangedSubview(line1);
-				var line2 = new UILabel();
-				line2.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-                line2.Text = $"Move 1: {raid.move_1}";
-				stack.AddArrangedSubview(line2);
-				var line3 = new UILabel();
-				line3.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-				line3.Text = $"Move 2: {raid.move_2}";
-				stack.AddArrangedSubview(line3);
-				var line4 = new UILabel();
-				line4.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-                line4.Text = $"Gym Name: {raid.name}";
-				stack.AddArrangedSubview(line4);
-				var line5 = new UILabel();
-				line5.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-                line5.Text = $"Gym Control: {Enum.GetName(typeof(Team), raid.team)}";
-				stack.AddArrangedSubview(line5);
-				if (mapView.UserLocation != null)
-				{
-					var dist = mapView.UserLocation.Location.DistanceFrom(new CLLocation(raid.lat, raid.lon));
-					var distMiles = dist * 0.00062137;
-					var distLabel = new UILabel();
-					distLabel.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
-					distLabel.Text = $"{distMiles.ToString("F1")} miles away";
-					stack.AddArrangedSubview(distLabel);
-				}
-                annotateView.DetailCalloutAccessoryView = stack;
                 annotateView.CanShowCallout = true;
             }
             return annotateView;
@@ -254,7 +171,9 @@ namespace OMAPGMap.iOS
                     var now = DateTime.UtcNow;
                     var pokes = map.Annotations.OfType<Pokemon>().Where(p => p.ExpiresDate < now);
                     map.RemoveAnnotations(pokes.ToArray());
-                    Console.WriteLine($"Removed {pokes.Count()} pokemon");
+                    var raids = map.Annotations.OfType<Raid>().Where(p => p.TimeEnd < now);
+					map.RemoveAnnotations(raids.ToArray());
+                    Console.WriteLine($"Removed {pokes.Count()} pokemon and {raids.Count()} raids");
                     var annotations = map.GetAnnotations(map.VisibleMapRect);
                     foreach (var a in annotations)
                     {

@@ -964,6 +964,8 @@
     <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid9.imageset\raid9.png" />
     <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid94.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid94.imageset\raid94.png" />
+    <ImageAsset Include="Assets.xcassets\gear.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\gear.imageset\31188-200.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -981,6 +983,7 @@
     <Folder Include="Assets.xcassets\egg5.imageset\" />
     <Folder Include="Assets.xcassets\gym0.imageset\" />
     <Folder Include="Assets.xcassets\Raids.imageset\" />
+    <Folder Include="Assets.xcassets\gear.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -1010,6 +1013,11 @@
     <Compile Include="Annotations\MapCountdownAnnotationView.cs" />
     <Compile Include="Annotations\RaidAnnotationView.cs" />
     <Compile Include="Annotations\Raid.cs" />
+    <Compile Include="Annotations\GymAnnotationView.cs" />
+    <Compile Include="SettingsViewController.cs" />
+    <Compile Include="SettingsViewController.designer.cs">
+      <DependentUpon>SettingsViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="..\OMAPGMap\OMAPGMap.projitems" Label="Shared" Condition="Exists('..\OMAPGMap\OMAPGMap.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

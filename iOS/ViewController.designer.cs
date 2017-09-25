@@ -34,6 +34,9 @@ namespace OMAPGMap.iOS
 		UIKit.UITextField password { get; set; }
 
 		[Outlet]
+		UIKit.UIButton settingsSelectButton { get; set; }
+
+		[Outlet]
 		UIKit.UIButton signInButton { get; set; }
 
 		[Outlet]
@@ -44,6 +47,11 @@ namespace OMAPGMap.iOS
 			if (effectOverlay != null) {
 				effectOverlay.Dispose ();
 				effectOverlay = null;
+			}
+
+			if (layerSelectButton != null) {
+				layerSelectButton.Dispose ();
+				layerSelectButton = null;
 			}
 
 			if (loader != null) {
@@ -81,9 +89,9 @@ namespace OMAPGMap.iOS
 				username = null;
 			}
 
-			if (layerSelectButton != null) {
-				layerSelectButton.Dispose ();
-				layerSelectButton = null;
+			if (settingsSelectButton != null) {
+				settingsSelectButton.Dispose ();
+				settingsSelectButton = null;
 			}
 		}
 	}

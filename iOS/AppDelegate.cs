@@ -39,6 +39,13 @@ namespace OMAPGMap.iOS
                 ServiceLayer.SharedInstance.LayersEnabled = layersBool.ToArray();
             }
 
+			var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
+			if (layers != null)
+			{
+				var trashBool = trash.Select(l => bool.Parse(l));
+				ServiceLayer.SharedInstance.TrashEnabled = trashBool.ToArray();
+			}
+
 			MobileCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes));
 
             return true;

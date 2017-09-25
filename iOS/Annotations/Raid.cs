@@ -29,7 +29,7 @@ namespace OMAPGMap.Models
                     return $"Upcoming raid level {level}";
                 } else
                 {
-                    return $"{pokemon_name} (#${pokemon_id}) Raid - Level {level}";
+                    return $"{pokemon_name} (#{pokemon_id}) Raid - Level {level}";
                 }
             }
         }

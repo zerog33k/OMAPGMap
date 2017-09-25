@@ -27,7 +27,7 @@ namespace OMAPGMap.iOS.Annotations
 			{
 				var diff = CountdownDate - now;
 				label.Text = $"{diff.Minutes}:{diff.Seconds.ToString("D2")}";
-				if (diff.Minutes < 1)
+                if (diff.Minutes < 1 && this is PokemonAnnotationView)
 				{
 					img.Alpha = diff.Seconds / 60.0f;
 				}
