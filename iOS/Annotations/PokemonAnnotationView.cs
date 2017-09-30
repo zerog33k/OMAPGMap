@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CoreGraphics;
 using CoreLocation;
 using Foundation;
@@ -12,6 +13,7 @@ namespace OMAPGMap.iOS.Annotations
     public class PokemonAnnotationView : MapCountdownAnnotationView
     {
         public MKMapView Map { get; set; }
+        public ViewController ParentVC { get; set; }
 
         private Pokemon _pokemon;
         public Pokemon Pokemon
@@ -51,6 +53,7 @@ namespace OMAPGMap.iOS.Annotations
 					view.Stack.RemoveArrangedSubview(view.IVLabl);
 					view.Move1Label.RemoveFromSuperview();
 					view.Move2Label.RemoveFromSuperview();
+                    view.DetailsLabel.RemoveFromSuperview();
 					view.IVLabl.RemoveFromSuperview();
 				}
 				else
@@ -58,8 +61,10 @@ namespace OMAPGMap.iOS.Annotations
 					view.Move1Label.Text = $"Move 1: {_pokemon.move1} ({_pokemon.damage1} dps)";
 					view.Move2Label.Text = $"Move 2: {_pokemon.move1} ({_pokemon.damage2} dps)";
 					view.IVLabl.Text = $"IV: {_pokemon.atk}atk {_pokemon.def}def {_pokemon.sta}sta";
+                    view.DetailsLabel.Text = $"CP: {_pokemon.cp} Level: {_pokemon.level}";
 					var iv = (_pokemon.atk + _pokemon.def + _pokemon.sta) / 45.0f;
 				}
+                view.HideButton.TouchUpInside += HideButton_TouchUpInside;
                 return view;
             }
             set
@@ -67,5 +72,14 @@ namespace OMAPGMap.iOS.Annotations
                 base.DetailCalloutAccessoryView = value;
             }
         }
+
+        void HideButton_TouchUpInside(object sender, EventArgs e)
+        {
+            ServiceLayer.SharedInstance.PokemonTrash.Add(_pokemon.pokemon_id);
+            var toRemove = new List<int>();
+            toRemove.Add(_pokemon.pokemon_id);
+            ParentVC.TrashAdded(toRemove);
+        }
+
     }
 }

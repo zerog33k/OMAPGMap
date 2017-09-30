@@ -79,6 +79,11 @@ namespace OMAPGMap.iOS
 				password = null;
 			}
 
+			if (settingsSelectButton != null) {
+				settingsSelectButton.Dispose ();
+				settingsSelectButton = null;
+			}
+
 			if (signInButton != null) {
 				signInButton.Dispose ();
 				signInButton = null;
@@ -87,11 +92,6 @@ namespace OMAPGMap.iOS
 			if (username != null) {
 				username.Dispose ();
 				username = null;
-			}
-
-			if (settingsSelectButton != null) {
-				settingsSelectButton.Dispose ();
-				settingsSelectButton = null;
 			}
 		}
 	}

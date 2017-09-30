@@ -9,7 +9,7 @@ namespace OMAPGMap.iOS
         public PokemonCalloutView (IntPtr handle) : base (handle)
         {
         }
-        public UILabel NameLabel { get { return nameLabel; } }
+        public UILabel DetailsLabel { get { return detailsLabel; } }
         public UILabel Move1Label { get { return move1Label; } }
         public UILabel Move2Label { get { return move2Label; } }
         public UILabel DistanceLabel { get { return distanceLabel; } }

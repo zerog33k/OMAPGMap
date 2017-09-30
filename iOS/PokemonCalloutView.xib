@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,47 +18,53 @@
                     <rect key="frame" x="0.0" y="0.0" width="210" height="163"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Sad-Ex-ojk">
-                            <rect key="frame" x="0.0" y="0.0" width="210" height="29.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="210" height="24"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2.7 miles away" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bta-gC-IEN">
-                                    <rect key="frame" x="0.0" y="0.0" width="105" height="29.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="105" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FAf-o9-0C2">
-                                    <rect key="frame" x="105" y="0.0" width="105" height="29.5"/>
+                                    <rect key="frame" x="105" y="0.0" width="105" height="24"/>
                                     <state key="normal" title="Directions"/>
                                 </button>
                             </subviews>
                         </stackView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move 1:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IWd-U9-sKZ">
-                            <rect key="frame" x="81" y="33.5" width="48.5" height="29.5"/>
+                            <rect key="frame" x="81" y="28" width="48.5" height="23.5"/>
                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move 2:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z6L-UR-RV6" userLabel="Move 2:">
-                            <rect key="frame" x="80" y="67" width="50.5" height="29"/>
+                            <rect key="frame" x="80" y="55.5" width="50.5" height="24"/>
                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="IV: 14 atk 15 def 11 sta" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WUZ-ZV-8Ld" userLabel="Move 2:">
-                            <rect key="frame" x="35.5" y="100" width="139" height="29.5"/>
+                            <rect key="frame" x="35.5" y="83.5" width="139.5" height="24"/>
+                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CP: 1234 Level 33" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3vB-Ix-72M" userLabel="Move 2:">
+                            <rect key="frame" x="47.5" y="111.5" width="115" height="23.5"/>
                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="cRc-9V-O6c">
-                            <rect key="frame" x="0.0" y="133.5" width="210" height="29.5"/>
+                            <rect key="frame" x="0.0" y="139" width="210" height="24"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="glW-su-mZl">
-                                    <rect key="frame" x="0.0" y="0.0" width="102.5" height="29.5"/>
-                                    <state key="normal" title="Hide"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="102.5" height="24"/>
+                                    <state key="normal" title="Trash"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JpR-Q2-mwg">
-                                    <rect key="frame" x="107.5" y="0.0" width="102.5" height="29.5"/>
+                                    <rect key="frame" x="107.5" y="0.0" width="102.5" height="24"/>
                                     <state key="normal" title="Notify"/>
                                 </button>
                             </subviews>
@@ -84,6 +89,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="IVLabel" destination="WUZ-ZV-8Ld" id="cA4-8s-vQq"/>
+                <outlet property="detailsLabel" destination="3vB-Ix-72M" id="6Il-oa-fKU"/>
                 <outlet property="directionsButton" destination="FAf-o9-0C2" id="YVb-mo-UJI"/>
                 <outlet property="distanceLabel" destination="bta-gC-IEN" id="A9y-Hm-qew"/>
                 <outlet property="hideButton" destination="glW-su-mZl" id="fvq-4L-eZX"/>

@@ -11,6 +11,7 @@ using ObjCRuntime;
 using CoreGraphics;
 using OMAPGMap.iOS.Annotations;
 using OMAPGMap;
+using System.Collections.Generic;
 
 namespace OMAPGMap.iOS
 {
@@ -92,7 +93,7 @@ namespace OMAPGMap.iOS
             {
                 map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.ToArray());
             } else{
-                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !p.trash).ToArray());
+                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
             }
             map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
             map.AddAnnotations(ServiceLayer.SharedInstance.Raids.Values.ToArray());
@@ -134,12 +135,13 @@ namespace OMAPGMap.iOS
                 pokeAV.Frame = new CGRect(0, 0, 40, 55);
                 pokeAV.UpdateTime(DateTime.Now);
                 pokeAV.Map = mapView;
+                pokeAV.ParentVC = this;
                 annotateView.CanShowCallout = true;
             }
             var gym = annotation as Gym;
             if(gym != null)
             {
-				annotateView = mapView.DequeueReusableAnnotation("Gym") ?? new MKAnnotationView(gym, "Gym");
+				annotateView = mapView.DequeueReusableAnnotation("Gym") ?? new GymAnnotationView(gym, "Gym");
 				annotateView.Image = UIImage.FromBundle($"gym{(int)gym.team}");
 				annotateView.Frame = new CGRect(0, 0, 40, 40);
                 var gymAV = annotateView as GymAnnotationView;
@@ -213,7 +215,7 @@ namespace OMAPGMap.iOS
                 if (ServiceLayer.SharedInstance.LayersEnabled[0])
                 {
                     var onMap = map.Annotations.OfType<Pokemon>();
-                    var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !p.trash).Except(onMap);
+                    var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                     map.AddAnnotations(toAdd.ToArray());
                 }
@@ -342,7 +344,7 @@ namespace OMAPGMap.iOS
                         map.RemoveAnnotations(pokesOnMap.ToArray());
                     } else
                     {
-						map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !p.trash).ToArray());
+						map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
                     }
                     break;
                 case 1:
@@ -369,11 +371,11 @@ namespace OMAPGMap.iOS
                 case 3:
                     if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
                     {
-                        var trashOnMap = map.Annotations.OfType<Pokemon>().Where(p => p.trash);
+                        var trashOnMap = map.Annotations.OfType<Pokemon>().Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id));
                         map.RemoveAnnotations(trashOnMap.ToArray());
                     } else 
                     {
-                        map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => p.trash).ToArray());
+                        map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
                     }
                     break;
             }
@@ -385,5 +387,40 @@ namespace OMAPGMap.iOS
         {
             return UIModalPresentationStyle.None;
         }
+
+        public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+        {
+            base.PrepareForSegue(segue, sender);
+            var nav = segue.DestinationViewController as UINavigationController;
+            var settings = nav.TopViewController as SettingsViewController;
+            if(settings != null)
+            {
+                settings.ParentVC = this;
+            }
+        }
+
+        public void TrashAdded(List<int> trash)
+        {
+            var toRemove = map.Annotations.OfType<Pokemon>().Where(p => trash.Contains(p.pokemon_id)).ToArray();
+            map.RemoveAnnotations(toRemove);
+            SaveTrashSettings();
+        }
+
+        public void TrashRemoved(List<int> notTrash)
+        {
+            var onMap = map.Annotations.OfType<Pokemon>().Where(p => notTrash.Contains(p.pokemon_id));
+            var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => notTrash.Contains(p.pokemon_id)).ToList();
+            var add = toAdd.Except(onMap).ToArray();
+            map.AddAnnotations(add);
+            SaveTrashSettings();
+        }
+
+        public void SaveTrashSettings()
+        {
+			var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
+			var tosave = NSArray.FromStrings(trashStrings);
+			NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trash"));
+        }
+
     }
 }

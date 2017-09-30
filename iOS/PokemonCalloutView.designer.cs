@@ -13,6 +13,9 @@ namespace OMAPGMap.iOS
 	partial class PokemonCalloutView
 	{
 		[Outlet]
+		UIKit.UILabel detailsLabel { get; set; }
+
+		[Outlet]
 		UIKit.UIButton directionsButton { get; set; }
 
 		[Outlet]
@@ -29,9 +32,6 @@ namespace OMAPGMap.iOS
 
 		[Outlet]
 		UIKit.UILabel move2Label { get; set; }
-
-		[Outlet]
-		UIKit.UILabel nameLabel { get; set; }
 
 		[Outlet]
 		UIKit.UIButton notifyButton { get; set; }
@@ -56,6 +56,11 @@ namespace OMAPGMap.iOS
 				hideButton = null;
 			}
 
+			if (IVLabel != null) {
+				IVLabel.Dispose ();
+				IVLabel = null;
+			}
+
 			if (move1Label != null) {
 				move1Label.Dispose ();
 				move1Label = null;
@@ -66,9 +71,9 @@ namespace OMAPGMap.iOS
 				move2Label = null;
 			}
 
-			if (nameLabel != null) {
-				nameLabel.Dispose ();
-				nameLabel = null;
+			if (detailsLabel != null) {
+				detailsLabel.Dispose ();
+				detailsLabel = null;
 			}
 
 			if (notifyButton != null) {
@@ -79,11 +84,6 @@ namespace OMAPGMap.iOS
 			if (stackView != null) {
 				stackView.Dispose ();
 				stackView = null;
-			}
-
-			if (IVLabel != null) {
-				IVLabel.Dispose ();
-				IVLabel = null;
 			}
 		}
 	}

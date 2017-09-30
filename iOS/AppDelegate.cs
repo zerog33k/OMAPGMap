@@ -5,6 +5,7 @@ using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace OMAPGMap.iOS
 {
@@ -39,11 +40,11 @@ namespace OMAPGMap.iOS
                 ServiceLayer.SharedInstance.LayersEnabled = layersBool.ToArray();
             }
 
-			var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
-			if (layers != null)
+            var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
+			if (trash != null)
 			{
-				var trashBool = trash.Select(l => bool.Parse(l));
-				ServiceLayer.SharedInstance.TrashEnabled = trashBool.ToArray();
+                var trashInt = trash.Select(l => int.Parse(l));
+                ServiceLayer.SharedInstance.PokemonTrash = new List<int>(trashInt);
 			}
 
 			MobileCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes));
