@@ -224,6 +224,15 @@ namespace OMAPGMap.iOS
                 {
                     map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
                     Console.WriteLine($"Adding {ServiceLayer.SharedInstance.Gyms.Count()} gyms to the map");
+                } else if(gymsOnMap.Count() > 0 && ServiceLayer.SharedInstance.LayersEnabled[1])
+                {
+                    var before = DateTime.UtcNow.AddMinutes(2.0);
+                    var toUpdate = gymsOnMap.Where(g => g.LastModifedDate > before);
+                    foreach(var g in toUpdate)
+                    {
+                        var ga = map.ViewForAnnotation(g) as GymAnnotationView;
+                        ga.Gym = g;
+                    }
                 }
 
 				if (ServiceLayer.SharedInstance.LayersEnabled[2])

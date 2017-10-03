@@ -11,7 +11,15 @@ namespace OMAPGMap.iOS.Annotations
     {
         private Gym _gym;
 
-        public Gym Gym { get => _gym; set => _gym = value; }
+        public Gym Gym
+        {
+            get => _gym;
+            set
+            {
+                _gym = value;
+                Image = UIImage.FromBundle($"gym{(int)_gym.team}");
+            }
+        }
 
         public MKMapView Map { get; set; }
 
@@ -48,11 +56,7 @@ namespace OMAPGMap.iOS.Annotations
 					distLabel.Text = $"{distMiles.ToString("F1")} miles away";
 					stack.AddArrangedSubview(distLabel);
 				}
-                return base.DetailCalloutAccessoryView;
-            }
-            set
-            {
-                base.DetailCalloutAccessoryView = value;
+                return stack;
             }
         }
     }

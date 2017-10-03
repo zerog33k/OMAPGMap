@@ -44,8 +44,6 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To find the Pokemon near you!</string>
-	<key>CFBundleVersion</key>
-	<string>2</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -71,5 +69,7 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>CFBundleVersion</key>
+	<string>12</string>
 </dict>
 </plist>

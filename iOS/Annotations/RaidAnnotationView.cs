@@ -45,12 +45,12 @@ namespace OMAPGMap.iOS.Annotations
 
         public override void UpdateTime(DateTime now)
         {
-            if (_raid.pokemon_id == 0 && CountdownDate != _raid.TimeBattle)
+            if (_raid.pokemon_id == 0 && now < _raid.TimeBattle)
 			{
 				img.Image = UIImage.FromBundle($"egg{_raid.level}");
 				CountdownDate = _raid.TimeBattle;
 			}
-            else if(_raid.pokemon_id != 0 && CountdownDate != _raid.TimeEnd )
+            else if(_raid.pokemon_id != 0 && now < _raid.TimeEnd )
 			{
 				img.Image = UIImage.FromBundle($"raid{_raid.pokemon_id}");
 				CountdownDate = _raid.TimeEnd;
