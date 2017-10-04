@@ -375,11 +375,8 @@
     <ImageAsset Include="Assets.xcassets\201.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\201.imageset\unown.png" />
     <ImageAsset Include="Assets.xcassets\gym1.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\gym1.imageset\Unknown.png" />
     <ImageAsset Include="Assets.xcassets\gym2.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\gym3.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\gym2.imageset\Unknown-3.png" />
-    <ImageAsset Include="Assets.xcassets\gym3.imageset\Unknown-4.png" />
     <ImageAsset Include="Assets.xcassets\layers.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\layers.imageset\Maps-Layers-icon.png" />
     <ImageAsset Include="Assets.xcassets\egg1.imageset\Contents.json" />
@@ -966,6 +963,9 @@
     <ImageAsset Include="Assets.xcassets\Raids.xcassets\raid94.imageset\raid94.png" />
     <ImageAsset Include="Assets.xcassets\gear.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\gear.imageset\31188-200.png" />
+    <ImageAsset Include="Assets.xcassets\gym1.imageset\Unknown.png" />
+    <ImageAsset Include="Assets.xcassets\gym3.imageset\Unknown-4.png" />
+    <ImageAsset Include="Assets.xcassets\gym2.imageset\Unknown-3.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
