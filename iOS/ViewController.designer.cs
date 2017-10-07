@@ -13,6 +13,9 @@ namespace OMAPGMap.iOS
 	partial class ViewController
 	{
 		[Outlet]
+		UIKit.UIActivityIndicatorView activity { get; set; }
+
+		[Outlet]
 		UIKit.UIVisualEffectView effectOverlay { get; set; }
 
 		[Outlet]
@@ -92,6 +95,11 @@ namespace OMAPGMap.iOS
 			if (username != null) {
 				username.Dispose ();
 				username = null;
+			}
+
+			if (activity != null) {
+				activity.Dispose ();
+				activity = null;
 			}
 		}
 	}

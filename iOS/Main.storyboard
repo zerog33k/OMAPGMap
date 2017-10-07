@@ -42,6 +42,20 @@
                                     <segue destination="zzC-0v-LjW" kind="show" id="cNV-fa-Zg6"/>
                                 </connections>
                             </button>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NYZ-uP-wCv">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="AiI-VI-QeX">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="pTG-r3-rP6"/>
+                                </constraints>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="mUF-vT-9Nq">
+                                <rect key="frame" x="13" y="108" width="20" height="20"/>
+                            </activityIndicatorView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fox-bb-4Os">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="urK-sf-oA1">
@@ -96,17 +110,6 @@
                                 </view>
                                 <blurEffect style="light"/>
                             </visualEffectView>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NYZ-uP-wCv">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="AiI-VI-QeX">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                </view>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="pTG-r3-rP6"/>
-                                </constraints>
-                                <blurEffect style="light"/>
-                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -114,9 +117,11 @@
                             <constraint firstItem="fox-bb-4Os" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="1Vh-BQ-Wj3"/>
                             <constraint firstAttribute="trailing" secondItem="fox-bb-4Os" secondAttribute="trailing" id="81X-oi-MPO"/>
                             <constraint firstItem="9Qa-YB-rI6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="HZH-Tf-aUd"/>
+                            <constraint firstItem="mUF-vT-9Nq" firstAttribute="top" secondItem="0dg-JE-eOe" secondAttribute="bottom" constant="8" id="Hbo-d2-ezA"/>
                             <constraint firstItem="NYZ-uP-wCv" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="O3w-rE-wzM"/>
                             <constraint firstItem="NYZ-uP-wCv" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="R8H-U4-Rpe"/>
                             <constraint firstAttribute="trailing" secondItem="NYZ-uP-wCv" secondAttribute="trailing" id="UxA-7E-y75"/>
+                            <constraint firstItem="mUF-vT-9Nq" firstAttribute="centerX" secondItem="0dg-JE-eOe" secondAttribute="centerX" id="YVN-5o-iF0"/>
                             <constraint firstAttribute="trailing" secondItem="9Qa-YB-rI6" secondAttribute="trailing" id="Zdg-68-JN3"/>
                             <constraint firstItem="fox-bb-4Os" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Zqq-90-XFu"/>
                             <constraint firstItem="0dg-JE-eOe" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="50" id="bwX-rk-4TX"/>
@@ -128,6 +133,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activity" destination="mUF-vT-9Nq" id="aJR-Fl-Iuv"/>
                         <outlet property="effectOverlay" destination="fox-bb-4Os" id="W2y-Cx-dB3"/>
                         <outlet property="layerSelectButton" destination="HmQ-Wb-Vno" id="uKV-Tz-aSG"/>
                         <outlet property="loader" destination="m3I-Re-7xn" id="Svd-1A-dEu"/>
@@ -200,6 +206,24 @@
                                         <constraint firstItem="V5T-Rv-2Op" firstAttribute="centerY" secondItem="eep-zw-wGj" secondAttribute="centerY" id="W3b-LA-eJW"/>
                                         <constraint firstItem="Nha-89-ZNi" firstAttribute="centerY" secondItem="eep-zw-wGj" secondAttribute="centerY" id="Xp1-8J-7CV"/>
                                         <constraint firstItem="bvP-VO-DDk" firstAttribute="centerY" secondItem="eep-zw-wGj" secondAttribute="centerY" id="mEX-Wn-Kn1"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ResetTrashCell" id="HDV-QW-Pq0">
+                                <rect key="frame" x="0.0" y="78" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HDV-QW-Pq0" id="Hx1-dR-TV8">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ij6-WZ-HSx">
+                                            <rect key="frame" x="136" y="6" width="102" height="30"/>
+                                            <state key="normal" title="Reset All Trash"/>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Ij6-WZ-HSx" firstAttribute="centerY" secondItem="Hx1-dR-TV8" secondAttribute="centerY" id="UWE-XV-VbB"/>
+                                        <constraint firstItem="Ij6-WZ-HSx" firstAttribute="centerX" secondItem="Hx1-dR-TV8" secondAttribute="centerX" id="gxS-1s-dPu"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>

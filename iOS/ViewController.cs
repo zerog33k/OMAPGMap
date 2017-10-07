@@ -171,9 +171,9 @@ namespace OMAPGMap.iOS
                 try
                 {
                     var now = DateTime.UtcNow;
-                    var pokes = map.Annotations.OfType<Pokemon>().Where(p => p.ExpiresDate < now);
+                    var pokes = ServiceLayer.SharedInstance.Pokemon.Where(p => p.ExpiresDate < now);
                     map.RemoveAnnotations(pokes.ToArray());
-                    var raids = map.Annotations.OfType<Raid>().Where(p => p.TimeEnd < now);
+                    var raids = ServiceLayer.SharedInstance.Raids.Values.Where(p => p.TimeEnd < now);
 					map.RemoveAnnotations(raids.ToArray());
                     Console.WriteLine($"Removed {pokes.Count()} pokemon and {raids.Count()} raids");
                     var annotations = map.GetAnnotations(map.VisibleMapRect);
@@ -204,6 +204,7 @@ namespace OMAPGMap.iOS
             
             InvokeOnMainThread(async () => 
             {
+                activity.StartAnimating();
 				try
 				{
 					await ServiceLayer.SharedInstance.LoadData();
@@ -228,13 +229,12 @@ namespace OMAPGMap.iOS
                 {
                     var before = DateTime.UtcNow.AddMinutes(2.0);
                     var toUpdate = gymsOnMap.Where(g => g.LastModifedDate > before);
-                    foreach(var g in toUpdate)
+                    foreach(var g in toUpdate) // update those that are on the map
                     {
                         var ga = map.ViewForAnnotation(g) as GymAnnotationView;
                         ga.Gym = g;
                     }
                 }
-
 				if (ServiceLayer.SharedInstance.LayersEnabled[2])
 				{
                     var raidsOnMap = map.Annotations.OfType<Raid>();
@@ -250,6 +250,7 @@ namespace OMAPGMap.iOS
                     }
 					Console.WriteLine($"Adding {toAdd.Count()} raids to the map");
 				}
+                activity.StopAnimating();
             });
         }
 
@@ -401,6 +402,10 @@ namespace OMAPGMap.iOS
         {
             base.PrepareForSegue(segue, sender);
             var nav = segue.DestinationViewController as UINavigationController;
+            if(UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+            {
+                nav.ModalPresentationStyle = UIModalPresentationStyle.FormSheet;
+            }
             var settings = nav.TopViewController as SettingsViewController;
             if(settings != null)
             {

@@ -375,8 +375,6 @@
     <ImageAsset Include="Assets.xcassets\201.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\201.imageset\unown.png" />
     <ImageAsset Include="Assets.xcassets\gym1.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\gym2.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\gym3.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\layers.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\layers.imageset\Maps-Layers-icon.png" />
     <ImageAsset Include="Assets.xcassets\egg1.imageset\Contents.json" />
@@ -964,16 +962,16 @@
     <ImageAsset Include="Assets.xcassets\gear.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\gear.imageset\31188-200.png" />
     <ImageAsset Include="Assets.xcassets\gym1.imageset\Unknown.png" />
-    <ImageAsset Include="Assets.xcassets\gym3.imageset\Unknown-4.png" />
-    <ImageAsset Include="Assets.xcassets\gym2.imageset\Unknown-3.png" />
+    <ImageAsset Include="Assets.xcassets\gym4.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\gym4.imageset\Unknown-3.png" />
+    <ImageAsset Include="Assets.xcassets\gym2.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\gym2.imageset\Unknown-4.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Assets.xcassets\201.imageset\" />
     <Folder Include="Annotations\" />
     <Folder Include="Assets.xcassets\gym1.imageset\" />
-    <Folder Include="Assets.xcassets\gym2.imageset\" />
-    <Folder Include="Assets.xcassets\gym3.imageset\" />
     <Folder Include="Assets.xcassets\layers.imageset\" />
     <Folder Include="Assets.xcassets\egg1.imageset\" />
     <Folder Include="Assets.xcassets\egg2.imageset\" />
@@ -984,6 +982,8 @@
     <Folder Include="Assets.xcassets\gym0.imageset\" />
     <Folder Include="Assets.xcassets\Raids.imageset\" />
     <Folder Include="Assets.xcassets\gear.imageset\" />
+    <Folder Include="Assets.xcassets\gym4.imageset\" />
+    <Folder Include="Assets.xcassets\gym2.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />

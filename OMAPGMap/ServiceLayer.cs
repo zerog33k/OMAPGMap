@@ -86,16 +86,21 @@ namespace OMAPGMap
         {
             var authData = string.Format("{0}:{1}", Username, Password);
 			var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
-
+            CleanUpExpired();
 			var client = new HttpClient(new NSUrlSessionHandler());
 			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-            var response = await client.GetAsync($"{pokemonURL}?last_id={lastId}");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
-                CleanUpExpired();
-                Pokemon.AddRange(pokes);
+                var response = await client.GetAsync($"{pokemonURL}?last_id={lastId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
+                    Pokemon.AddRange(pokes);
+                }
+            } catch(Exception e)
+            {
+                
             }
         }
 
@@ -129,6 +134,7 @@ namespace OMAPGMap
 			var authData = string.Format("{0}:{1}", Username, Password);
 			var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
 
+			CleanUpExpiredRaids();
 			var client = new HttpClient(new NSUrlSessionHandler());
 			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
             var response = await client.GetAsync(raidsURL);
@@ -136,7 +142,7 @@ namespace OMAPGMap
 			{
 				var content = await response.Content.ReadAsStringAsync();
                 var raids = JsonConvert.DeserializeObject<List<Raid>>(content);
-                CleanUpExpiredRaids();
+
 
                 foreach (var r in raids)
 				{

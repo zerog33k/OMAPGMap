@@ -40,40 +40,77 @@ namespace OMAPGMap.iOS
             TableView.AllowsSelection = false;
         }
 
+        public override nint NumberOfSections(UITableView tableView)
+        {
+            return 2;
+        }
+
+        public override string TitleForHeader(UITableView tableView, nint section)
+        {
+            return section == 0 ? "Settings" : "Pokemon Settings";
+        }
+
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            var cell = tableView.DequeueReusableCell("FilterCell", indexPath);
-            var img = cell.ViewWithTag(1) as UIImageView;
-            var notifyLbl = cell.ViewWithTag(2) as UILabel;
-            var notifySwitch = cell.ViewWithTag(3) as UISwitch;
-            var trashLbl = cell.ViewWithTag(4) as UILabel;
-            var trashSwitch = cell.ViewWithTag(5) as UISwitch;
-
-            img.Image = UIImage.FromBundle(indexPath.Row.ToString("D3"));
-            if (!ServiceLayer.SharedInstance.PokemonHidden.Contains(indexPath.Row))
+            if (indexPath.Section == 0)
             {
-                img.Alpha = 1.0f;
-                notifyLbl.TextColor = UIColor.Black;
-				trashSwitch.Enabled = true;
-                trashSwitch.On = ServiceLayer.SharedInstance.PokemonTrash.Contains(indexPath.Row);
-				notifySwitch.Enabled = false;
-				notifySwitch.On = false;
-            } else {
-                img.Alpha = 0.7f;
-                notifyLbl.TextColor = UIColor.LightGray;
-                trashLbl.TextColor = UIColor.LightGray;
-                trashSwitch.Enabled = false;
-                trashSwitch.On = false;
-                notifySwitch.Enabled = false;
-                notifySwitch.On = false;
+                var cell = tableView.DequeueReusableCell("ResetTrashCell", indexPath);
+                var button = cell.ViewWithTag(1) as UIButton;
+                button.TouchUpInside += (sender, e) => 
+                {
+                    for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
+                    {
+                        if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && ServiceLayer.DefaultTrash.Contains(i))
+                        {
+                            TrashAdded.Add(i);
+                        } else if(ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !ServiceLayer.DefaultTrash.Contains(i))
+                        {
+                            TrashRemoved.Add(i);
+                        }
+                    }
+                    ServiceLayer.SharedInstance.PokemonTrash.Clear();
+                    ServiceLayer.SharedInstance.PokemonTrash.AddRange(ServiceLayer.DefaultTrash);
+                    tableView.ReloadData();
+                };
+                return cell;
             }
+            else
+            {
+                var cell = tableView.DequeueReusableCell("FilterCell", indexPath);
+                var img = cell.ViewWithTag(1) as UIImageView;
+                var notifyLbl = cell.ViewWithTag(2) as UILabel;
+                var notifySwitch = cell.ViewWithTag(3) as UISwitch;
+                var trashLbl = cell.ViewWithTag(4) as UILabel;
+                var trashSwitch = cell.ViewWithTag(5) as UISwitch;
 
-            return cell;
+                img.Image = UIImage.FromBundle(indexPath.Row.ToString("D3"));
+                if (!ServiceLayer.SharedInstance.PokemonHidden.Contains(indexPath.Row))
+                {
+                    img.Alpha = 1.0f;
+                    notifyLbl.TextColor = UIColor.Black;
+                    trashLbl.TextColor = UIColor.Black;
+                    trashSwitch.Enabled = true;
+                    trashSwitch.On = ServiceLayer.SharedInstance.PokemonTrash.Contains(indexPath.Row);
+                    notifySwitch.Enabled = false;
+                    notifySwitch.On = false;
+                }
+                else
+                {
+                    img.Alpha = 0.7f;
+                    notifyLbl.TextColor = UIColor.LightGray;
+                    trashLbl.TextColor = UIColor.LightGray;
+                    trashSwitch.Enabled = false;
+                    trashSwitch.On = false;
+                    notifySwitch.Enabled = false;
+                    notifySwitch.On = false;
+                }
+                return cell;
+            }
         }
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return ServiceLayer.NumberPokemon;
+            return section == 0 ? 1 : ServiceLayer.NumberPokemon;
         }
 
         partial void TrashToggled(NSObject sender)
