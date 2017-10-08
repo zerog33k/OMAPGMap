@@ -122,7 +122,7 @@ namespace OMAPGMap.iOS
             if (cell != null)
             {
                 var path = TableView.IndexPathForCell(cell);
-                var pokemonid = path.Row - 1;
+                var pokemonid = path.Row + 1;
                 if(trashSwitch.On)
                 {
                     TrashAdded.Add(pokemonid);
