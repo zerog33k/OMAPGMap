@@ -83,15 +83,15 @@ namespace OMAPGMap.iOS
                 var notifySwitch = cell.ViewWithTag(3) as UISwitch;
                 var trashLbl = cell.ViewWithTag(4) as UILabel;
                 var trashSwitch = cell.ViewWithTag(5) as UISwitch;
-
-                img.Image = UIImage.FromBundle(indexPath.Row.ToString("D3"));
-                if (!ServiceLayer.SharedInstance.PokemonHidden.Contains(indexPath.Row))
+                var pokemonid = indexPath.Row + 1;
+                img.Image = UIImage.FromBundle(pokemonid.ToString("D3"));
+                if (!ServiceLayer.SharedInstance.PokemonHidden.Contains(pokemonid))
                 {
                     img.Alpha = 1.0f;
                     notifyLbl.TextColor = UIColor.Black;
                     trashLbl.TextColor = UIColor.Black;
                     trashSwitch.Enabled = true;
-                    trashSwitch.On = ServiceLayer.SharedInstance.PokemonTrash.Contains(indexPath.Row);
+                    trashSwitch.On = ServiceLayer.SharedInstance.PokemonTrash.Contains(pokemonid);
                     notifySwitch.Enabled = false;
                     notifySwitch.On = false;
                 }
@@ -122,16 +122,17 @@ namespace OMAPGMap.iOS
             if (cell != null)
             {
                 var path = TableView.IndexPathForCell(cell);
+                var pokemonid = path.Row - 1;
                 if(trashSwitch.On)
                 {
-                    TrashAdded.Add(path.Row);
-                    TrashRemoved.Remove(path.Row);
-                    ServiceLayer.SharedInstance.PokemonTrash.Add(path.Row);
+                    TrashAdded.Add(pokemonid);
+                    TrashRemoved.Remove(pokemonid);
+                    ServiceLayer.SharedInstance.PokemonTrash.Add(pokemonid);
                 } else 
                 {
-                    TrashRemoved.Add(path.Row);
-                    TrashAdded.Remove(path.Row);
-                    ServiceLayer.SharedInstance.PokemonTrash.Remove(path.Row);
+                    TrashRemoved.Add(pokemonid);
+                    TrashAdded.Remove(pokemonid);
+                    ServiceLayer.SharedInstance.PokemonTrash.Remove(pokemonid);
                 }
             }
         }
