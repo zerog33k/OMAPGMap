@@ -61,10 +61,10 @@ namespace OMAPGMap.iOS
 				switch (indexPath.Row)
 				{
                     case 0:
-                        label.Text = "Trash EVERYTHING";
+                        label.Text = "Hide Everything";
                         break;
                     case 1:
-                        label.Text = "Reset Trash";
+                        label.Text = "Reset Default Trash";
                         break;
                     case 2:
                         label.Text = "Save Current Trash";
