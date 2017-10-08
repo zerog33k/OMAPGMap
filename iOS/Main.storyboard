@@ -216,14 +216,16 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ij6-WZ-HSx">
-                                            <rect key="frame" x="136" y="6" width="102" height="30"/>
-                                            <state key="normal" title="Reset All Trash"/>
-                                        </button>
+                                        <label opaque="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbx-DQ-LUP">
+                                            <rect key="frame" x="165.5" y="11" width="43" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                            <color key="textColor" red="0.08235294118" green="0.64313725489999995" blue="0.79215686269999996" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="Ij6-WZ-HSx" firstAttribute="centerY" secondItem="Hx1-dR-TV8" secondAttribute="centerY" id="UWE-XV-VbB"/>
-                                        <constraint firstItem="Ij6-WZ-HSx" firstAttribute="centerX" secondItem="Hx1-dR-TV8" secondAttribute="centerX" id="gxS-1s-dPu"/>
+                                        <constraint firstItem="cbx-DQ-LUP" firstAttribute="centerX" secondItem="Hx1-dR-TV8" secondAttribute="centerX" id="SfQ-CK-o26"/>
+                                        <constraint firstItem="cbx-DQ-LUP" firstAttribute="centerY" secondItem="Hx1-dR-TV8" secondAttribute="centerY" id="bcz-wW-XBt"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>

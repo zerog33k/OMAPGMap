@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreGraphics;
 using Foundation;
 using OMAPGMap.Models;
 using UIKit;
@@ -37,7 +38,7 @@ namespace OMAPGMap.iOS
                 }
                 DismissViewController(true, null);
              });
-            TableView.AllowsSelection = false;
+            //TableView.AllowsSelection = false;
         }
 
         public override nint NumberOfSections(UITableView tableView)
@@ -52,26 +53,26 @@ namespace OMAPGMap.iOS
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
+            
             if (indexPath.Section == 0)
             {
                 var cell = tableView.DequeueReusableCell("ResetTrashCell", indexPath);
-                var button = cell.ViewWithTag(1) as UIButton;
-                button.TouchUpInside += (sender, e) => 
-                {
-                    for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
-                    {
-                        if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && ServiceLayer.DefaultTrash.Contains(i))
-                        {
-                            TrashAdded.Add(i);
-                        } else if(ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !ServiceLayer.DefaultTrash.Contains(i))
-                        {
-                            TrashRemoved.Add(i);
-                        }
-                    }
-                    ServiceLayer.SharedInstance.PokemonTrash.Clear();
-                    ServiceLayer.SharedInstance.PokemonTrash.AddRange(ServiceLayer.DefaultTrash);
-                    tableView.ReloadData();
-                };
+                var label = cell.ViewWithTag(1) as UILabel;
+				switch (indexPath.Row)
+				{
+                    case 0:
+                        label.Text = "Trash EVERYTHING";
+                        break;
+                    case 1:
+                        label.Text = "Reset Trash";
+                        break;
+                    case 2:
+                        label.Text = "Save Current Trash";
+                        break;
+                    case 3:
+                        label.Text = "Recall Saved Trash";
+                        break;
+				}
                 return cell;
             }
             else
@@ -104,13 +105,14 @@ namespace OMAPGMap.iOS
                     notifySwitch.Enabled = false;
                     notifySwitch.On = false;
                 }
+                cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 return cell;
             }
         }
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return section == 0 ? 1 : ServiceLayer.NumberPokemon;
+            return section == 0 ? 4 : ServiceLayer.NumberPokemon;
         }
 
         partial void TrashToggled(NSObject sender)
@@ -132,6 +134,73 @@ namespace OMAPGMap.iOS
                     ServiceLayer.SharedInstance.PokemonTrash.Remove(path.Row);
                 }
             }
+        }
+
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            switch(indexPath.Row)
+            {
+                case 0:
+					for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
+					{
+                        TrashRemoved.Clear();
+                        if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !TrashAdded.Contains(i))
+						{
+							TrashAdded.Add(i);
+                            ServiceLayer.SharedInstance.PokemonTrash.Add(i);
+						}
+					}
+					
+                    TableView.ReloadData();
+                    break;
+                case 1:
+                    for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
+					{
+						if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && ServiceLayer.DefaultTrash.Contains(i))
+						{
+							TrashAdded.Add(i);
+                            TrashRemoved.Remove(i);
+						}
+						else if (ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !ServiceLayer.DefaultTrash.Contains(i))
+						{
+							TrashRemoved.Add(i);
+                            TrashAdded.Remove(i);
+						}
+					}
+					ServiceLayer.SharedInstance.PokemonTrash.Clear();
+					ServiceLayer.SharedInstance.PokemonTrash.AddRange(ServiceLayer.DefaultTrash);
+					TableView.ReloadData();
+                    break;
+                case 2:
+					var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
+					var tosave = NSArray.FromStrings(trashStrings);
+					NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trashSaved"));
+                    break;
+                case 3:
+					var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trashSaved");
+					if (trash != null)
+					{
+						var trashInt = trash.Select(l => int.Parse(l));
+                        for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
+                        {
+                            if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && trashInt.Contains(i))
+							{
+								TrashAdded.Add(i);
+                                TrashRemoved.Remove(i);
+							}
+							else if (ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !trashInt.Contains(i))
+							{
+								TrashRemoved.Add(i);
+                                TrashAdded.Remove(i);
+							}
+                        }
+						ServiceLayer.SharedInstance.PokemonTrash.Clear();
+                        ServiceLayer.SharedInstance.PokemonTrash.AddRange(trashInt);
+						TableView.ReloadData();
+					}
+                    break;
+            }
+            tableView.DeselectRow(indexPath, true);
         }
 	}
 }
