@@ -105,6 +105,11 @@ namespace OMAPGMap.iOS
         {
             // Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
         }
+
+        public void OpenMapAppAtLocation(double lat, double lon)
+        {
+            UIApplication.SharedApplication.OpenUrl(new NSUrl($"https://www.google.com/maps/dir/@{lat.ToString("F5")},{lon.ToString("F5")},6z"));
+        }
     }
 }
 

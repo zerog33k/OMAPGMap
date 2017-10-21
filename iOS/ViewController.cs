@@ -173,7 +173,7 @@ namespace OMAPGMap.iOS
                     var now = DateTime.UtcNow;
                     var pokes = ServiceLayer.SharedInstance.Pokemon.Where(p => p.ExpiresDate < now);
                     map.RemoveAnnotations(pokes.ToArray());
-                    var raids = ServiceLayer.SharedInstance.Raids.Values.Where(p => p.TimeEnd < now);
+                    var raids = ServiceLayer.SharedInstance.Raids.Values.Where(p => p.TimeEnd < now || (p.TimeBattle < now && p.pokemon_id == 0));
 					map.RemoveAnnotations(raids.ToArray());
                     Console.WriteLine($"Removed {pokes.Count()} pokemon and {raids.Count()} raids");
                     var annotations = map.GetAnnotations(map.VisibleMapRect);

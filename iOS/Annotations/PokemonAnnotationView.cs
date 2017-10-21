@@ -65,6 +65,7 @@ namespace OMAPGMap.iOS.Annotations
 					var iv = (_pokemon.atk + _pokemon.def + _pokemon.sta) / 45.0f;
 				}
                 view.HideButton.TouchUpInside += HideButton_TouchUpInside;
+                view.DirectionsButton.TouchUpInside += DirectionsButton_TouchUpInside;; 
                 return view;
             }
             set
@@ -81,5 +82,10 @@ namespace OMAPGMap.iOS.Annotations
             ParentVC.TrashAdded(toRemove);
         }
 
+        void DirectionsButton_TouchUpInside(object sender, EventArgs e)
+        {
+            var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+            app.OpenMapAppAtLocation(_pokemon.lat, _pokemon.lon);
+        }
     }
 }
