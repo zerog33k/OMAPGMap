@@ -168,7 +168,7 @@ namespace OMAPGMap
         public void CleanUpExpiredRaids()
         {
             var now = DateTime.UtcNow;
-            var toRemove = Raids.Values.Where(r => r.TimeEnd < now);
+            var toRemove = Raids.Values.Where(r => (r.TimeEnd < now) || (r.pokemon_id == 0 && r.TimeBattle < now));
             foreach (var r in toRemove)
             {
                 Raids.Remove(r.id);
