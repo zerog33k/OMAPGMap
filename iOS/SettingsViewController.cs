@@ -143,7 +143,7 @@ namespace OMAPGMap.iOS
             switch(indexPath.Row)
             {
                 case 0: //hide everythings
-                    for (var i = 0; i <= ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
+                    for (var i = 0; i < ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
 					{
                         var i2 = ConvertRowToID(i);
                         TrashRemoved.Clear();
@@ -157,7 +157,7 @@ namespace OMAPGMap.iOS
                     TableView.ReloadData();
                     break;
                 case 1: //reset trash
-                    for (var i = 0; i <= ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
+                    for (var i = 0; i < ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
 					{
                         var i2 = ConvertRowToID(i);
 						if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && ServiceLayer.DefaultTrash.Contains(i2))
