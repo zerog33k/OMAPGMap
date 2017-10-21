@@ -17,15 +17,23 @@ namespace OMAPGMap.Models
                     _id = int.Parse(id.Split('-')[1]);
                 }
                 return _id;
-            } 
+            }
+            set {
+                _id = value;
+            }
         }
         public double lat { get; set; }
         public double lon { get; set; }
         public int pokemon_id { get; set; }
         public bool trash { get; set; }
         public long expires_at {
-            set => _expires = Utility.FromUnixTime(value);
+            set {
+                _expires = Utility.FromUnixTime(value);
+                _expiresValue = value;
+            }
+            get { return _expiresValue; }
         }
+        private long _expiresValue;
         private DateTime _expires;
         public DateTime ExpiresDate {get { return _expires; } }
         public PokeGender gender { get; set; }

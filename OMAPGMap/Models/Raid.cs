@@ -1,4 +1,6 @@
 ﻿using System;
+using OMAPGMap;
+
 namespace OMAPGMap.Models
 {
     public partial class Raid

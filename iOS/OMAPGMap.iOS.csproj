@@ -966,6 +966,16 @@
     <ImageAsset Include="Assets.xcassets\gym2.imageset\Unknown-4.png" />
     <ImageAsset Include="Assets.xcassets\gym3.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\gym3.imageset\Unknown-3.png" />
+    <ImageAsset Include="Assets.xcassets\302.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\302.imageset\302Sableye.png" />
+    <ImageAsset Include="Assets.xcassets\353.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\353.imageset\353Shuppet.png" />
+    <ImageAsset Include="Assets.xcassets\354.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\354.imageset\354Banette.png" />
+    <ImageAsset Include="Assets.xcassets\355.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\355.imageset\355Duskull.png" />
+    <ImageAsset Include="Assets.xcassets\356.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\356.imageset\356Dusclops.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -984,6 +994,11 @@
     <Folder Include="Assets.xcassets\gear.imageset\" />
     <Folder Include="Assets.xcassets\gym2.imageset\" />
     <Folder Include="Assets.xcassets\gym3.imageset\" />
+    <Folder Include="Assets.xcassets\302.imageset\" />
+    <Folder Include="Assets.xcassets\353.imageset\" />
+    <Folder Include="Assets.xcassets\354.imageset\" />
+    <Folder Include="Assets.xcassets\355.imageset\" />
+    <Folder Include="Assets.xcassets\356.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />

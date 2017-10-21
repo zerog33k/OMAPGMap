@@ -41,10 +41,33 @@ namespace OMAPGMap.iOS
             }
 
             var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
+            var gen3Added = NSUserDefaults.StandardUserDefaults.BoolForKey("gen3Added");
 			if (trash != null)
 			{
                 var trashInt = trash.Select(l => int.Parse(l));
                 ServiceLayer.SharedInstance.PokemonTrash = new List<int>(trashInt);
+                if(!gen3Added)
+                {
+                    if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(353))
+                    {
+                        ServiceLayer.SharedInstance.PokemonTrash.Add(353);
+                    }
+                    if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(355))
+                    {
+                        ServiceLayer.SharedInstance.PokemonTrash.Add(355);
+                    }
+                    if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(302))
+                    {
+                        ServiceLayer.SharedInstance.PokemonTrash.Add(302);
+                    }
+                    NSUserDefaults.StandardUserDefaults.SetBool(true, "gen3Added");
+                    var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
+                    var tosave = NSArray.FromStrings(trashStrings);
+                    NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trash"));
+                } else 
+                {
+                    NSUserDefaults.StandardUserDefaults.SetBool(true, "gen3Added");
+                }
 			}
 
 			MobileCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes));

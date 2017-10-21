@@ -83,7 +83,8 @@ namespace OMAPGMap.iOS
                 var notifySwitch = cell.ViewWithTag(3) as UISwitch;
                 var trashLbl = cell.ViewWithTag(4) as UILabel;
                 var trashSwitch = cell.ViewWithTag(5) as UISwitch;
-                var pokemonid = indexPath.Row + 1;
+                var pokemonid = ConvertRowToID(indexPath.Row);
+
                 img.Image = UIImage.FromBundle(pokemonid.ToString("D3"));
                 if (!ServiceLayer.SharedInstance.PokemonHidden.Contains(pokemonid))
                 {
@@ -112,7 +113,7 @@ namespace OMAPGMap.iOS
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return section == 0 ? 4 : ServiceLayer.NumberPokemon;
+            return section == 0 ? 4 : ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count();
         }
 
         partial void TrashToggled(NSObject sender)
@@ -122,7 +123,7 @@ namespace OMAPGMap.iOS
             if (cell != null)
             {
                 var path = TableView.IndexPathForCell(cell);
-                var pokemonid = path.Row + 1;
+                var pokemonid = ConvertRowToID(path.Row);
                 if(trashSwitch.On)
                 {
                     TrashAdded.Add(pokemonid);
@@ -141,48 +142,50 @@ namespace OMAPGMap.iOS
         {
             switch(indexPath.Row)
             {
-                case 0:
-					for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
+                case 0: //hide everythings
+                    for (var i = 0; i <= ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
 					{
+                        var i2 = ConvertRowToID(i);
                         TrashRemoved.Clear();
-                        if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !TrashAdded.Contains(i))
+                        if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && !TrashAdded.Contains(i2))
 						{
-							TrashAdded.Add(i);
-                            ServiceLayer.SharedInstance.PokemonTrash.Add(i);
+							TrashAdded.Add(i2);
+                            ServiceLayer.SharedInstance.PokemonTrash.Add(i2);
 						}
 					}
 					
                     TableView.ReloadData();
                     break;
-                case 1:
-                    for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
+                case 1: //reset trash
+                    for (var i = 0; i <= ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
 					{
-						if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && ServiceLayer.DefaultTrash.Contains(i))
+                        var i2 = ConvertRowToID(i);
+						if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && ServiceLayer.DefaultTrash.Contains(i2))
 						{
-							TrashAdded.Add(i);
-                            TrashRemoved.Remove(i);
+							TrashAdded.Add(i2);
+                            TrashRemoved.Remove(i2);
 						}
-						else if (ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !ServiceLayer.DefaultTrash.Contains(i))
+						else if (ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && !ServiceLayer.DefaultTrash.Contains(i2))
 						{
-							TrashRemoved.Add(i);
-                            TrashAdded.Remove(i);
+							TrashRemoved.Add(i2);
+                            TrashAdded.Remove(i2);
 						}
 					}
 					ServiceLayer.SharedInstance.PokemonTrash.Clear();
 					ServiceLayer.SharedInstance.PokemonTrash.AddRange(ServiceLayer.DefaultTrash);
 					TableView.ReloadData();
                     break;
-                case 2:
+                case 2: //save current trash
 					var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
 					var tosave = NSArray.FromStrings(trashStrings);
 					NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trashSaved"));
                     break;
-                case 3:
+                case 3: //recall saved trash
 					var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trashSaved");
 					if (trash != null)
 					{
 						var trashInt = trash.Select(l => int.Parse(l));
-                        for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
+                        for (var i = 0; i < ServiceLayer.HighestPokemonId; i++)
                         {
                             if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && trashInt.Contains(i))
 							{
@@ -202,6 +205,16 @@ namespace OMAPGMap.iOS
                     break;
             }
             tableView.DeselectRow(indexPath, true);
+        }
+
+        private int ConvertRowToID(int row)
+        {
+            if (row >= ServiceLayer.NumberPokemon)
+            {
+                return ServiceLayer.Gen3[row - ServiceLayer.NumberPokemon];
+            } else {
+                return row+1;
+            }
         }
 	}
 }

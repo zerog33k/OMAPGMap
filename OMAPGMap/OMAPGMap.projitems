@@ -10,9 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ServiceLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Pokemon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Gym.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Pokemon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Raid.cs" />
   </ItemGroup>
   <ItemGroup>
