@@ -96,7 +96,7 @@ namespace OMAPGMap.iOS
                 map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
             }
             map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
-            map.AddAnnotations(ServiceLayer.SharedInstance.Raids.Values.ToArray());
+            map.AddAnnotations(ServiceLayer.SharedInstance.Raids.ToArray());
             UIView.Animate(0.3, () =>
             {
                 overlayView.Alpha = 0.0f;
@@ -173,7 +173,7 @@ namespace OMAPGMap.iOS
                     var now = DateTime.UtcNow;
                     var pokes = ServiceLayer.SharedInstance.Pokemon.Where(p => p.ExpiresDate < now);
                     map.RemoveAnnotations(pokes.ToArray());
-                    var raids = ServiceLayer.SharedInstance.Raids.Values.Where(p => p.TimeEnd < now || (p.TimeBattle < now && p.pokemon_id == 0));
+                    var raids = ServiceLayer.SharedInstance.Raids.Where(p => p.TimeEnd < now || (p.TimeBattle < now && p.pokemon_id == 0));
 					map.RemoveAnnotations(raids.ToArray());
                     Console.WriteLine($"Removed {pokes.Count()} pokemon and {raids.Count()} raids");
                     var annotations = map.GetAnnotations(map.VisibleMapRect);
@@ -238,16 +238,8 @@ namespace OMAPGMap.iOS
 				if (ServiceLayer.SharedInstance.LayersEnabled[2])
 				{
                     var raidsOnMap = map.Annotations.OfType<Raid>();
-                    var toAdd = ServiceLayer.SharedInstance.Raids.Values.Except(raidsOnMap);
-                    foreach (var r in toAdd)
-                    {
-                        Raid thisRaid;
-                        if(ServiceLayer.SharedInstance.Raids.TryGetValue(r.id, out thisRaid))
-                        {
-                            map.AddAnnotation(thisRaid);
-                        }
-                        //map.AddAnnotations(toAdd.ToArray());
-                    }
+                    var toAdd = ServiceLayer.SharedInstance.Raids.Except(raidsOnMap);
+                    map.AddAnnotations(toAdd.ToArray());
 					Console.WriteLine($"Adding {toAdd.Count()} raids to the map");
 				}
                 activity.StopAnimating();
@@ -375,7 +367,7 @@ namespace OMAPGMap.iOS
 					}
 					else
 					{
-						map.AddAnnotations(ServiceLayer.SharedInstance.Raids.Values.ToArray());
+						map.AddAnnotations(ServiceLayer.SharedInstance.Raids.ToArray());
 					}
                     break;
                 case 3:

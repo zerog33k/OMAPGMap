@@ -28,7 +28,7 @@ namespace OMAPGMap
 
         public List<Pokemon> Pokemon = new List<Pokemon>();
         public Dictionary<string, Gym> Gyms = new Dictionary<string, Gym>();
-        public Dictionary<string, Raid> Raids = new Dictionary<string, Raid>();
+        public List<Raid> Raids = new List<Raid>();
         //pokemon, gyms, raids, trash
         public bool[] LayersEnabled = { true, false, true, false, };
         public static int[] DefaultHidden = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 132, 144, 145, 146, 150, 151, 161, 162, 163, 164, 165, 166, 167, 168, 172, 173, 174, 175, 182, 186, 192, 196, 197, 199, 208, 212, 230, 233, 236, 238, 239, 240, 243, 244, 245, 249, 250, 251 };
@@ -143,17 +143,11 @@ namespace OMAPGMap
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var raids = JsonConvert.DeserializeObject<List<Raid>>(content);
-
-
                 foreach (var r in raids)
                 {
-                    if (!Raids.ContainsKey(r.id))
+                    if (!Raids.Exists(r2 => r2.id.Equals(r.id)))
                     {
-                        Raids.Add(r.id, r);
-                    }
-                    else //update the old one
-                    {
-                        Raids[r.id].Update(r);
+                        Raids.Add(r);
                     }
                 }
             }
@@ -168,11 +162,7 @@ namespace OMAPGMap
         public void CleanUpExpiredRaids()
         {
             var now = DateTime.UtcNow;
-            var toRemove = Raids.Values.Where(r => (r.TimeEnd < now) || (r.pokemon_id == 0 && r.TimeBattle < now));
-            foreach (var r in toRemove)
-            {
-                Raids.Remove(r.id);
-            }
+            var toRemove = Raids.RemoveAll(r => (r.TimeEnd < now) || (r.pokemon_id == 0 && r.TimeBattle < now));
         }
     }
 }
