@@ -237,7 +237,14 @@ namespace OMAPGMap.iOS
                 }
 				if (ServiceLayer.SharedInstance.LayersEnabled[2])
 				{
-                    var raidsOnMap = map.Annotations.OfType<Raid>();
+                    var raidsOnMap = map.Annotations.OfType<Raid>().ToList();
+                    var unhatched = raidsOnMap.Where(r => r.pokemon_id == 0);
+                    var haveHatched = unhatched.Where((Raid r) =>
+                    {
+                        return ServiceLayer.SharedInstance.Raids.Any(r2 => r2.id.Equals(r.id)) && r.pokemon_id != 0;
+                    });
+                    map.RemoveAnnotations(haveHatched.ToArray());
+                    raidsOnMap.RemoveAll(r => haveHatched.Contains(r));
                     var toAdd = ServiceLayer.SharedInstance.Raids.Except(raidsOnMap);
                     map.AddAnnotations(toAdd.ToArray());
 					Console.WriteLine($"Adding {toAdd.Count()} raids to the map");

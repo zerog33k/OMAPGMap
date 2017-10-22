@@ -108,7 +108,7 @@ namespace OMAPGMap.iOS
 
         public void OpenMapAppAtLocation(double lat, double lon)
         {
-            var url = $"https://maps.google.com/maps?q=41.256120,-96.156800{lat.ToString("F6")},{lon.ToString("F6")}";
+            var url = $"https://maps.google.com/maps?q={lat.ToString("F6")},{lon.ToString("F6")}";
             UIApplication.SharedApplication.OpenUrl(new NSUrl(url));
         }
     }
