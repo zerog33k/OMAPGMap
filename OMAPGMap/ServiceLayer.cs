@@ -8,7 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
 using Newtonsoft.Json;
+#if NETCOREAPP2_0
+using OMAPGServiceData.Models;
+#else
 using OMAPGMap.Models;
+#endif  
 
 namespace OMAPGMap
 {
@@ -98,9 +102,9 @@ namespace OMAPGMap
                     LastId = Pokemon.MaxBy(p => p.idValue).idValue;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Console.WriteLine(e);
             }
         }
 
