@@ -44,8 +44,6 @@ namespace OMAPGMap
         public List<int> PokemonTrash = new List<int>(DefaultTrash);
         public List<int> PokemonHidden = new List<int>(DefaultHidden);
 
-        public int LastId = 0;
-
         public string Username { get; set; } = "";
         public string Password { get; set; } = "";
 
@@ -64,12 +62,12 @@ namespace OMAPGMap
             return rval;
         }
 
-        public async Task LoadData()
+        public async Task LoadData(nint lastId)
         {
             if (LayersEnabled[0])
             {
                 Console.WriteLine("loading Pokemon");
-                await LoadPokemon();
+                await LoadPokemon(lastId);
             }
             if (LayersEnabled[1])
             {
@@ -84,7 +82,7 @@ namespace OMAPGMap
 
         }
 
-        public async Task LoadPokemon()
+        public async Task LoadPokemon(nint lastId)
         {
             var authData = string.Format("{0}:{1}", Username, Password);
             var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
@@ -93,13 +91,13 @@ namespace OMAPGMap
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
             try
             {
-                var response = await client.GetAsync($"{pokemonURL}?last_id={LastId}");
+                var response = await client.GetAsync($"{pokemonURL}?last_id={lastId}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
                     Pokemon.AddRange(pokes);
-                    LastId = Pokemon.MaxBy(p => p.idValue).idValue;
+
                 }
             }
             catch (Exception e)

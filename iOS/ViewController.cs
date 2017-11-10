@@ -12,6 +12,7 @@ using CoreGraphics;
 using OMAPGMap.iOS.Annotations;
 using OMAPGMap;
 using System.Collections.Generic;
+using MoreLinq;
 
 namespace OMAPGMap.iOS
 {
@@ -22,6 +23,7 @@ namespace OMAPGMap.iOS
         Timer minuteTimer;
         string[] Layers = { "Pokemon", "Gyms", "Raids", "Trash" };
         UITableViewController layersTableVC = null;
+        nint lastId = 0;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -86,11 +88,15 @@ namespace OMAPGMap.iOS
 
         private async Task LoggedIn()
         {
-            await ServiceLayer.SharedInstance.LoadData();
+            lastId = NSUserDefaults.StandardUserDefaults.IntForKey("LastId");
+            await ServiceLayer.SharedInstance.LoadData(lastId);
             loader.StopAnimating();
             map.Delegate = this;
             if (ServiceLayer.SharedInstance.LayersEnabled[3])
             {
+                lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p.idValue).idValue;
+                var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p.idValue).idValue;
+                NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
                 map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.ToArray());
             } else{
                 map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
@@ -207,7 +213,7 @@ namespace OMAPGMap.iOS
                 activity.StartAnimating();
 				try
 				{
-					await ServiceLayer.SharedInstance.LoadData();
+                    await ServiceLayer.SharedInstance.LoadData(lastId);
 				}
 				catch (Exception)
 				{
@@ -215,6 +221,9 @@ namespace OMAPGMap.iOS
 				}
                 if (ServiceLayer.SharedInstance.LayersEnabled[0])
                 {
+                    lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p.idValue).idValue;
+                    var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p.idValue).idValue;
+                    NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
                     var onMap = map.Annotations.OfType<Pokemon>();
                     var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
