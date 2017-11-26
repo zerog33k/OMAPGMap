@@ -183,6 +183,9 @@
                                         </label>
                                         <switch opaque="NO" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V5T-Rv-2Op">
                                             <rect key="frame" x="129" y="10" width="51" height="31"/>
+                                            <connections>
+                                                <action selector="NotifyToggled:" destination="10Z-yE-Hfq" eventType="valueChanged" id="Elj-b0-mfJ"/>
+                                            </connections>
                                         </switch>
                                         <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SjQ-OB-lqg">
                                             <rect key="frame" x="15" y="4" width="40" height="40"/>

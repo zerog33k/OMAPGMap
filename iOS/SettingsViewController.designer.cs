@@ -12,6 +12,9 @@ namespace OMAPGMap.iOS
 	[Register ("SettingsViewController")]
 	partial class SettingsViewController
 	{
+		[Action ("NotifyToggled:")]
+		partial void NotifyToggled (Foundation.NSObject sender);
+
 		[Action ("SettingButtonPressed:")]
 		partial void SettingButtonPressed (Foundation.NSObject sender);
 

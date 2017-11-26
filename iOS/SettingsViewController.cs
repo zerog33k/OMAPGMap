@@ -27,18 +27,22 @@ namespace OMAPGMap.iOS
             base.ViewDidLoad();
             Title = "Pokemon Filters";
             NavigationItem.LeftBarButtonItem = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
-             {
+            {
                 if(TrashAdded.Count > 0)
                 {
                     ParentVC.TrashAdded(TrashAdded);
                 }
                 if(TrashRemoved.Count > 0)
                 {
-                    ParentVC.TrashRemoved( TrashRemoved);
+                    ParentVC.TrashRemoved(TrashRemoved);
                 }
                 DismissViewController(true, null);
-             });
-            //TableView.AllowsSelection = false;
+                var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+                var notifyStrings = ServiceLayer.SharedInstance.NotifyPokemon.Select(t => t.ToString()).ToArray();
+                var tosave = NSArray.FromStrings(notifyStrings);
+                NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("notify"));
+                app.UpdateDeviceData();
+            });
         }
 
         public override nint NumberOfSections(UITableView tableView)
@@ -93,8 +97,8 @@ namespace OMAPGMap.iOS
                     trashLbl.TextColor = UIColor.Black;
                     trashSwitch.Enabled = true;
                     trashSwitch.On = ServiceLayer.SharedInstance.PokemonTrash.Contains(pokemonid);
-                    notifySwitch.Enabled = false;
-                    notifySwitch.On = false;
+                    notifySwitch.Enabled = true;
+                    notifySwitch.On = ServiceLayer.SharedInstance.NotifyPokemon.Contains(pokemonid);
                 }
                 else
                 {
@@ -134,6 +138,25 @@ namespace OMAPGMap.iOS
                     TrashRemoved.Add(pokemonid);
                     TrashAdded.Remove(pokemonid);
                     ServiceLayer.SharedInstance.PokemonTrash.Remove(pokemonid);
+                }
+            }
+        }
+
+        partial void NotifyToggled(NSObject sender)
+        {
+            var notifySwitch = sender as UISwitch;
+            var cell = notifySwitch.Superview.Superview as UITableViewCell;
+            if (cell != null)
+            {
+                var path = TableView.IndexPathForCell(cell);
+                var pokemonid = ConvertRowToID(path.Row);
+                if (notifySwitch.On)
+                {
+                    ServiceLayer.SharedInstance.NotifyPokemon.Add(pokemonid);
+                }
+                else
+                {
+                    ServiceLayer.SharedInstance.NotifyPokemon.Remove(pokemonid);
                 }
             }
         }

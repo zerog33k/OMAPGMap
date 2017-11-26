@@ -1,11 +1,13 @@
 ﻿using Foundation;
 using Security;
 using UIKit;
-using Microsoft.Azure.Mobile;
-using Microsoft.Azure.Mobile.Analytics;
-using Microsoft.Azure.Mobile.Crashes;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter.Push;
 using System.Linq;
 using System.Collections.Generic;
+using CoreLocation;
 
 namespace OMAPGMap.iOS
 {
@@ -20,6 +22,18 @@ namespace OMAPGMap.iOS
         {
             get;
             set;
+        }
+
+        public static string pushToken = "";
+        CLLocationManager locManager;
+        private CLLocation currentLocation;
+        public CLLocation CurrentLocation 
+        { 
+            set
+            {
+                currentLocation = value;
+                UpdateDeviceData();
+            }
         }
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
@@ -69,8 +83,22 @@ namespace OMAPGMap.iOS
                     NSUserDefaults.StandardUserDefaults.SetBool(true, "gen3Added");
                 }
 			}
-
-			MobileCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes));
+            var notify = NSUserDefaults.StandardUserDefaults.StringArrayForKey("notify");
+            if (notify != null)
+            {
+                var notifyInt = notify.Select(l => int.Parse(l));
+                ServiceLayer.SharedInstance.NotifyPokemon = new List<int>(notifyInt);
+            }
+            if (launchOptions != null)
+            {
+                var loc = launchOptions[UIApplication.LaunchOptionsLocationKey] as NSNumber;
+                if (loc.BoolValue)
+                {
+                    pushToken = NSUserDefaults.StandardUserDefaults.StringForKey("pushToken");
+                    MonitorBackgroundLocation();
+                }
+            }
+            AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
 
             return true;
         }
@@ -110,6 +138,54 @@ namespace OMAPGMap.iOS
         {
             var url = $"https://maps.google.com/maps?q={lat.ToString("F6")},{lon.ToString("F6")}";
             UIApplication.SharedApplication.OpenUrl(new NSUrl(url));
+        }
+
+        public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+        {
+            Push.RegisteredForRemoteNotifications(deviceToken);
+            pushToken = deviceToken.Description;
+            NSUserDefaults.StandardUserDefaults.SetString(pushToken, "pushToken");
+            UpdateDeviceData();
+        }
+
+        public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
+        {
+            Push.FailedToRegisterForRemoteNotifications(error);
+        }
+
+        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, System.Action<UIBackgroundFetchResult> completionHandler)
+        {
+            var result = Push.DidReceiveRemoteNotification(userInfo);
+            if (result)
+            {
+                completionHandler?.Invoke(UIBackgroundFetchResult.NewData);
+            }
+            else
+            {
+                completionHandler?.Invoke(UIBackgroundFetchResult.NoData);
+            }
+        }
+
+        public void MonitorBackgroundLocation()
+        {
+            locManager = new CLLocationManager();
+            locManager.RequestAlwaysAuthorization();
+            locManager.StartMonitoringSignificantLocationChanges();
+            locManager.LocationsUpdated += LocationsUpdated;
+        }
+
+        void LocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
+        {
+            CurrentLocation = e.Locations.First();
+            UpdateDeviceData();
+        }
+
+        public async void UpdateDeviceData()
+        {
+            if(currentLocation != null && pushToken != "")
+            {
+                await ServiceLayer.SharedInstance.UpdateDeviceInfo(pushToken, currentLocation.Coordinate.Latitude, currentLocation.Coordinate.Longitude);
+            }
         }
     }
 }

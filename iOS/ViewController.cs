@@ -23,7 +23,7 @@ namespace OMAPGMap.iOS
         Timer minuteTimer;
         string[] Layers = { "Pokemon", "Gyms", "Raids", "Trash" };
         UITableViewController layersTableVC = null;
-        nint lastId = 0;
+        int lastId = 0;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -33,7 +33,10 @@ namespace OMAPGMap.iOS
         {
             base.ViewDidLoad();
             loader.StartAnimating();
+            var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+            app.MonitorBackgroundLocation();
             locationManager = new CLLocationManager();
+            locationManager.RequestAlwaysAuthorization();
             locationManager.RequestWhenInUseAuthorization();
             locationManager.LocationsUpdated += LocationManager_LocationsUpdated;
             locationManager.StartUpdatingLocation();
@@ -88,7 +91,7 @@ namespace OMAPGMap.iOS
 
         private async Task LoggedIn()
         {
-            lastId = NSUserDefaults.StandardUserDefaults.IntForKey("LastId");
+            lastId = (int) NSUserDefaults.StandardUserDefaults.IntForKey("LastId");
             await ServiceLayer.SharedInstance.LoadData(lastId);
             loader.StopAnimating();
             map.Delegate = this;
@@ -97,6 +100,7 @@ namespace OMAPGMap.iOS
                 lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p.idValue).idValue;
                 var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p.idValue).idValue;
                 NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
+                NSUserDefaults.StandardUserDefaults.Synchronize();
                 map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.ToArray());
             } else{
                 map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
@@ -125,6 +129,8 @@ namespace OMAPGMap.iOS
 				MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(2), Utility.MilesToLongitudeDegrees(2, coords.Latitude));
                 map.SetRegion(new MKCoordinateRegion(coords, span), true);
             }
+            var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+            app.CurrentLocation = e.Locations.First();
         }
 
         [Export("mapView:viewForAnnotation:")]
@@ -224,6 +230,7 @@ namespace OMAPGMap.iOS
                     lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p.idValue).idValue;
                     var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p.idValue).idValue;
                     NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
+                    NSUserDefaults.StandardUserDefaults.Synchronize();
                     var onMap = map.Annotations.OfType<Pokemon>();
                     var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");

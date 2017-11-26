@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 #if NETCOREAPP2_0
 using OMAPGServiceData.Models;
 #else
@@ -41,8 +42,10 @@ namespace OMAPGMap
         public static int NumberPokemon = 251;
         public static int HighestPokemonId = 356;
 
+
         public List<int> PokemonTrash = new List<int>(DefaultTrash);
         public List<int> PokemonHidden = new List<int>(DefaultHidden);
+        public List<int> NotifyPokemon = new List<int>();
 
         public string Username { get; set; } = "";
         public string Password { get; set; } = "";
@@ -62,7 +65,7 @@ namespace OMAPGMap
             return rval;
         }
 
-        public async Task LoadData(nint lastId)
+        public async Task LoadData(int lastId)
         {
             if (LayersEnabled[0])
             {
@@ -82,7 +85,7 @@ namespace OMAPGMap
 
         }
 
-        public async Task LoadPokemon(nint lastId)
+        public async Task LoadPokemon(int lastId)
         {
             var authData = string.Format("{0}:{1}", Username, Password);
             var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
@@ -165,6 +168,34 @@ namespace OMAPGMap
         {
             var now = DateTime.UtcNow;
             var toRemove = Raids.RemoveAll(r => (r.TimeEnd < now) || (r.pokemon_id == 0 && r.TimeBattle < now));
+        }
+
+        public async Task UpdateDeviceInfo(string deviceId, double lat, double lon)
+        {
+            using (var client = new HttpClient())
+            {
+                var str = NotifyPokemon.ToDelimitedString(":");
+                var jobj = JObject.FromObject(new
+                {
+                    DeviceId = deviceId,
+                    Ostype = 1,
+                    NotifyPokemonStr = str,
+                    LocationLat = lat,
+                    LocationLon = lon,
+                    DistanceAlert = 0,
+                    NotifyEnabled = true
+                });
+                var content = new StringContent(jobj.ToString(), Encoding.UTF8, "application/json");
+                var results = await client.PutAsync($"{baseURL}service/api/device", content);
+                if(results.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("updated device data!");
+                }
+                else 
+                {
+                    Console.WriteLine("updated device failed :/");
+                }
+            }
         }
     }
 }
