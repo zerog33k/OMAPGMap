@@ -8,6 +8,7 @@ using Microsoft.AppCenter.Push;
 using System.Linq;
 using System.Collections.Generic;
 using CoreLocation;
+using Microsoft.AppCenter.iOS.Bindings;
 
 namespace OMAPGMap.iOS
 {
@@ -180,7 +181,7 @@ namespace OMAPGMap.iOS
         {
             if(currentLocation != null)
             {
-                var installId = await AppCenter.GetInstallIdAsync();
+                var installId = MSAppCenter.InstallId();
                 await ServiceLayer.SharedInstance.UpdateDeviceInfo(installId.ToString(), currentLocation.Coordinate.Latitude, currentLocation.Coordinate.Longitude);
             }
         }
