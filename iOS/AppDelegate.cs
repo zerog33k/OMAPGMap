@@ -24,7 +24,6 @@ namespace OMAPGMap.iOS
             set;
         }
 
-        public static string pushToken = "";
         CLLocationManager locManager;
         private CLLocation currentLocation;
         public CLLocation CurrentLocation 
@@ -94,7 +93,6 @@ namespace OMAPGMap.iOS
                 var loc = launchOptions[UIApplication.LaunchOptionsLocationKey] as NSNumber;
                 if (loc.BoolValue)
                 {
-                    pushToken = NSUserDefaults.StandardUserDefaults.StringForKey("pushToken");
                     MonitorBackgroundLocation();
                 }
             }
@@ -143,8 +141,6 @@ namespace OMAPGMap.iOS
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
         {
             Push.RegisteredForRemoteNotifications(deviceToken);
-            pushToken = deviceToken.Description;
-            NSUserDefaults.StandardUserDefaults.SetString(pushToken, "pushToken");
             UpdateDeviceData();
         }
 
@@ -182,9 +178,10 @@ namespace OMAPGMap.iOS
 
         public async void UpdateDeviceData()
         {
-            if(currentLocation != null && pushToken != "")
+            if(currentLocation != null)
             {
-                await ServiceLayer.SharedInstance.UpdateDeviceInfo(pushToken, currentLocation.Coordinate.Latitude, currentLocation.Coordinate.Longitude);
+                var installId = await AppCenter.GetInstallIdAsync();
+                await ServiceLayer.SharedInstance.UpdateDeviceInfo(installId.ToString(), currentLocation.Coordinate.Latitude, currentLocation.Coordinate.Longitude);
             }
         }
     }
