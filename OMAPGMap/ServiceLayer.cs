@@ -186,15 +186,19 @@ namespace OMAPGMap
                     NotifyEnabled = true
                 });
                 var content = new StringContent(jobj.ToString(), Encoding.UTF8, "application/json");
-                var results = await client.PutAsync($"{baseURL}service/api/device", content);
-                if(results.IsSuccessStatusCode)
+                try
                 {
-                    Console.WriteLine("updated device data!");
-                }
-                else 
-                {
-                    Console.WriteLine("updated device failed :/");
-                }
+
+                    var results = await client.PutAsync($"{baseURL}service/api/device", content);
+                    if (results.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("updated device data!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("updated device failed :/");
+                    }
+                }catch(Exception) {//swallow silently}
             }
         }
     }
