@@ -188,7 +188,6 @@ namespace OMAPGMap
                 var content = new StringContent(jobj.ToString(), Encoding.UTF8, "application/json");
                 try
                 {
-
                     var results = await client.PutAsync($"{baseURL}service/api/device", content);
                     if (results.IsSuccessStatusCode)
                     {
@@ -198,7 +197,10 @@ namespace OMAPGMap
                     {
                         Console.WriteLine("updated device failed :/");
                     }
-                }catch(Exception) {//swallow silently}
+                } catch(Exception) 
+                {
+                    //swallow silently
+                }
             }
         }
     }
