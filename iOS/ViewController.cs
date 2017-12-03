@@ -25,6 +25,9 @@ namespace OMAPGMap.iOS
         string[] Layers = { "Pokemon", "Gyms", "Raids", "Trash" };
         UITableViewController layersTableVC = null;
         int lastId = 0;
+        bool mapLoaded = false;
+        string notifyID = "";
+        bool startedFromNotify = false;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -126,6 +129,7 @@ namespace OMAPGMap.iOS
 
             secondTimer = new Timer(HandleTimerCallback, null, 1000, 1000);
             minuteTimer = new Timer(refreshMap, null, 60000, 60000);
+            mapLoaded = true;
             Push.PushNotificationReceived += async (sender, e) => {
 
                 // Add the notification message and title to the message
@@ -143,12 +147,26 @@ namespace OMAPGMap.iOS
                     var lon = float.Parse(e.CustomData["lon"]);
                     var expiresDate = Utility.FromUnixTime(expires);
                     Console.WriteLine($"opened with ID of {pokeID}");
+
                     await this.NotificationLaunched(pokeID, expiresDate, lat, lon);
                 }
 
                 // Send the notification summary to debug output
                 System.Diagnostics.Debug.WriteLine(summary);
             };
+
+            if(startedFromNotify)
+            {
+                var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == notifyID).FirstOrDefault();
+                if (poke != null)
+                {
+                    MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, poke.lon));
+                    var coords = new CLLocationCoordinate2D(poke.lat, poke.lon);
+                    var reg = new MKCoordinateRegion(coords, span);
+                    map.SetRegion(reg, true);
+                    map.SelectAnnotation(poke, true);
+                }
+            }
         }
 
         void LocationManager_LocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
@@ -492,16 +510,23 @@ namespace OMAPGMap.iOS
             } else 
             {
                 ServiceLayer.SharedInstance.LayersEnabled[0] = true;
-                MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, lat));
-                var coords = new CLLocationCoordinate2D(lat, lon);
-                var reg = new MKCoordinateRegion(coords, span);
-                map.SetRegion(reg, true);
-                await ServiceLayer.SharedInstance.LoadData(lastId);
-                var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == pokemonID).FirstOrDefault();
-                if(poke != null)
+                if(mapLoaded)
                 {
-                    map.ShowAnnotations(new IMKAnnotation[]{poke}, true);
-                }
+                    MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, lat));
+                    var coords = new CLLocationCoordinate2D(lat, lon);
+                    var reg = new MKCoordinateRegion(coords, span);
+                    map.SetRegion(reg, true);
+                    await ServiceLayer.SharedInstance.LoadData(lastId);
+                    var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == pokemonID).FirstOrDefault();
+                    if(poke != null)
+                    {
+                        map.SelectAnnotation(poke, true);
+                    }
+                } else 
+                {
+                    startedFromNotify = true;
+                    notifyID = pokemonID;
+                }    
                            
             }
         }
