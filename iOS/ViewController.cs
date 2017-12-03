@@ -125,6 +125,29 @@ namespace OMAPGMap.iOS
 
             secondTimer = new Timer(HandleTimerCallback, null, 1000, 1000);
             minuteTimer = new Timer(refreshMap, null, 60000, 60000);
+            Push.PushNotificationReceived += async (sender, e) => {
+
+                // Add the notification message and title to the message
+                var summary = $"Push notification received:" +
+                                    $"\n\tNotification title: {e.Title}" +
+                                    $"\n\tMessage: {e.Message}";
+
+                // If there is custom data associated with the notification,
+                // print the entries
+                if (e.CustomData != null)
+                {
+                    var pokeID = e.CustomData["pokemon_id"];
+                    var expires = long.Parse(e.CustomData["expires"]);
+                    var lat = float.Parse(e.CustomData["lat"]);
+                    var lon = float.Parse(e.CustomData["lon"]);
+                    var expiresDate = Utility.FromUnixTime(expires);
+                    Console.WriteLine($"opened with ID of {pokeID}");
+                    await this.NotificationLaunched(pokeID, expiresDate, lat, lon);
+                }
+
+                // Send the notification summary to debug output
+                System.Diagnostics.Debug.WriteLine(summary);
+            };
         }
 
         void LocationManager_LocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)

@@ -37,6 +37,10 @@ namespace OMAPGMap.iOS
                 {
                     ParentVC.TrashRemoved(TrashRemoved);
                 }
+                if (DistInput != null)
+                {
+                    ServiceLayer.SharedInstance.NotifyDistance = int.Parse(DistInput.Text);
+                }
                 DismissViewController(true, null);
                 var app = UIApplication.SharedApplication.Delegate as AppDelegate;
                 app.UpdateDeviceData();

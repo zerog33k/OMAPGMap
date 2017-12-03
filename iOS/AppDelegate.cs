@@ -101,33 +101,7 @@ namespace OMAPGMap.iOS
                     MonitorBackgroundLocation();
                 }
             }
-            Push.PushNotificationReceived += async (sender, e) => {
 
-                // Add the notification message and title to the message
-                var summary = $"Push notification received:" +
-                                    $"\n\tNotification title: {e.Title}" +
-                                    $"\n\tMessage: {e.Message}";
-
-                // If there is custom data associated with the notification,
-                // print the entries
-                if (e.CustomData != null)
-                {
-                    var mainVC = Window.RootViewController as ViewController;
-                    if(mainVC != null)
-                    {
-                        var pokeID = e.CustomData["pokemon_id"];
-                        var expires = long.Parse(e.CustomData["expires"]);
-                        var lat = float.Parse(e.CustomData["lat"]);
-                        var lon = float.Parse(e.CustomData["lon"]);
-                        var expiresDate = Utility.FromUnixTime(expires);
-                        Console.WriteLine($"opened with ID of {pokeID}");
-                        await mainVC.NotificationLaunched(pokeID, expiresDate, lat, lon);
-                    }
-                }
-
-                // Send the notification summary to debug output
-                System.Diagnostics.Debug.WriteLine(summary);
-            };
             AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
 
             return true;
