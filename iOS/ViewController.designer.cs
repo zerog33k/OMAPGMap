@@ -19,6 +19,9 @@ namespace OMAPGMap.iOS
 		UIKit.UIVisualEffectView effectOverlay { get; set; }
 
 		[Outlet]
+		UIKit.UILabel errorLabel { get; set; }
+
+		[Outlet]
 		UIKit.UIButton layerSelectButton { get; set; }
 
 		[Outlet]
@@ -47,6 +50,11 @@ namespace OMAPGMap.iOS
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (activity != null) {
+				activity.Dispose ();
+				activity = null;
+			}
+
 			if (effectOverlay != null) {
 				effectOverlay.Dispose ();
 				effectOverlay = null;
@@ -97,9 +105,9 @@ namespace OMAPGMap.iOS
 				username = null;
 			}
 
-			if (activity != null) {
-				activity.Dispose ();
-				activity = null;
+			if (errorLabel != null) {
+				errorLabel.Dispose ();
+				errorLabel = null;
 			}
 		}
 	}

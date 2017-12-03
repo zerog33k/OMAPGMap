@@ -19,6 +19,7 @@ namespace OMAPGMap.iOS
 
         private List<int> TrashAdded = new List<int>();
         private List<int> TrashRemoved = new List<int>();
+        private UITextField DistInput = null;
 
         public ViewController ParentVC { get; set; }
 
@@ -41,6 +42,10 @@ namespace OMAPGMap.iOS
                 var notifyStrings = ServiceLayer.SharedInstance.NotifyPokemon.Select(t => t.ToString()).ToArray();
                 var tosave = NSArray.FromStrings(notifyStrings);
                 NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("notify"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.NotifyEnabled, new NSString("notifyEnabled"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify90Enabled, new NSString("notify100"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify100Enabled, new NSString("notify90"));
+                NSUserDefaults.StandardUserDefaults.SetInt(ServiceLayer.SharedInstance.NotifyDistance, new NSString("notifyDistance"));
                 app.UpdateDeviceData();
             });
         }
@@ -60,10 +65,14 @@ namespace OMAPGMap.iOS
             
             if (indexPath.Section == 0)
             {
-                var cell = tableView.DequeueReusableCell("ResetTrashCell", indexPath);
-                var label = cell.ViewWithTag(1) as UILabel;
-				switch (indexPath.Row)
-				{
+                UITableViewCell cell = null;
+                if(indexPath.Row < 4)
+                {
+                    cell = tableView.DequeueReusableCell("ResetTrashCell", indexPath);
+                }
+                var label = cell?.ViewWithTag(1) as UILabel;
+                switch(indexPath.Row)
+                {
                     case 0:
                         label.Text = "Hide Everything";
                         break;
@@ -76,9 +85,62 @@ namespace OMAPGMap.iOS
                     case 3:
                         label.Text = "Recall Saved Trash";
                         break;
-				}
+                    case 4:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "All Notifications";
+                        s.On = ServiceLayer.SharedInstance.NotifyEnabled;
+                        break;
+                    case 5:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s1 = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "> 90% IV Notify";
+                        s1.On = ServiceLayer.SharedInstance.NotifyEnabled;
+                        label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        s1.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
+                        break;
+                    case 6:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s2 = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "100% IV Notify";
+                        s2.On = ServiceLayer.SharedInstance.NotifyEnabled;
+                        label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        s2.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
+                        break;
+                    case 7:
+                        cell = tableView.DequeueReusableCell("NotifyDistanceCell", indexPath);
+                        var input = cell.ViewWithTag(2) as UITextField;
+                        if(DistInput == null)
+                        {
+                            DistInput = input;
+                            input.ValueChanged += (sender, e) =>
+                            {
+                                ServiceLayer.SharedInstance.NotifyDistance = int.Parse(DistInput.Text);
+                            };
+                            var tool = new UIToolbar();
+                            tool.SizeToFit();
+                            var done = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
+                            {
+                                ServiceLayer.SharedInstance.NotifyDistance = int.Parse(DistInput.Text);
+                                DistInput.ResignFirstResponder();
+                            });
+                            tool.SetItems(new UIBarButtonItem[] { done }, false);
+                            DistInput.InputAccessoryView = tool;
+                        }
+                        label = cell.ViewWithTag(1) as UILabel;
+                        input.Text = ServiceLayer.SharedInstance.NotifyDistance.ToString();
+                        label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        input.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
+
+                        break;
+                }
                 return cell;
             }
+
+
             else
             {
                 var cell = tableView.DequeueReusableCell("FilterCell", indexPath);
@@ -117,7 +179,7 @@ namespace OMAPGMap.iOS
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return section == 0 ? 4 : ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count();
+            return section == 0 ? 8 : ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count();
         }
 
         partial void TrashToggled(NSObject sender)
@@ -238,6 +300,27 @@ namespace OMAPGMap.iOS
             } else {
                 return row+1;
             }
+        }
+
+        partial void SettingToggled(NSObject sender)
+        {
+            var toggle = sender as UISwitch;
+            var cell = toggle.Superview.Superview as UITableViewCell;
+            if (cell != null)
+            {
+                var path = TableView.IndexPathForCell(cell);
+                if(path.Row == 4)
+                {
+                    ServiceLayer.SharedInstance.NotifyEnabled = toggle.On;
+                } else if(path.Row == 5)
+                {
+                    ServiceLayer.SharedInstance.Notify90Enabled = toggle.On;
+                } else if(path.Row == 6)
+                {
+                    ServiceLayer.SharedInstance.Notify100Enabled = toggle.On;
+                }
+            }
+            TableView.ReloadData();
         }
 	}
 }

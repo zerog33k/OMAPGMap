@@ -44,6 +44,9 @@ namespace OMAPGMap.iOS
             CLLocationCoordinate2D coords = new CLLocationCoordinate2D(41.2524, -95.9980);
             MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(2), Utility.MilesToLongitudeDegrees(2, coords.Latitude));
             map.Region = new MKCoordinateRegion(coords, span);
+            var credentialsVerified = ServiceLayer.SharedInstance.Username != "";
+            username.Alpha = credentialsVerified ? 0.0f : 1.0f;
+            password.Alpha = credentialsVerified ? 0.0f : 1.0f;
 			username.ShouldReturn += (textField) =>
 			{
                 password.BecomeFirstResponder();
@@ -54,7 +57,7 @@ namespace OMAPGMap.iOS
                 SignInButton_TouchUpInside(password, null);
                 return true;
             };
-            if (ServiceLayer.SharedInstance.Username == "")
+            if (!credentialsVerified)
             {
 				loader.Alpha = 0.0f;
 				loadingLabel.Alpha = 0.0f;
@@ -70,19 +73,23 @@ namespace OMAPGMap.iOS
                 catch(Exception e)
                 {
                     Console.WriteLine(e);
+                    errorLabel.Hidden = false;
                 } //swallow exception
                 if (loggedIn)
                 {
-                    username.Alpha = 0.0f;
-                    password.Alpha = 0.0f;
                     signInButton.Alpha = 0.0f;
                     await LoggedIn();
                 }
                 else
                 {
+                    if(credentialsVerified)
+                    {
+                        loadingLabel.Alpha = 0.0f;
+                        errorLabel.Hidden = false;
+                    } else {
+                        username.BecomeFirstResponder();
+                    }
 					loader.Alpha = 0.0f;
-					loadingLabel.Alpha = 0.0f;
-					username.BecomeFirstResponder();
                 }
             }
             signInButton.TouchUpInside += SignInButton_TouchUpInside;
@@ -286,7 +293,7 @@ namespace OMAPGMap.iOS
                 }
             } catch(Exception)
             {
-                errorMessage = "An error occured when attempting to log in";
+                errorMessage = "An error occured when attempting to log in - server may be down.";
             }
             if(errorMessage == "")
             {
@@ -297,11 +304,11 @@ namespace OMAPGMap.iOS
                 loader.Alpha = 1.0f;
                 loader.StartAnimating();
                 loadingLabel.Alpha = 1.0f;
-                var helper = new KeychainHelper();
                 try
                 {
                     NSUserDefaults.StandardUserDefaults.SetString(username.Text, "user");
                     NSUserDefaults.StandardUserDefaults.SetString(password.Text, "pass");
+
                     //helper.SetValueForKey(password.Text, username.Text);
                     await LoggedIn();
                 } catch(Exception)
@@ -449,6 +456,25 @@ namespace OMAPGMap.iOS
 			var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
 			var tosave = NSArray.FromStrings(trashStrings);
 			NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trash"));
+        }
+
+        public async Task NotificationLaunched(string pokemonID, DateTime expires, float lat, float lon)
+        {
+            if(expires < DateTime.UtcNow)
+            {
+                var alert = UIAlertController.Create("Pokemon expired", "Looks like that Pokemon has despawned.", UIAlertControllerStyle.Alert);
+                alert.AddAction(UIAlertAction.Create("Ok", UIAlertActionStyle.Default, null));
+                PresentViewController(alert, true, null);
+            } else 
+            {
+                ServiceLayer.SharedInstance.LayersEnabled[0] = true;
+                MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(2), Utility.MilesToLongitudeDegrees(2, lat));
+                var coords = new CLLocationCoordinate2D(lat, lon);
+                var reg = new MKCoordinateRegion(coords, span);
+                map.SetRegion(reg, true);
+                await ServiceLayer.SharedInstance.LoadData(lastId);
+
+            }
         }
 
     }

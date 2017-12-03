@@ -41,7 +41,10 @@ namespace OMAPGMap
         public static int[] Gen3 = { 302, 353, 354, 355, 356 };
         public static int NumberPokemon = 251;
         public static int HighestPokemonId = 356;
-
+        public bool NotifyEnabled { get; set; } = true;
+        public bool Notify90Enabled { get; set; } = true;
+        public bool Notify100Enabled { get; set; } = true;
+        public int NotifyDistance { get; set; } = 3;
 
         public List<int> PokemonTrash = new List<int>(DefaultTrash);
         public List<int> PokemonHidden = new List<int>(DefaultHidden);
@@ -57,11 +60,12 @@ namespace OMAPGMap
             var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
 
             //var handler = new NSUrlSessionHandler();
+
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
             var response = await client.GetAsync(baseURL);
-            rval = response.IsSuccessStatusCode;
+            rval = response.StatusCode != System.Net.HttpStatusCode.Unauthorized;
             return rval;
         }
 
@@ -182,8 +186,10 @@ namespace OMAPGMap
                     NotifyPokemonStr = str,
                     LocationLat = lat,
                     LocationLon = lon,
-                    DistanceAlert = 0,
-                    NotifyEnabled = true
+                    DistanceAlert = NotifyDistance,
+                    NotifyEnabled = NotifyEnabled,
+                    Notify90 = Notify90Enabled,
+                    Notify100 = Notify100Enabled
                 });
                 var content = new StringContent(jobj.ToString(), Encoding.UTF8, "application/json");
                 try
