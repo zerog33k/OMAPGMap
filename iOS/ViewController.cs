@@ -147,8 +147,13 @@ namespace OMAPGMap.iOS
                     var lon = float.Parse(e.CustomData["lon"]);
                     var expiresDate = Utility.FromUnixTime(expires);
                     Console.WriteLine($"opened with ID of {pokeID}");
-
-                    await this.NotificationLaunched(pokeID, expiresDate, lat, lon);
+                    if (mapLoaded)
+                    {
+                        await NotificationLaunched(pokeID, expiresDate, lat, lon);
+                    } else {
+                        startedFromNotify = true;
+                        notifyID = pokeID;
+                    }
                 }
 
                 // Send the notification summary to debug output
@@ -502,32 +507,26 @@ namespace OMAPGMap.iOS
 
         public async Task NotificationLaunched(string pokemonID, DateTime expires, float lat, float lon)
         {
-            if(expires < DateTime.UtcNow)
+            if (expires < DateTime.UtcNow)
             {
                 var alert = UIAlertController.Create("Pokemon expired", "Looks like that Pokemon has despawned.", UIAlertControllerStyle.Alert);
                 alert.AddAction(UIAlertAction.Create("Ok", UIAlertActionStyle.Default, null));
                 PresentViewController(alert, true, null);
-            } else 
+            }
+            else
             {
                 ServiceLayer.SharedInstance.LayersEnabled[0] = true;
-                if(mapLoaded)
+                MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, lat));
+                var coords = new CLLocationCoordinate2D(lat, lon);
+                var reg = new MKCoordinateRegion(coords, span);
+                map.SetRegion(reg, true);
+                await ServiceLayer.SharedInstance.LoadData(lastId);
+                var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == pokemonID).FirstOrDefault();
+                if (poke != null)
                 {
-                    MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, lat));
-                    var coords = new CLLocationCoordinate2D(lat, lon);
-                    var reg = new MKCoordinateRegion(coords, span);
-                    map.SetRegion(reg, true);
-                    await ServiceLayer.SharedInstance.LoadData(lastId);
-                    var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == pokemonID).FirstOrDefault();
-                    if(poke != null)
-                    {
-                        map.SelectAnnotation(poke, true);
-                    }
-                } else 
-                {
-                    startedFromNotify = true;
-                    notifyID = pokemonID;
-                }    
-                           
+                    map.SelectAnnotation(poke, true);
+                }
+
             }
         }
 
