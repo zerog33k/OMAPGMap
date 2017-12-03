@@ -39,13 +39,6 @@ namespace OMAPGMap.iOS
                 }
                 DismissViewController(true, null);
                 var app = UIApplication.SharedApplication.Delegate as AppDelegate;
-                var notifyStrings = ServiceLayer.SharedInstance.NotifyPokemon.Select(t => t.ToString()).ToArray();
-                var tosave = NSArray.FromStrings(notifyStrings);
-                NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("notify"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.NotifyEnabled, new NSString("notifyEnabled"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify90Enabled, new NSString("notify100"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify100Enabled, new NSString("notify90"));
-                NSUserDefaults.StandardUserDefaults.SetInt(ServiceLayer.SharedInstance.NotifyDistance, new NSString("notifyDistance"));
                 app.UpdateDeviceData();
             });
         }

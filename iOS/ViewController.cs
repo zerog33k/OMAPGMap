@@ -468,12 +468,17 @@ namespace OMAPGMap.iOS
             } else 
             {
                 ServiceLayer.SharedInstance.LayersEnabled[0] = true;
-                MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(2), Utility.MilesToLongitudeDegrees(2, lat));
+                MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, lat));
                 var coords = new CLLocationCoordinate2D(lat, lon);
                 var reg = new MKCoordinateRegion(coords, span);
                 map.SetRegion(reg, true);
-                await ServiceLayer.SharedInstance.LoadData(lastId);  
-
+                await ServiceLayer.SharedInstance.LoadData(lastId);
+                var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == pokemonID).FirstOrDefault();
+                if(poke != null)
+                {
+                    map.ShowAnnotations(new IMKAnnotation[]{poke}, true);
+                }
+                           
             }
         }
 

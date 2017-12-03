@@ -65,7 +65,10 @@ namespace OMAPGMap.iOS.Annotations
 					var iv = (_pokemon.atk + _pokemon.def + _pokemon.sta) / 45.0f;
 				}
                 view.HideButton.TouchUpInside += HideButton_TouchUpInside;
-                view.DirectionsButton.TouchUpInside += DirectionsButton_TouchUpInside;; 
+                view.DirectionsButton.TouchUpInside += DirectionsButton_TouchUpInside;
+                view.NotifyButotn.TouchUpInside += NotifyButotn_TouchUpInside;
+                var notifyLabel = ServiceLayer.SharedInstance.NotifyPokemon.Contains(_pokemon.pokemon_id) ? "Remove Notify" : "Notify";
+                view.NotifyButotn.SetTitle(notifyLabel, UIControlState.Normal);
                 return view;
             }
             set
@@ -86,6 +89,22 @@ namespace OMAPGMap.iOS.Annotations
         {
             var app = UIApplication.SharedApplication.Delegate as AppDelegate;
             app.OpenMapAppAtLocation(_pokemon.lat, _pokemon.lon);
+        }
+
+        void NotifyButotn_TouchUpInside(object sender, EventArgs e)
+        {
+            var button = sender as UIButton;
+            if(ServiceLayer.SharedInstance.NotifyPokemon.Contains(_pokemon.pokemon_id))
+            {
+                ServiceLayer.SharedInstance.NotifyPokemon.Remove(_pokemon.pokemon_id);
+                button.SetTitle("Notify", UIControlState.Normal);
+            } else 
+            {
+                ServiceLayer.SharedInstance.NotifyPokemon.Add(_pokemon.pokemon_id);
+                button.SetTitle("Remove Notify", UIControlState.Normal);
+            }
+            var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+            app.UpdateDeviceData();
         }
     }
 }
