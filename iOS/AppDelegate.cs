@@ -155,18 +155,18 @@ namespace OMAPGMap.iOS
             Push.FailedToRegisterForRemoteNotifications(error);
         }
 
-        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, System.Action<UIBackgroundFetchResult> completionHandler)
-        {
-            var result = Push.DidReceiveRemoteNotification(userInfo);
-            if (result)
-            {
-                completionHandler?.Invoke(UIBackgroundFetchResult.NewData);
-            }
-            else
-            {
-                completionHandler?.Invoke(UIBackgroundFetchResult.NoData);
-            }
-        }
+        //public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, System.Action<UIBackgroundFetchResult> completionHandler)
+        //{
+        //    var result = Push.DidReceiveRemoteNotification(userInfo);
+        //    if (result)
+        //    {
+        //        completionHandler?.Invoke(UIBackgroundFetchResult.NewData);
+        //    }
+        //    else
+        //    {
+        //        completionHandler?.Invoke(UIBackgroundFetchResult.NoData);
+        //    }
+        //}
 
         public void MonitorBackgroundLocation()
         {
