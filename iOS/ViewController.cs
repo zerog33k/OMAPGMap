@@ -12,6 +12,7 @@ using CoreGraphics;
 using OMAPGMap.iOS.Annotations;
 using OMAPGMap;
 using System.Collections.Generic;
+using Microsoft.AppCenter.Push;
 using MoreLinq;
 
 namespace OMAPGMap.iOS
