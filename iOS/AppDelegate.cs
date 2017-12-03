@@ -101,7 +101,7 @@ namespace OMAPGMap.iOS
                     MonitorBackgroundLocation();
                 }
             }
-            Push.PushNotificationReceived async += (sender, e) => {
+            Push.PushNotificationReceived += async (sender, e) => {
 
                 // Add the notification message and title to the message
                 var summary = $"Push notification received:" +

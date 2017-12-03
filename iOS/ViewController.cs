@@ -472,7 +472,7 @@ namespace OMAPGMap.iOS
                 var coords = new CLLocationCoordinate2D(lat, lon);
                 var reg = new MKCoordinateRegion(coords, span);
                 map.SetRegion(reg, true);
-                await ServiceLayer.SharedInstance.LoadData(lastId);
+                await ServiceLayer.SharedInstance.LoadData(lastId);  
 
             }
         }
