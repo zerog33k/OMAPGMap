@@ -36,11 +36,11 @@ namespace OMAPGMap
         public List<Raid> Raids = new List<Raid>();
         //pokemon, gyms, raids, trash
         public bool[] LayersEnabled = { true, false, true, false, };
-        public static int[] DefaultHidden = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 132, 144, 145, 146, 150, 151, 161, 162, 163, 164, 165, 166, 167, 168, 172, 173, 174, 175, 182, 186, 192, 196, 197, 199, 208, 212, 230, 233, 236, 238, 239, 240, 243, 244, 245, 249, 250, 251 };
-        public static int[] DefaultTrash = { 1, 4, 7, 21, 23, 25, 27, 29, 30, 32, 33, 35, 37, 39, 41, 43, 46, 48, 50, 52, 54, 56, 58, 60, 63, 66, 69, 72, 74, 77, 79, 81, 84, 86, 88, 90, 92, 96, 98, 100, 102, 104, 109, 111, 116, 118, 120, 124, 129, 133, 138, 140, 147, 152, 155, 158, 170, 177, 183, 185, 187, 188, 190, 191, 194, 198, 200, 202, 203, 204, 206, 207, 209, 211, 215, 216, 218, 220, 223, 228, 231, 234, 246, 302, 355, 353 };
-        public static int[] Gen3 = { 302, 353, 354, 355, 356 };
-        public static int NumberPokemon = 251;
-        public static int HighestPokemonId = 356;
+        public static int[] DefaultHidden = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 132, 144, 145, 146, 150, 151, 161, 162, 163, 164, 165, 166, 167, 168, 172, 173, 174, 175, 182, 186, 192, 196, 197, 199, 208, 212, 230, 233, 236, 238, 239, 240, 243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386 };
+        public static int[] DefaultTrash = { 1, 4, 7, 21, 23, 25, 27, 29, 30, 32, 33, 35, 37, 39, 41, 43, 46, 48, 50, 52, 54, 56, 58, 60, 63, 66, 69, 72, 74, 77, 79, 81, 84, 86, 88, 90, 92, 96, 98, 100, 102, 104, 109, 111, 116, 118, 120, 124, 129, 133, 138, 140, 147, 152, 155, 158, 170, 177, 183, 185, 187, 188, 190, 191, 194, 198, 200, 202, 203, 204, 206, 207, 209, 211, 215, 216, 218, 220, 223, 228, 231, 
+            //gen 3 list
+            253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378 };
+        public static int NumberPokemon = 378;
         public bool NotifyEnabled { get; set; } = true;
         public bool Notify90Enabled { get; set; } = true;
         public bool Notify100Enabled { get; set; } = true;
@@ -115,27 +115,34 @@ namespace OMAPGMap
 
         public async Task LoadGyms()
         {
-            var authData = string.Format("{0}:{1}", Username, Password);
-            var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
-
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-            var response = await client.GetAsync(gymsURL);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var gyms = JsonConvert.DeserializeObject<List<Gym>>(content);
-                foreach (var g in gyms)
+                var authData = string.Format("{0}:{1}", Username, Password);
+                var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
+
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+                var response = await client.GetAsync(gymsURL);
+                if (response.IsSuccessStatusCode)
                 {
-                    if (!Gyms.ContainsKey(g.id))
+                    var content = await response.Content.ReadAsStringAsync();
+                    var gyms = JsonConvert.DeserializeObject<List<Gym>>(content);
+                    foreach (var g in gyms)
                     {
-                        Gyms[g.id] = g;
-                    }
-                    else //update the old one
-                    {
-                        Gyms[g.id].update(g);
+                        if (!Gyms.ContainsKey(g.id))
+                        {
+                            Gyms[g.id] = g;
+                        }
+                        else //update the old one
+                        {
+                            Gyms[g.id].update(g);
+                        }
                     }
                 }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -145,20 +152,27 @@ namespace OMAPGMap
             var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
 
             CleanUpExpiredRaids();
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-            var response = await client.GetAsync(raidsURL);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var raids = JsonConvert.DeserializeObject<List<Raid>>(content);
-                foreach (var r in raids)
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+                var response = await client.GetAsync(raidsURL);
+                if (response.IsSuccessStatusCode)
                 {
-                    if (!Raids.Exists(r2 => r2.id.Equals(r.id)))
+                    var content = await response.Content.ReadAsStringAsync();
+                    var raids = JsonConvert.DeserializeObject<List<Raid>>(content);
+                    foreach (var r in raids)
                     {
-                        Raids.Add(r);
+                        if (!Raids.Exists(r2 => r2.id.Equals(r.id)))
+                        {
+                            Raids.Add(r);
+                        }
                     }
                 }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 

@@ -20,13 +20,17 @@ namespace OMAPGMap.iOS
         private List<int> TrashAdded = new List<int>();
         private List<int> TrashRemoved = new List<int>();
         private UITextField DistInput = null;
+        private UIView HeaderView = null;
+        private nint SelectedGen = 0;
+        private int gen2start = 152;
+        private int gen3start = 252;
 
         public ViewController ParentVC { get; set; }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            Title = "Pokemon Filters";
+            Title = "App Settings";
             NavigationItem.LeftBarButtonItem = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
             {
                 if(TrashAdded.Count > 0)
@@ -45,6 +49,8 @@ namespace OMAPGMap.iOS
                 var app = UIApplication.SharedApplication.Delegate as AppDelegate;
                 app.UpdateDeviceData();
             });
+            HeaderView = TableView.TableHeaderView;
+            TableView.TableHeaderView = new UIView();
         }
 
         public override nint NumberOfSections(UITableView tableView)
@@ -52,9 +58,29 @@ namespace OMAPGMap.iOS
             return 2;
         }
 
-        public override string TitleForHeader(UITableView tableView, nint section)
+        //public override string TitleForHeader(UITableView tableView, nint section)
+        //{
+        //    return section == 0 ? "Settings" : "Pokemon Settings";
+        //}
+
+        public override UIView GetViewForHeader(UITableView tableView, nint section)
         {
-            return section == 0 ? "Settings" : "Pokemon Settings";
+            if(section == 0)
+            {
+                var label = new UILabel();
+                label.Text = "Settings";
+                label.Font = UIFont.BoldSystemFontOfSize(17.0f);    
+                return label;
+            }
+            else 
+            {
+                return HeaderView;
+            }
+        }
+
+        public override nfloat GetHeightForHeader(UITableView tableView, nint section)
+        {
+            return section == 0 ? 25.0f : 70.0f;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
@@ -176,7 +202,27 @@ namespace OMAPGMap.iOS
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return section == 0 ? 8 : ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count();
+            if (section == 0)
+            {
+                return 8;
+            }
+            else
+            {
+                var numPokes = 0;
+                switch (SelectedGen)
+                {
+                    case 0:
+                        numPokes = 151;
+                        break;
+                    case 1:
+                        numPokes = 100;
+                        break;
+                    case 2:
+                        numPokes = 134;
+                        break;
+                }
+                return numPokes;
+            }
         }
 
         partial void TrashToggled(NSObject sender)
@@ -225,7 +271,7 @@ namespace OMAPGMap.iOS
             switch(indexPath.Row)
             {
                 case 0: //hide everythings
-                    for (var i = 0; i < ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
+                    for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
 					{
                         var i2 = ConvertRowToID(i);
                         TrashRemoved.Clear();
@@ -239,7 +285,7 @@ namespace OMAPGMap.iOS
                     TableView.ReloadData();
                     break;
                 case 1: //reset trash
-                    for (var i = 0; i < ServiceLayer.NumberPokemon + ServiceLayer.Gen3.Count(); i++)
+                    for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
 					{
                         var i2 = ConvertRowToID(i);
 						if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && ServiceLayer.DefaultTrash.Contains(i2))
@@ -267,7 +313,7 @@ namespace OMAPGMap.iOS
 					if (trash != null)
 					{
 						var trashInt = trash.Select(l => int.Parse(l));
-                        for (var i = 0; i < ServiceLayer.HighestPokemonId; i++)
+                        for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
                         {
                             if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && trashInt.Contains(i))
 							{
@@ -291,12 +337,17 @@ namespace OMAPGMap.iOS
 
         private int ConvertRowToID(int row)
         {
-            if (row >= ServiceLayer.NumberPokemon)
+            var rval = row+1;
+            switch (SelectedGen)
             {
-                return ServiceLayer.Gen3[row - ServiceLayer.NumberPokemon];
-            } else {
-                return row+1;
+                case 1:
+                    rval = row + gen2start;
+                    break;
+                case 2:
+                    rval = row + gen3start;
+                    break;
             }
+            return rval;
         }
 
         partial void SettingToggled(NSObject sender)
@@ -317,6 +368,13 @@ namespace OMAPGMap.iOS
                     ServiceLayer.SharedInstance.Notify100Enabled = toggle.On;
                 }
             }
+            TableView.ReloadData();
+        }
+
+        partial void GenerationSelected(NSObject sender)
+        {
+            var seg = sender as UISegmentedControl;
+            SelectedGen = seg.SelectedSegment;
             TableView.ReloadData();
         }
 	}

@@ -136,7 +136,6 @@ namespace OMAPGMap.iOS
                 var summary = $"Push notification received:" +
                                     $"\n\tNotification title: {e.Title}" +
                                     $"\n\tMessage: {e.Message}";
-
                 // If there is custom data associated with the notification,
                 // print the entries
                 if (e.CustomData != null)

@@ -15,6 +15,9 @@ namespace OMAPGMap.iOS
 		[Action ("DistanceChanged:")]
 		partial void DistanceChanged (Foundation.NSObject sender);
 
+		[Action ("GenerationSelected:")]
+		partial void GenerationSelected (Foundation.NSObject sender);
+
 		[Action ("NotifyToggled:")]
 		partial void NotifyToggled (Foundation.NSObject sender);
 
