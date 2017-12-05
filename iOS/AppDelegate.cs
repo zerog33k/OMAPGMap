@@ -91,7 +91,7 @@ namespace OMAPGMap.iOS
             if (launchOptions != null)
             {
                 var loc = launchOptions[UIApplication.LaunchOptionsLocationKey] as NSNumber;
-                if (loc.BoolValue)
+                if (loc != null && loc.BoolValue)
                 {
                     MonitorBackgroundLocation();
                 }
