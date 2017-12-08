@@ -110,12 +110,12 @@ namespace OMAPGMap.iOS
                         var pokeID = mcDict.ObjectForKey(new NSString("pokemon_id")) as NSString;
                         var lat = mcDict.ObjectForKey(new NSString("lat")) as NSString;
                         var lon = mcDict.ObjectForKey(new NSString("lon")) as NSString;
-                        var expires = mcDict.ObjectForKey(new NSString("expires")) as NSNumber;
+                        var expires = mcDict.ObjectForKey(new NSString("expires")) as NSString;
                         LaunchedNotification = true;
                         LaunchPokemon = pokeID.ToString();
                         LaunchLat = float.Parse(lat.ToString());
                         LaunchLon = float.Parse(lon.ToString());
-                        LaunchExpires = Utility.FromUnixTime(expires.LongValue);
+                        LaunchExpires = Utility.FromUnixTime(long.Parse(expires.ToString()));
                     }
                 }
             }
