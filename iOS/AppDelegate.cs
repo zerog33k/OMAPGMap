@@ -37,6 +37,12 @@ namespace OMAPGMap.iOS
             }
         }
 
+        public bool LaunchedNotification { get; set; } = false;
+        public string LaunchPokemon { get; set; }
+        public long LaunchLat { get; set; }
+        public long LaunchLon { get; set; }
+        public DateTime LaunchExpires { get; set; }
+
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
 
@@ -96,12 +102,24 @@ namespace OMAPGMap.iOS
                     MonitorBackgroundLocation();
                 }
                 var notifyDict = launchOptions[UIApplication.LaunchOptionsRemoteNotificationKey] as NSDictionary;
-                if(notifyDict != null && notifyDict.ContainsKey(new NSString("aps")))
+                if(notifyDict != null && notifyDict.ContainsKey(new NSString("mobile_center")))
                 {
-                    Console.WriteLine($"launched with notify dictionary of {notifyDict}");
+                    var mcDict = notifyDict[new NSString("mobile_center")] as NSDictionary;
+                    if(mcDict != null)
+                    {
+                        var pokeID = mcDict[new NSString("pokemon_id")] as NSString;
+                        var lat = mcDict[new NSString("lat")] as NSString;
+                        var lon = mcDict[new NSString("lon")] as NSString;
+                        var expires = mcDict[new NSString("expires")] as NSNumber;
+                        LaunchedNotification = true;
+                        LaunchPokemon = pokeID.ToString();
+                        LaunchLat = long.Parse(lat.ToString());
+                        LaunchLon = long.Parse(lon.ToString());
+                        LaunchExpires = Utility.FromUnixTime(expires.LongValue);
+                    }
                 }
             }
-
+            UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
             AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
 
             return true;
@@ -131,6 +149,7 @@ namespace OMAPGMap.iOS
         {
             // Restart any tasks that were paused (or not yet started) while the application was inactive. 
             // If the application was previously in the background, optionally refresh the user interface.
+            UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
         }
 
         public override void WillTerminate(UIApplication application)

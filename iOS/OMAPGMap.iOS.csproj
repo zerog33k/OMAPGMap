@@ -1290,6 +1290,8 @@
     <ImageAsset Include="gen3.xcassets\389.imageset\Contents.json" />
     <ImageAsset Include="gen3.xcassets\390.imageset\390.png" />
     <ImageAsset Include="gen3.xcassets\390.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\currentLocation.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\currentLocation.imageset\currentLocation.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -1313,6 +1315,7 @@
     <Folder Include="Assets.xcassets\354.imageset\" />
     <Folder Include="Assets.xcassets\355.imageset\" />
     <Folder Include="Assets.xcassets\356.imageset\" />
+    <Folder Include="Assets.xcassets\currentLocation.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />

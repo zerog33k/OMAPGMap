@@ -30,7 +30,7 @@ namespace OMAPGMap.iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            Title = "App Settings";
+            Title = "Map Settings";
             NavigationItem.LeftBarButtonItem = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
             {
                 if(TrashAdded.Count > 0)
@@ -67,10 +67,7 @@ namespace OMAPGMap.iOS
         {
             if(section == 0)
             {
-                var label = new UILabel();
-                label.Text = "Settings";
-                label.Font = UIFont.BoldSystemFontOfSize(17.0f);    
-                return label;
+                return new UIView();
             }
             else 
             {
@@ -80,7 +77,7 @@ namespace OMAPGMap.iOS
 
         public override nfloat GetHeightForHeader(UITableView tableView, nint section)
         {
-            return section == 0 ? 25.0f : 70.0f;
+            return section == 0 ? 1.0f : 70.0f;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)

@@ -27,7 +27,6 @@ namespace OMAPGMap.iOS
         int lastId = 0;
         bool mapLoaded = false;
         string notifyID = "";
-        bool startedFromNotify = false;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -51,6 +50,7 @@ namespace OMAPGMap.iOS
             var credentialsVerified = ServiceLayer.SharedInstance.Username != "";
             username.Alpha = credentialsVerified ? 0.0f : 1.0f;
             password.Alpha = credentialsVerified ? 0.0f : 1.0f;
+            signInButton.Alpha = credentialsVerified ? 0.0f : 1.0f;
 			username.ShouldReturn += (textField) =>
 			{
                 password.BecomeFirstResponder();
@@ -78,6 +78,7 @@ namespace OMAPGMap.iOS
                 {
                     Console.WriteLine(e);
                     errorLabel.Hidden = false;
+                    tryAgainButton.Hidden = false;
                 } //swallow exception
                 if (loggedIn)
                 {
@@ -90,14 +91,42 @@ namespace OMAPGMap.iOS
                     {
                         loadingLabel.Alpha = 0.0f;
                         errorLabel.Hidden = false;
+                        tryAgainButton.Hidden = false;
                     } else {
                         username.BecomeFirstResponder();
                     }
 					loader.Alpha = 0.0f;
                 }
             }
+
             signInButton.TouchUpInside += SignInButton_TouchUpInside;
             layerSelectButton.TouchUpInside += LayerSelectButton_TouchUpInside;
+            tryAgainButton.TouchUpInside += async (sender, e) => 
+            {
+                var loggedIn = false;
+                try
+                {
+                    loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
+                }
+                catch (Exception e2)
+                {
+                    Console.WriteLine(e2);
+                    errorLabel.Hidden = false;
+                    tryAgainButton.Hidden = false;
+                } //swallow exception
+                if (loggedIn)
+                {
+                    signInButton.Alpha = 0.0f;
+                    await LoggedIn();
+                }
+            };
+            currentLocationButton.TouchUpInside += (sender, e) => 
+            {
+                if (map.UserLocation != null)
+                {
+                    map.SetCenterCoordinate(map.UserLocation.Coordinate, true);
+                }
+            };
         }   
 
         private async Task LoggedIn()
@@ -149,27 +178,16 @@ namespace OMAPGMap.iOS
                     if (mapLoaded)
                     {
                         await NotificationLaunched(pokeID, expiresDate, lat, lon);
-                    } else {
-                        startedFromNotify = true;
-                        notifyID = pokeID;
                     }
                 }
 
                 // Send the notification summary to debug output
                 System.Diagnostics.Debug.WriteLine(summary);
             };
-
-            if(startedFromNotify)
+            var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+            if(app.LaunchedNotification)
             {
-                var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == notifyID).FirstOrDefault();
-                if (poke != null)
-                {
-                    MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, poke.lon));
-                    var coords = new CLLocationCoordinate2D(poke.lat, poke.lon);
-                    var reg = new MKCoordinateRegion(coords, span);
-                    map.SetRegion(reg, true);
-                    map.SelectAnnotation(poke, true);
-                }
+                await NotificationLaunched(app.LaunchPokemon, app.LaunchExpires, app.LaunchLat, app.LaunchLon);
             }
         }
 
