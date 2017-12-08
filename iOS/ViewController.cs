@@ -305,6 +305,9 @@ namespace OMAPGMap.iOS
                     var onMap = map.Annotations.OfType<Pokemon>();
                     var toRemove = onMap.Where(p => p.ExpiresDate < DateTime.UtcNow);
                     map.RemoveAnnotations(toRemove.ToArray());
+                    var onMapRaids = map.Annotations.OfType<Raid>();
+                    var toRemoveRaids = onMapRaids.Where(r => r.TimeEnd < DateTime.UtcNow);
+                    map.RemoveAnnotations(toRemoveRaids.ToArray());
                     var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                     map.AddAnnotations(toAdd.ToArray());

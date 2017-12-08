@@ -45,7 +45,7 @@ namespace OMAPGMap.iOS
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
-
+            AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
             //var helper = new KeychainHelper();
             var user = NSUserDefaults.StandardUserDefaults.StringForKey("user");
             var pass = NSUserDefaults.StandardUserDefaults.StringForKey("pass");
@@ -107,10 +107,10 @@ namespace OMAPGMap.iOS
                     var mcDict = notifyDict[new NSString("mobile_center")] as NSDictionary;
                     if(mcDict != null)
                     {
-                        var pokeID = mcDict[new NSString("pokemon_id")] as NSString;
-                        var lat = mcDict[new NSString("lat")] as NSString;
-                        var lon = mcDict[new NSString("lon")] as NSString;
-                        var expires = mcDict[new NSString("expires")] as NSNumber;
+                        var pokeID = mcDict.ObjectForKey(new NSString("pokemon_id")) as NSString;
+                        var lat = mcDict.ObjectForKey(new NSString("lat")) as NSString;
+                        var lon = mcDict.ObjectForKey(new NSString("lon")) as NSString;
+                        var expires = mcDict.ObjectForKey(new NSString("expires")) as NSNumber;
                         LaunchedNotification = true;
                         LaunchPokemon = pokeID.ToString();
                         LaunchLat = long.Parse(lat.ToString());
@@ -120,7 +120,7 @@ namespace OMAPGMap.iOS
                 }
             }
             UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
-            AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
+
 
             return true;
         }
