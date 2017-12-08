@@ -285,6 +285,8 @@ namespace OMAPGMap.iOS
                     NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
                     NSUserDefaults.StandardUserDefaults.Synchronize();
                     var onMap = map.Annotations.OfType<Pokemon>();
+                    var toRemove = onMap.Where(p => p.ExpiresDate < DateTime.UtcNow);
+                    map.RemoveAnnotations(toRemove.ToArray());
                     var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                     map.AddAnnotations(toAdd.ToArray());

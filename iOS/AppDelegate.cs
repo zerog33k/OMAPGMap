@@ -95,6 +95,11 @@ namespace OMAPGMap.iOS
                 {
                     MonitorBackgroundLocation();
                 }
+                var notifyDict = launchOptions[UIApplication.LaunchOptionsRemoteNotificationKey] as NSDictionary;
+                if(notifyDict != null && notifyDict.ContainsKey(new NSString("aps")))
+                {
+                    Console.WriteLine($"launched with notify dictionary of {notifyDict}");
+                }
             }
 
             AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
