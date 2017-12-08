@@ -39,8 +39,8 @@ namespace OMAPGMap.iOS
 
         public bool LaunchedNotification { get; set; } = false;
         public string LaunchPokemon { get; set; }
-        public long LaunchLat { get; set; }
-        public long LaunchLon { get; set; }
+        public float LaunchLat { get; set; }
+        public float LaunchLon { get; set; }
         public DateTime LaunchExpires { get; set; }
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
@@ -113,8 +113,8 @@ namespace OMAPGMap.iOS
                         var expires = mcDict.ObjectForKey(new NSString("expires")) as NSNumber;
                         LaunchedNotification = true;
                         LaunchPokemon = pokeID.ToString();
-                        LaunchLat = long.Parse(lat.ToString());
-                        LaunchLon = long.Parse(lon.ToString());
+                        LaunchLat = float.Parse(lat.ToString());
+                        LaunchLon = float.Parse(lon.ToString());
                         LaunchExpires = Utility.FromUnixTime(expires.LongValue);
                     }
                 }
