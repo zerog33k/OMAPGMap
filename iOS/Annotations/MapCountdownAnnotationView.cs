@@ -19,6 +19,7 @@ namespace OMAPGMap.iOS.Annotations
 			label.Layer.BackgroundColor = UIColor.LightGray.CGColor;
 			label.TextAlignment = UITextAlignment.Center;
 			label.Font = UIFont.SystemFontOfSize(12.0f, UIFontWeight.Light);
+            img.ContentMode = UIViewContentMode.ScaleAspectFit;
         }
 
 		public virtual void UpdateTime(DateTime now)

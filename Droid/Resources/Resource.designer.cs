@@ -501,11 +501,11 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0001
 			public const int line3 = 2131427329;
 			
+			// aapt resource value: 0x7f0b0016
+			public const int map = 2131427350;
+			
 			// aapt resource value: 0x7f0b001d
 			public const int media_actions = 2131427357;
-			
-			// aapt resource value: 0x7f0b0016
-			public const int myButton = 2131427350;
 			
 			// aapt resource value: 0x7f0b0006
 			public const int none = 2131427334;

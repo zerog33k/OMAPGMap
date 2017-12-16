@@ -298,10 +298,13 @@ namespace OMAPGMap.iOS
 				}
                 if (ServiceLayer.SharedInstance.LayersEnabled[0])
                 {
-                    lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p.idValue).idValue;
-                    var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p.idValue).idValue;
-                    NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
-                    NSUserDefaults.StandardUserDefaults.Synchronize();
+                    if (ServiceLayer.SharedInstance.Pokemon.Count() > 0)
+                    {
+                        lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p?.idValue)?.idValue ?? lastId;
+                        var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p?.idValue)?.idValue ?? 0;
+                        NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
+                        NSUserDefaults.StandardUserDefaults.Synchronize();
+                    }
                     var onMap = map.Annotations.OfType<Pokemon>();
                     var toRemove = onMap.Where(p => p.ExpiresDate < DateTime.UtcNow);
                     map.RemoveAnnotations(toRemove.ToArray());

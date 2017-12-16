@@ -13,6 +13,8 @@ namespace OMAPGMap.iOS.Annotations
 
         private Raid _raid;
 
+        protected UIImageView raidImg = new UIImageView(new CGRect(0, 15, 25, 25));
+
         public RaidAnnotationView(IMKAnnotation annotate, string resueID) : base(annotate, resueID)
         {
             var raid = annotate as Raid;
@@ -20,6 +22,9 @@ namespace OMAPGMap.iOS.Annotations
             {
                 Raid = raid;
             }
+            raidImg.Hidden = true;
+            raidImg.ContentMode = UIViewContentMode.ScaleAspectFit;
+            AddSubview(raidImg);
 
         }
 
@@ -30,13 +35,15 @@ namespace OMAPGMap.iOS.Annotations
                 _raid = value;
                 if (_raid != null)
 				{
+                    img.Image = UIImage.FromBundle($"egg{_raid.level}");
                     if(_raid.pokemon_id == 0)
                     {
-                        img.Image = UIImage.FromBundle($"egg{_raid.level}");
+                        raidImg.Hidden = true;
                         CountdownDate = _raid.TimeBattle;
                     } else
                     {
-                        img.Image = UIImage.FromBundle($"raid{_raid.pokemon_id}");
+                        raidImg.Hidden = false;
+                        raidImg.Image =  UIImage.FromBundle(_raid.pokemon_id.ToString("D3"));
                         CountdownDate = _raid.TimeEnd;
                     }
 				}
@@ -47,12 +54,10 @@ namespace OMAPGMap.iOS.Annotations
         {
             if (_raid.pokemon_id == 0 && now < _raid.TimeBattle)
 			{
-				img.Image = UIImage.FromBundle($"egg{_raid.level}");
 				CountdownDate = _raid.TimeBattle;
 			}
             else if(_raid.pokemon_id != 0 && now < _raid.TimeEnd )
 			{
-				img.Image = UIImage.FromBundle($"raid{_raid.pokemon_id}");
 				CountdownDate = _raid.TimeEnd;
 			}
 
