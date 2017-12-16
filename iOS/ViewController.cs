@@ -315,20 +315,15 @@ namespace OMAPGMap.iOS
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                     map.AddAnnotations(toAdd.ToArray());
                 }
-                var gymsOnMap = map.Annotations.OfType<Gym>();
-                if(gymsOnMap.Count() == 0 && ServiceLayer.SharedInstance.LayersEnabled[1])
+
+                if(ServiceLayer.SharedInstance.LayersEnabled[1])
                 {
-                    map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
-                    Console.WriteLine($"Adding {ServiceLayer.SharedInstance.Gyms.Count()} gyms to the map");
-                } else if(gymsOnMap.Count() > 0 && ServiceLayer.SharedInstance.LayersEnabled[1])
-                {
-                    var before = DateTime.UtcNow.AddMinutes(2.0);
-                    var toUpdate = gymsOnMap.Where(g => g.LastModifedDate > before);
-                    foreach(var g in toUpdate) // update those that are on the map
+                    var gymsOnMap = map.Annotations.OfType<Gym>();
+                    if (gymsOnMap.Count() > 0)
                     {
-                        var ga = map.ViewForAnnotation(g) as GymAnnotationView;
-                        ga.Gym = g;
+                        map.RemoveAnnotations(gymsOnMap.ToArray());
                     }
+                    map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
                 }
 				if (ServiceLayer.SharedInstance.LayersEnabled[2])
 				{
