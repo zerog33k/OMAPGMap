@@ -94,6 +94,14 @@ namespace OMAPGMap.iOS
                 ServiceLayer.SharedInstance.Notify90Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify90");
                 ServiceLayer.SharedInstance.Notify100Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify100");
             }
+            if (NSUserDefaults.StandardUserDefaults.ValueForKey(new NSString("raid5")) != null)
+            {
+                ServiceLayer.SharedInstance.LegondaryRaids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid5");
+                ServiceLayer.SharedInstance.Level4Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid4");
+                ServiceLayer.SharedInstance.Level3Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid3");
+                ServiceLayer.SharedInstance.Level2Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid2");
+                ServiceLayer.SharedInstance.Level1Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid1");
+            }
             if (launchOptions != null)
             {
                 var loc = launchOptions[UIApplication.LaunchOptionsLocationKey] as NSNumber;
@@ -212,6 +220,11 @@ namespace OMAPGMap.iOS
                 NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify90Enabled, new NSString("notify100"));
                 NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify100Enabled, new NSString("notify90"));
                 NSUserDefaults.StandardUserDefaults.SetInt(ServiceLayer.SharedInstance.NotifyDistance, new NSString("notifyDistance"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.LegondaryRaids, new NSString("raid5"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level4Raids, new NSString("raid4"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level3Raids, new NSString("raid3"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level2Raids, new NSString("raid2"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level1Raids, new NSString("raid1"));
                 var installId = MSAppCenter.InstallId();
                 await ServiceLayer.SharedInstance.UpdateDeviceInfo(installId.ToString(), currentLocation.Coordinate.Latitude, currentLocation.Coordinate.Longitude);
             }

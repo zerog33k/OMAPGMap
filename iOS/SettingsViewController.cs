@@ -45,6 +45,7 @@ namespace OMAPGMap.iOS
                 {
                     ServiceLayer.SharedInstance.NotifyDistance = int.Parse(DistInput.Text);
                 }
+                ParentVC.ApplySettings();
                 DismissViewController(true, null);
                 var app = UIApplication.SharedApplication.Delegate as AppDelegate;
                 app.UpdateDeviceData();
@@ -97,13 +98,13 @@ namespace OMAPGMap.iOS
                         label.Text = "Hide Everything";
                         break;
                     case 1:
-                        label.Text = "Reset Default Trash";
+                        label.Text = "Reset Default Hidden";
                         break;
                     case 2:
-                        label.Text = "Save Current Trash";
+                        label.Text = "Save Current Hidden";
                         break;
                     case 3:
-                        label.Text = "Recall Saved Trash";
+                        label.Text = "Recall Saved Hidden";
                         break;
                     case 4:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
@@ -117,7 +118,7 @@ namespace OMAPGMap.iOS
                         var s1 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "> 90% IV Notify";
-                        s1.On = ServiceLayer.SharedInstance.NotifyEnabled;
+                        s1.On = ServiceLayer.SharedInstance.Notify90Enabled;
                         label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
                         s1.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
                         break;
@@ -126,7 +127,7 @@ namespace OMAPGMap.iOS
                         var s2 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "100% IV Notify";
-                        s2.On = ServiceLayer.SharedInstance.NotifyEnabled;
+                        s2.On = ServiceLayer.SharedInstance.Notify100Enabled;
                         label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
                         s2.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
                         break;
@@ -154,11 +155,46 @@ namespace OMAPGMap.iOS
                         input.Text = ServiceLayer.SharedInstance.NotifyDistance.ToString();
                         label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
                         input.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
-
+                        break;
+                    case 8:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s3 = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "Legondary Raids";
+                        s3.On = ServiceLayer.SharedInstance.LegondaryRaids;
+                        break;
+                    case 9:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s4 = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "Level 4 Raids";
+                        s4.On = ServiceLayer.SharedInstance.Level4Raids;
+                        break;
+                    case 10:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s5 = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "Level 3 Raids";
+                        s5.On = ServiceLayer.SharedInstance.Level3Raids;
+                        break;
+                    case 11:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s6 = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "Level 2 Raids";
+                        s6.On = ServiceLayer.SharedInstance.Level2Raids;
+                        break;
+                    case 12:
+                        cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
+                        var s7 = cell.ViewWithTag(2) as UISwitch;
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "Level 1 Raids";
+                        s7.On = ServiceLayer.SharedInstance.Level1Raids;
                         break;
                 }
                 return cell;
             }
+
 
 
             else
@@ -201,7 +237,7 @@ namespace OMAPGMap.iOS
         {
             if (section == 0)
             {
-                return 8;
+                return 13;
             }
             else
             {
@@ -363,7 +399,23 @@ namespace OMAPGMap.iOS
                 } else if(path.Row == 6)
                 {
                     ServiceLayer.SharedInstance.Notify100Enabled = toggle.On;
+                }else if (path.Row == 8)
+                {
+                    ServiceLayer.SharedInstance.LegondaryRaids = toggle.On;
+                } else if (path.Row == 9)
+                {
+                    ServiceLayer.SharedInstance.Level4Raids = toggle.On;
+                } else if (path.Row == 10)
+                {
+                    ServiceLayer.SharedInstance.Level3Raids = toggle.On;
+                } else if (path.Row == 11)
+                {
+                    ServiceLayer.SharedInstance.Level2Raids = toggle.On;
+                } else if (path.Row == 12)
+                {
+                    ServiceLayer.SharedInstance.Level1Raids = toggle.On;
                 }
+
             }
             TableView.ReloadData();
         }

@@ -22,7 +22,7 @@ namespace OMAPGMap.iOS
         CLLocationManager locationManager;
         Timer secondTimer;
         Timer minuteTimer;
-        string[] Layers = { "Pokemon", "Gyms", "Raids", "Trash" };
+        string[] Layers = { "Pokemon", "Gyms", "Raids"};
         UITableViewController layersTableVC = null;
         int lastId = 0;
         bool mapLoaded = false;
@@ -135,18 +135,30 @@ namespace OMAPGMap.iOS
             await ServiceLayer.SharedInstance.LoadData(lastId);
             loader.StopAnimating();
             map.Delegate = this;
-            if (ServiceLayer.SharedInstance.LayersEnabled[3])
-            {
-                lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p.idValue).idValue;
-                var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p.idValue).idValue;
-                NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
-                NSUserDefaults.StandardUserDefaults.Synchronize();
-                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.ToArray());
-            } else{
-                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
-            }
+            map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
             map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
-            map.AddAnnotations(ServiceLayer.SharedInstance.Raids.ToArray());
+            var toAdd = new List<Raid>(ServiceLayer.SharedInstance.Raids);
+            if (!ServiceLayer.SharedInstance.LegondaryRaids)
+            {
+                toAdd.RemoveAll(r => r.level == 5);
+            }
+            if (!ServiceLayer.SharedInstance.Level4Raids)
+            {
+                toAdd.RemoveAll(r => r.level == 4);
+            }
+            if (!ServiceLayer.SharedInstance.Level3Raids)
+            {
+                toAdd.RemoveAll(r => r.level == 3);
+            }
+            if (!ServiceLayer.SharedInstance.Level2Raids)
+            {
+                toAdd.RemoveAll(r => r.level == 2);
+            }
+            if (!ServiceLayer.SharedInstance.Level1Raids)
+            {
+                toAdd.RemoveAll(r => r.level == 1);
+            }
+            map.AddAnnotations(toAdd.ToArray());
             UIView.Animate(0.3, () =>
             {
                 overlayView.Alpha = 0.0f;
@@ -335,7 +347,27 @@ namespace OMAPGMap.iOS
                     });
                     map.RemoveAnnotations(haveHatched.ToArray());
                     raidsOnMap.RemoveAll(r => haveHatched.Contains(r));
-                    var toAdd = ServiceLayer.SharedInstance.Raids.Except(raidsOnMap);
+                    var toAdd = ServiceLayer.SharedInstance.Raids.Except(raidsOnMap).ToList();
+                    if(!ServiceLayer.SharedInstance.LegondaryRaids)
+                    {
+                        toAdd.RemoveAll(r => r.level == 5);
+                    }
+                    if (!ServiceLayer.SharedInstance.Level4Raids)
+                    {
+                        toAdd.RemoveAll(r => r.level == 4);
+                    }
+                    if (!ServiceLayer.SharedInstance.Level3Raids)
+                    {
+                        toAdd.RemoveAll(r => r.level == 3);
+                    }
+                    if (!ServiceLayer.SharedInstance.Level2Raids)
+                    {
+                        toAdd.RemoveAll(r => r.level == 2);
+                    }
+                    if (!ServiceLayer.SharedInstance.Level1Raids)
+                    {
+                        toAdd.RemoveAll(r => r.level == 1);
+                    }
                     map.AddAnnotations(toAdd.ToArray());
 					Console.WriteLine($"Adding {toAdd.Count()} raids to the map");
 				}
@@ -550,5 +582,64 @@ namespace OMAPGMap.iOS
             }
         }
 
+        public void ApplySettings()
+        {
+            if(ServiceLayer.SharedInstance.LayersEnabled[2])
+            {
+                var l5 = map.Annotations.OfType<Raid>().Where(r => r.level == 5);
+                var l4 = map.Annotations.OfType<Raid>().Where(r => r.level == 4);
+                var l3 = map.Annotations.OfType<Raid>().Where(r => r.level == 3);
+                var l2 = map.Annotations.OfType<Raid>().Where(r => r.level == 2);
+                var l1 = map.Annotations.OfType<Raid>().Where(r => r.level == 1);
+                if(ServiceLayer.SharedInstance.LegondaryRaids && l5.Count() == 0)
+                {
+                    var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 5);
+                    map.AddAnnotations(removeRaids.ToArray());
+                } else if(!ServiceLayer.SharedInstance.LegondaryRaids && l5.Count() != 0)
+                {
+                    map.RemoveAnnotations(l5.ToArray());
+                }
+
+                if (ServiceLayer.SharedInstance.Level4Raids && l4.Count() == 0)
+                {
+                    var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 4);
+                    map.AddAnnotations(removeRaids.ToArray());
+                }
+                else if (!ServiceLayer.SharedInstance.Level4Raids && l4.Count() != 0)
+                {
+                    map.RemoveAnnotations(l4.ToArray());
+                }
+
+                if (ServiceLayer.SharedInstance.Level3Raids && l3.Count() == 0)
+                {
+                    var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 3);
+                    map.AddAnnotations(removeRaids.ToArray());
+                }
+                else if (!ServiceLayer.SharedInstance.Level3Raids && l3.Count() != 0)
+                {
+                    map.RemoveAnnotations(l3.ToArray());
+                }
+
+                if (ServiceLayer.SharedInstance.Level2Raids && l2.Count() == 0)
+                {
+                    var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 2);
+                    map.AddAnnotations(removeRaids.ToArray());
+                }
+                else if (!ServiceLayer.SharedInstance.Level2Raids && l2.Count() != 0)
+                {
+                    map.RemoveAnnotations(l2.ToArray());
+                }
+
+                if (ServiceLayer.SharedInstance.Level1Raids && l1.Count() == 0)
+                {
+                    var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 1);
+                    map.AddAnnotations(removeRaids.ToArray());
+                }
+                else if (!ServiceLayer.SharedInstance.Level1Raids && l1.Count() != 0)
+                {
+                    map.RemoveAnnotations(l1.ToArray());
+                }
+            }
+        }
     }
 }
