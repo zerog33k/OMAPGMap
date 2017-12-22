@@ -160,7 +160,7 @@ namespace OMAPGMap.iOS
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s3 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
-                        label.Text = "Legondary Raids";
+                        label.Text = "Legendary Raids";
                         s3.On = ServiceLayer.SharedInstance.LegondaryRaids;
                         break;
                     case 9:
