@@ -93,6 +93,7 @@ namespace OMAPGMap.iOS
                 ServiceLayer.SharedInstance.NotifyEnabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notifyEnabled");
                 ServiceLayer.SharedInstance.Notify90Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify90");
                 ServiceLayer.SharedInstance.Notify100Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify100");
+                ServiceLayer.SharedInstance.NotifyDistance = (int) NSUserDefaults.StandardUserDefaults.IntForKey("notifyDistance");
             }
             if (NSUserDefaults.StandardUserDefaults.ValueForKey(new NSString("raid5")) != null)
             {
@@ -217,8 +218,8 @@ namespace OMAPGMap.iOS
                 var tosave = NSArray.FromStrings(notifyStrings);
                 NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("notify"));
                 NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.NotifyEnabled, new NSString("notifyEnabled"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify90Enabled, new NSString("notify100"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify100Enabled, new NSString("notify90"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify90Enabled, new NSString("notify90"));
+                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify100Enabled, new NSString("notify100"));
                 NSUserDefaults.StandardUserDefaults.SetInt(ServiceLayer.SharedInstance.NotifyDistance, new NSString("notifyDistance"));
                 NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.LegondaryRaids, new NSString("raid5"));
                 NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level4Raids, new NSString("raid4"));
