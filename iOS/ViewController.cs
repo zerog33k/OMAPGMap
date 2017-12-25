@@ -211,6 +211,7 @@ namespace OMAPGMap.iOS
                 CLLocationCoordinate2D coords = e.Locations[0].Coordinate;
 				MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(2), Utility.MilesToLongitudeDegrees(2, coords.Latitude));
                 map.SetRegion(new MKCoordinateRegion(coords, span), true);
+                ServiceLayer.SharedInstance.UserLocation = new Coordinates(coords.Latitude, coords.Longitude);
             }
             var app = UIApplication.SharedApplication.Delegate as AppDelegate;
             app.CurrentLocation = e.Locations.First();

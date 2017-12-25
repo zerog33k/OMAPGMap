@@ -1,8 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/map"
-    tools:context=".MapsActivity"
-    android:name="com.google.android.gms.maps.SupportMapFragment" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <fragment xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        tools:context=".MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+    <android.support.v7.widget.CardView
+        android:layout_width="300dp"
+        android:layout_height="245dp"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/lightgray"
+        android:id="@+id/loginHolder"
+        android:backgroundTintMode="src_atop">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/usernameWrapper"
+                android:layout_marginTop="4dp">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/username"
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:hint="Username"
+                    android:includeFontPadding="true"
+                    android:inputType="textNoSuggestions"
+                    android:phoneNumber="false"
+                    android:textColor="@android:color/black"
+                    android:password="false" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/passwordWrapper"
+                android:layout_below="@id/usernameWrapper"
+                android:layout_marginTop="4dp">
+                <EditText
+                    android:inputType="textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/password"
+                    android:hint="Password"
+                    android:paddingTop="10dp"
+                    android:textColor="@android:color/black"
+                    android:paddingLeft="20dp" />
+            </android.support.design.widget.TextInputLayout>
+            <Button
+                android:id="@+id/signInButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign In"
+                android:paddingTop="15dp" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</FrameLayout>

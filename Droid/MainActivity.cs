@@ -12,11 +12,18 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Android.Views;
+using Android.Support.V7.App;
+using Android.Support.Design.Widget;
+using Android.Support.V7.Widget;
+using System;
+using System.Threading.Tasks;
+using Android.Preferences;
+using Android.Content;
 
 namespace OMAPGMap.Droid
 {
-    [Activity(Label = "OMA PGMap", MainLauncher = true, Icon = "@mipmap/ic_launcher")]
-    public class MainActivity : FragmentActivity, IOnMapReadyCallback
+    [Activity(Label = "OMA PGMap", MainLauncher = true, Icon = "@mipmap/ic_launcher", WindowSoftInputMode = SoftInput.AdjustResize)]
+    public class MainActivity : AppCompatActivity, IOnMapReadyCallback
     {
         MapFragment _mapFragment = null;
         GoogleMap map = null;
@@ -27,6 +34,9 @@ namespace OMAPGMap.Droid
         private bool mLocationPermissionGranted;
         private Location lastKnownLocation;
         private bool centeredMap = false;
+        private EditText username;
+        private EditText password;
+        private CardView loginHolder;
 
         readonly string[] PermissionsLocation =
         {
@@ -34,7 +44,7 @@ namespace OMAPGMap.Droid
             Manifest.Permission.AccessFineLocation
         };
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Window.RequestFeature(WindowFeatures.NoTitle);
@@ -56,7 +66,47 @@ namespace OMAPGMap.Droid
                 fragTx.Add(Resource.Id.map, _mapFragment, "map");
                 fragTx.Commit();
             }
-            _mapFragment.GetMapAsync(this);
+
+            var prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+            var user = prefs.GetString("username", "empty");
+            if(user != "empty")
+            {
+                var pass = prefs.GetString("password", "empty");
+                ServiceLayer.SharedInstance.Username = user;
+                ServiceLayer.SharedInstance.Password = pass;
+                await ServiceLayer.SharedInstance.VerifyCredentials();
+            }
+
+            loginHolder = FindViewById(Resource.Id.loginHolder) as CardView;
+
+            if(ServiceLayer.SharedInstance.LoggedIn)
+            {
+                loginHolder.Visibility = ViewStates.Gone;
+                _mapFragment.GetMapAsync(this);
+                await LoadData();
+            } else 
+            {
+                username = FindViewById(Resource.Id.username) as EditText;
+                password = FindViewById(Resource.Id.password) as EditText;
+                username.RequestFocus();
+                _mapFragment.GetMapAsync(this);
+            }
+
+            var loginButton = FindViewById(Resource.Id.signInButton) as Button;
+            loginButton.Click += LoginButton_Click;
+        }
+
+        private async Task LoadData()
+        {
+            var progress = new ProgressDialog(this);  
+            progress.Indeterminate = true;  
+            progress.SetProgressStyle(ProgressDialogStyle.Spinner);  
+            progress.SetMessage("Loading...");  
+            progress.SetCancelable(false);  
+            progress.Show();  
+            await ServiceLayer.SharedInstance.LoadData(0);
+            progress.Dismiss();
+
         }
 
         public void OnMapReady(GoogleMap mapp)
@@ -123,6 +173,32 @@ namespace OMAPGMap.Droid
         public void RequestCredentials()
         {
             
+        }
+
+        async void LoginButton_Click(object sender, EventArgs e)
+        {
+            ServiceLayer.SharedInstance.Username = username.Text;
+            ServiceLayer.SharedInstance.Password = password.Text;
+            var loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
+            if(loggedIn)
+            {
+                var prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+                var editor = prefs.Edit();
+                editor.PutString("username", ServiceLayer.SharedInstance.Username);
+                editor.PutString("password", ServiceLayer.SharedInstance.Password);
+                editor.Apply();
+                loginHolder.Visibility = ViewStates.Gone;
+                await LoadData();
+            } else 
+            {
+                Android.Support.V7.App.AlertDialog.Builder alert = new Android.Support.V7.App.AlertDialog.Builder(this);
+                alert.SetTitle("Error Logging In");
+                alert.SetMessage("Username or password incorrect");
+                alert.SetPositiveButton("Ok", (senderAlert, args) => { });
+
+                Dialog dialog = alert.Create();
+                dialog.Show();
+            }
         }
     }
 }

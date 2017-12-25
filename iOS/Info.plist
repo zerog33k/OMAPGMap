@@ -69,8 +69,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>CFBundleVersion</key>
-	<string>12</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
@@ -79,5 +77,7 @@
 	<string>To let you know when Pokémon are near you!</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To let you know when Pokémon are near you!</string>
+	<key>CFBundleVersion</key>
+	<string>81</string>
 </dict>
 </plist>

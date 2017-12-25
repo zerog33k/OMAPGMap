@@ -6,38 +6,4 @@
     android:minWidth="25px"
     android:minHeight="25px"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp">
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/usernameWrapper"
-        android:layout_marginTop="4dp">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/username"
-            android:paddingTop="40dp"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
-            android:hint="Username"
-            android:includeFontPadding="true"
-            android:inputType="textNoSuggestions"
-            android:phoneNumber="false"
-            android:password="false" />
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/passwordWrapper"
-        android:layout_marginTop="4dp">
-        <EditText
-            android:inputType="textPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/password"
-            android:hint="Password"
-            android:paddingTop="10dp"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp" />
-    </android.support.design.widget.TextInputLayout>
-</LinearLayout>
+    android:paddingRight="10dp" />

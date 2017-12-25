@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 using OMAPGServiceData.Models;
 #else
 using OMAPGMap.Models;
-#endif  
+#endif
 
 namespace OMAPGMap
 {
@@ -23,9 +23,12 @@ namespace OMAPGMap
         public static ServiceLayer SharedInstance { get { return lazy.Value; } }
 
         private static string baseURL = "http://zerogeek.net/map";
-        private static string pokemonURL = $"{baseURL}/data";
-        private static string gymsURL = $"{baseURL}/gym_data";
-        private static string raidsURL = $"{baseURL}/raids";
+        private static string altURL = "http://107.189.42.114:7500";
+        private string dataURL = baseURL;
+
+        private string pokemonURL => $"{dataURL}/data";
+        private string gymsURL => $"{dataURL}/gym_data";
+        private string raidsURL => $"{dataURL}/raids";
 
         private ServiceLayer()
         {
@@ -57,6 +60,24 @@ namespace OMAPGMap
 
         public string Username { get; set; } = "";
         public string Password { get; set; } = "";
+        public bool LoggedIn { get; set; } = false;
+
+        private Coordinates _userLocation;
+        public Coordinates UserLocation {
+            set{
+                _userLocation = value;
+                var dist = Coordinates.DistanceBetween(value, BlairLocation);
+                var distMiles = dist * 0.0000062137;
+                if(distMiles < 5)
+                {
+                    dataURL = altURL;
+                    Console.WriteLine($"loading data from {pokemonURL}");
+                    _isAltLocation = true;
+                }
+            }
+        }
+        public static Coordinates BlairLocation = new Coordinates(41.543834, -96.137934);
+        private bool _isAltLocation = false;
 
         public async Task<bool> VerifyCredentials()
         {
@@ -71,6 +92,7 @@ namespace OMAPGMap
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
             var response = await client.GetAsync(baseURL);
             rval = response.StatusCode != System.Net.HttpStatusCode.Unauthorized;
+            LoggedIn = rval;
             return rval;
         }
 
@@ -103,7 +125,8 @@ namespace OMAPGMap
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
             try
             {
-                var response = await client.GetAsync($"{pokemonURL}?last_id={lastId}");
+                var lid = _isAltLocation ? 0 : lastId;
+                var response = await client.GetAsync($"{pokemonURL}?last_id={lid}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
