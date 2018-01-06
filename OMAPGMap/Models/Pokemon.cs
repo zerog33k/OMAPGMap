@@ -47,6 +47,8 @@ namespace OMAPGMap.Models
         public int level { get; set; }
         public int cp { get; set; }
 
+        public float iv { get => (sta + def + atk) / 45.0f; }
+
         public int CompareTo(object obj)
         {
             return idValue.CompareTo(obj);

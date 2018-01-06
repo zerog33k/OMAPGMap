@@ -90,9 +90,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="MoreLinq">
-      <HintPath>..\packages\morelinq.2.8.0\lib\netstandard2.0\MoreLinq.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AppCenter.Android.Bindings">
       <HintPath>..\packages\Microsoft.AppCenter.1.1.0\lib\MonoAndroid403\Microsoft.AppCenter.Android.Bindings.dll</HintPath>
     </Reference>
@@ -138,12 +135,16 @@
     <Reference Include="Xamarin.Android.Support.v7.CardView">
       <HintPath>..\packages\Xamarin.Android.Support.v7.CardView.26.1.0.1\lib\MonoAndroid80\Xamarin.Android.Support.v7.CardView.dll</HintPath>
     </Reference>
+    <Reference Include="MoreLinq">
+      <HintPath>..\packages\morelinq.2.9.0\lib\netstandard2.0\MoreLinq.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LoginActivity.cs" />
+    <Compile Include="Pokemon.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -187,6 +188,8 @@
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\layout\Login.axml" />
+    <AndroidResource Include="Resources\layout\map_marker.xml" />
+    <AndroidResource Include="Resources\drawable\rounded_corner.xml" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p001.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p002.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p003.png" />
@@ -437,6 +440,115 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\p249.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p250.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p251.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p252.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p253.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p254.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p255.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p256.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p257.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p258.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p259.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p260.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p261.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p262.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p263.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p264.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p265.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p266.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p267.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p268.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p269.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p270.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p271.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p272.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p273.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p274.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p275.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p276.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p277.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p278.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p279.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p280.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p281.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p282.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p283.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p284.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p285.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p286.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p287.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p288.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p289.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p290.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p291.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p292.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p293.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p294.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p295.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p296.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p297.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p298.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p299.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p300.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p301.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p302.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p303.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p304.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p305.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p306.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p307.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p308.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p309.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p310.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p311.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p312.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p313.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p314.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p315.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p316.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p317.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p318.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p319.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p320.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p321.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p322.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p323.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p324.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p325.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p326.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p327.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p328.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p329.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p330.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p331.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p332.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p333.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p334.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p335.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p336.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p337.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p338.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p339.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p340.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p341.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p342.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p343.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p344.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p345.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p346.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p347.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p348.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p349.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p350.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p351.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p353.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p354.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p355.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p356.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p359.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p360.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p383.png" />
+    <AndroidResource Include="Resources\layout\pokemon_info.xml" />
+    <AndroidResource Include="Resources\layout\settings.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />
@@ -444,6 +556,7 @@
     <Folder Include="Resources\mipmap-xhdpi\" />
     <Folder Include="Resources\mipmap-xxhdpi\" />
     <Folder Include="Resources\mipmap-xxxhdpi\" />
+    <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <Import Project="..\OMAPGMap\OMAPGMap.projitems" Label="Shared" Condition="Exists('..\OMAPGMap\OMAPGMap.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

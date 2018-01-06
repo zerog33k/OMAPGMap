@@ -62,29 +62,11 @@ namespace OMAPGMap.iOS
             }
 
             var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
-            var gen3Added = NSUserDefaults.StandardUserDefaults.BoolForKey("gen3Added2");
-			if (trash != null)
-			{
+            if (trash != null)
+            {
                 var trashInt = trash.Select(l => int.Parse(l));
                 ServiceLayer.SharedInstance.PokemonTrash = new List<int>(trashInt);
-                if(!gen3Added)
-                {
-                    for (int i = 253; i < 379; i++)
-                    {
-                        if(!ServiceLayer.SharedInstance.PokemonTrash.Contains(i))
-                        {
-                            ServiceLayer.SharedInstance.PokemonTrash.Add(i);
-                        }
-                    }
-                    NSUserDefaults.StandardUserDefaults.SetBool(true, "gen3Added2");
-                    var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
-                    var tosave = NSArray.FromStrings(trashStrings);
-                    NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trash"));
-                } else 
-                {
-                    NSUserDefaults.StandardUserDefaults.SetBool(true, "gen3Added2");
-                }
-			}
+            }
             var notify = NSUserDefaults.StandardUserDefaults.StringArrayForKey("notify");
             if (notify != null)
             {

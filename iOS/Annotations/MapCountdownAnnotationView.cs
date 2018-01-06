@@ -34,5 +34,11 @@ namespace OMAPGMap.iOS.Annotations
 				}
 			}
 		}
+
+        public bool TimerVisible {
+            set {
+                label.Hidden = !value;
+            }
+        }
     }
 }

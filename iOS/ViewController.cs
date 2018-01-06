@@ -22,10 +22,11 @@ namespace OMAPGMap.iOS
         CLLocationManager locationManager;
         Timer secondTimer;
         Timer minuteTimer;
-        string[] Layers = { "Pokemon", "Gyms", "Raids"};
+        string[] Layers = { "Pokémon", "Gyms", "Raids", "90+ IV Pokémon"};
         UITableViewController layersTableVC = null;
         int lastId = 0;
         bool mapLoaded = false;
+        bool timersVisible = true;
         string notifyID = "";
 
         public ViewController(IntPtr handle) : base(handle)
@@ -127,6 +128,7 @@ namespace OMAPGMap.iOS
                     map.SetCenterCoordinate(map.UserLocation.Coordinate, true);
                 }
             };
+
         }   
 
         private async Task LoggedIn()
@@ -257,6 +259,11 @@ namespace OMAPGMap.iOS
 				raidAV.UpdateTime(DateTime.Now);
                 annotateView.CanShowCallout = true;
             }
+            var av = annotateView as MapCountdownAnnotationView;
+            if(av != null)
+            {
+                av.TimerVisible = timersVisible;
+            }
             return annotateView;
         }
 
@@ -273,18 +280,39 @@ namespace OMAPGMap.iOS
 					map.RemoveAnnotations(raids.ToArray());
                     Console.WriteLine($"Removed {pokes.Count()} pokemon and {raids.Count()} raids");
                     var annotations = map.GetAnnotations(map.VisibleMapRect);
-                    foreach (var a in annotations)
+                    if(annotations.Count() > 150 && timersVisible)
                     {
-                        var a2 = a as IMKAnnotation;
-                        if (a is Pokemon || a is Raid)
+                        timersVisible = false;
+                        foreach (var a in map.Annotations)
                         {
-                            var annotateView = map.ViewForAnnotation(a2) as MapCountdownAnnotationView;
-                            if (annotateView != null)
+                            var a2 = a as IMKAnnotation;
+                            if (a is Pokemon || a is Raid)
                             {
-                                annotateView.UpdateTime(now);
+                                var annotateView = map.ViewForAnnotation(a2) as MapCountdownAnnotationView;
+                                if (annotateView != null)
+                                {
+                                    annotateView.TimerVisible = timersVisible;
+                                }
+                            }
+                        }
+                    } else 
+                    {
+                        timersVisible = true;
+                        foreach (var a in annotations)
+                        {
+                            var a2 = a as IMKAnnotation;
+                            if (a is Pokemon || a is Raid)
+                            {
+                                var annotateView = map.ViewForAnnotation(a2) as MapCountdownAnnotationView;
+                                if (annotateView != null)
+                                {
+                                    annotateView.UpdateTime(now);
+                                    annotateView.TimerVisible = timersVisible;
+                                }
                             }
                         }
                     }
+
                 }
                 catch (Exception e)
                 {
@@ -324,7 +352,14 @@ namespace OMAPGMap.iOS
                     var onMapRaids = map.Annotations.OfType<Raid>();
                     var toRemoveRaids = onMapRaids.Where(r => r.TimeEnd < DateTime.UtcNow);
                     map.RemoveAnnotations(toRemoveRaids.ToArray());
-                    var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
+                    List<Pokemon> toAdd;
+                    if(ServiceLayer.SharedInstance.LayersEnabled[3])
+                    {
+                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(onMap);
+                    } else 
+                    {
+                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
+                    }
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                     map.AddAnnotations(toAdd.ToArray());
                 }
@@ -642,5 +677,6 @@ namespace OMAPGMap.iOS
                 }
             }
         }
+
     }
 }

@@ -62,6 +62,23 @@
                 android:layout_height="wrap_content"
                 android:text="Sign In"
                 android:paddingTop="15dp" />
+            <TextView xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/loginMessage"
+                android:paddingTop="20dp"
+                android:textColor="#ffb71c1c"
+                android:gravity="center"
+                android:text="Username and password incorrect."
+                tools:visibility="gone" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/lightgray"
+        android:id="@+id/settingsHolder"
+        android:backgroundTintMode="src_atop"
+        android:layout_margin="20dp" />
 </FrameLayout>
