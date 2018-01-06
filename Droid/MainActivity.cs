@@ -288,8 +288,8 @@ namespace OMAPGMap.Droid
                 if(!centeredMap)
                 {
                     centeredMap = true;
-                    //var cam = CameraUpdateFactory.NewLatLngZoom(new LatLng(e.Location.Latitude, e.Location.Longitude), defaultZoom);
-                    //map.MoveCamera(cam);
+                    var cam = CameraUpdateFactory.NewLatLngZoom(new LatLng(e.Location.Latitude, e.Location.Longitude), defaultZoom);
+                    map.MoveCamera(cam);
                 }
                 userLocation = e.Location;
             };
