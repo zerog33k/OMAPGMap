@@ -549,6 +549,7 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\p383.png" />
     <AndroidResource Include="Resources\layout\pokemon_info.xml" />
     <AndroidResource Include="Resources\layout\settings.xml" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\gear.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />
