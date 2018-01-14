@@ -22,13 +22,13 @@ namespace OMAPGMap.iOS
         CLLocationManager locationManager;
         Timer secondTimer;
         Timer minuteTimer;
-        string[] Layers = { "Pokémon", "Gyms", "Raids", "90+ IV Pokémon"};
+        string[] Layers = { "Pokémon", "Gyms", "Raids", "90+ IV Pokémon", "Perfect Pokémon"};
         UITableViewController layersTableVC = null;
         int lastId = 0;
         bool mapLoaded = false;
         bool timersVisible = true;
         string notifyID = "";
-        UserSettings settings;
+        UserSettings settings => ServiceLayer.SharedInstance.Settings;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -49,9 +49,8 @@ namespace OMAPGMap.iOS
             CLLocationCoordinate2D coords = new CLLocationCoordinate2D(41.2524, -95.9980);
             MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(2), Utility.MilesToLongitudeDegrees(2, coords.Latitude));
             map.Region = new MKCoordinateRegion(coords, span);
-            await ServiceLayer.SharedInstance.InitalizeSettings();
+            ServiceLayer.SharedInstance.InitalizeSettings();
             app.MigrageUserSettings();
-            settings = ServiceLayer.SharedInstance.Settings;
 
             var credentialsVerified = settings.Username != "";
             username.Alpha = credentialsVerified ? 0.0f : 1.0f;
@@ -142,7 +141,7 @@ namespace OMAPGMap.iOS
             await ServiceLayer.SharedInstance.LoadData(lastId);
             loader.StopAnimating();
             map.Delegate = this;
-            map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
+            map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).ToArray());
             map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
             var toAdd = new List<Raid>(ServiceLayer.SharedInstance.Raids);
             if (!settings.LegondaryRaids)
@@ -360,10 +359,10 @@ namespace OMAPGMap.iOS
                     List<Pokemon> toAdd;
                     if(settings.NinetyOnlyEnabled)
                     {
-                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(onMap);
+                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(onMap).ToList();
                     } else 
                     {
-                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(onMap);
+                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(onMap).ToList();
                     }
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                     map.AddAnnotations(toAdd.ToArray());
@@ -423,8 +422,8 @@ namespace OMAPGMap.iOS
             {
                 errorMessage = "Username or password cannot be empty";
             }
-            ServiceLayer.SharedInstance.Username = username.Text;
-            ServiceLayer.SharedInstance.Password = password.Text;
+            settings.Username = username.Text;
+            settings.Password = password.Text;
             try{
                 var loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
                 if(!loggedIn)
@@ -494,33 +493,28 @@ namespace OMAPGMap.iOS
         {
             var cell = new UITableViewCell(UITableViewCellStyle.Default, "cell");
 			cell.TextLabel.Text = Layers[indexPath.Row];
-			cell.Accessory = ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row] ? UITableViewCellAccessory.Checkmark : UITableViewCellAccessory.None;
+            bool enabled = false;
+            enabled = settings.PokemonEnabled && indexPath.Row == 0;
+            enabled = settings.GymsEnabled && indexPath.Row == 1 || enabled;
+            enabled = settings.RaidsEnabled && indexPath.Row == 2 || enabled;
+            enabled = settings.NinetyOnlyEnabled && indexPath.Row == 3 || enabled;
+            cell.Accessory = enabled ? UITableViewCellAccessory.Checkmark : UITableViewCellAccessory.None;
 			return cell;
         }
 
         [Export("tableView:didSelectRowAtIndexPath:")]
         public void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-			ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row] = !ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row];
-            var layers = ServiceLayer.SharedInstance.LayersEnabled.Select(l => l.ToString()).ToArray();
-            NSUserDefaults.StandardUserDefaults.SetValueForKey(NSArray.FromStrings(layers), new NSString("layers"));
-            NSUserDefaults.StandardUserDefaults.Synchronize();
-			tableView.DeselectRow(indexPath, true);
-            tableView.ReloadData();
+            var pokesChanged = false;
             switch(indexPath.Row)
             {
                 case 0:
-                    if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
-                    {
-                        var pokesOnMap = map.Annotations.OfType<Pokemon>();
-                        map.RemoveAnnotations(pokesOnMap.ToArray());
-                    } else
-                    {
-						map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
-                    }
+                    pokesChanged = true;
+                    settings.PokemonEnabled = !settings.PokemonEnabled;
                     break;
                 case 1:
-                    if(!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
+                    settings.GymsEnabled = !settings.GymsEnabled;
+                    if(!settings.GymsEnabled)
                     {
 						var gymsOnMap = map.Annotations.OfType<Gym>();
 						map.RemoveAnnotations(gymsOnMap.ToArray());
@@ -530,7 +524,8 @@ namespace OMAPGMap.iOS
                     }
                     break;
                 case 2:
-					if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
+                    settings.RaidsEnabled = !settings.RaidsEnabled;
+                    if (!settings.RaidsEnabled)
 					{
 						var raidsOnMap = map.Annotations.OfType<Raid>();
                         map.RemoveAnnotations(raidsOnMap.ToArray());
@@ -541,16 +536,44 @@ namespace OMAPGMap.iOS
 					}
                     break;
                 case 3:
-                    if (!ServiceLayer.SharedInstance.LayersEnabled[indexPath.Row])
+                    pokesChanged = true;
+                    settings.NinetyOnlyEnabled = !settings.NinetyOnlyEnabled;
+                    if(settings.NinetyOnlyEnabled)
                     {
-                        var trashOnMap = map.Annotations.OfType<Pokemon>().Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id));
-                        map.RemoveAnnotations(trashOnMap.ToArray());
-                    } else 
-                    {
-                        map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
+                        settings.PokemonEnabled = true;
                     }
                     break;
             }
+            tableView.DeselectRow(indexPath, true);
+            tableView.ReloadData();
+            if(settings.NinetyOnlyEnabled && pokesChanged)
+            {
+                var pokesOnMap = map.Annotations.OfType<Pokemon>();
+                if (pokesOnMap.Count() > 0)
+                {
+                    var remove = pokesOnMap.Where(p => p.iv < 0.9f);
+                    map.RemoveAnnotations(remove.ToArray());
+                }
+                else
+                {
+                    map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9f).ToArray());
+                }
+            } else if(settings.PokemonEnabled && pokesChanged)
+            {
+                if (map.Annotations.OfType<Pokemon>().Count() > 0)
+                {
+                    map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id) && p.iv < 0.9f).ToArray());
+                }
+                else
+                {
+                    map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).ToArray());
+                }
+            } else if(pokesChanged)
+            {
+                var pokesOnMap = map.Annotations.OfType<Pokemon>();
+                map.RemoveAnnotations(pokesOnMap.ToArray());
+            }
+
             layersTableVC.DismissViewController(true, () => { refreshMap(null); });
         }
 
@@ -568,10 +591,10 @@ namespace OMAPGMap.iOS
             {
                 nav.ModalPresentationStyle = UIModalPresentationStyle.FormSheet;
             }
-            var settings = nav.TopViewController as SettingsViewController;
-            if(settings != null)
+            var settingsVC = nav.TopViewController as SettingsViewController;
+            if(settingsVC != null)
             {
-                settings.ParentVC = this;
+                settingsVC.ParentVC = this;
             }
         }
 
@@ -593,7 +616,7 @@ namespace OMAPGMap.iOS
 
         public void SaveTrashSettings()
         {
-			var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
+            var trashStrings = settings.PokemonTrash.Select(t => t.ToString()).ToArray();
 			var tosave = NSArray.FromStrings(trashStrings);
 			NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trash"));
         }
@@ -608,7 +631,7 @@ namespace OMAPGMap.iOS
             }
             else
             {
-                ServiceLayer.SharedInstance.LayersEnabled[0] = true;
+                settings.PokemonEnabled = true;
                 MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(0.7), Utility.MilesToLongitudeDegrees(0.7, lat));
                 var coords = new CLLocationCoordinate2D(lat, lon);
                 var reg = new MKCoordinateRegion(coords, span);
@@ -625,58 +648,58 @@ namespace OMAPGMap.iOS
 
         public void ApplySettings()
         {
-            if(ServiceLayer.SharedInstance.LayersEnabled[2])
+            if(settings.RaidsEnabled)
             {
                 var l5 = map.Annotations.OfType<Raid>().Where(r => r.level == 5);
                 var l4 = map.Annotations.OfType<Raid>().Where(r => r.level == 4);
                 var l3 = map.Annotations.OfType<Raid>().Where(r => r.level == 3);
                 var l2 = map.Annotations.OfType<Raid>().Where(r => r.level == 2);
                 var l1 = map.Annotations.OfType<Raid>().Where(r => r.level == 1);
-                if(ServiceLayer.SharedInstance.LegondaryRaids && l5.Count() == 0)
+                if(settings.LegondaryRaids && l5.Count() == 0)
                 {
                     var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 5);
                     map.AddAnnotations(removeRaids.ToArray());
-                } else if(!ServiceLayer.SharedInstance.LegondaryRaids && l5.Count() != 0)
+                } else if(!settings.LegondaryRaids && l5.Count() != 0)
                 {
                     map.RemoveAnnotations(l5.ToArray());
                 }
 
-                if (ServiceLayer.SharedInstance.Level4Raids && l4.Count() == 0)
+                if (settings.Level4Raids && l4.Count() == 0)
                 {
                     var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 4);
                     map.AddAnnotations(removeRaids.ToArray());
                 }
-                else if (!ServiceLayer.SharedInstance.Level4Raids && l4.Count() != 0)
+                else if (!settings.Level4Raids && l4.Count() != 0)
                 {
                     map.RemoveAnnotations(l4.ToArray());
                 }
 
-                if (ServiceLayer.SharedInstance.Level3Raids && l3.Count() == 0)
+                if (settings.Level3Raids && l3.Count() == 0)
                 {
                     var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 3);
                     map.AddAnnotations(removeRaids.ToArray());
                 }
-                else if (!ServiceLayer.SharedInstance.Level3Raids && l3.Count() != 0)
+                else if (!settings.Level3Raids && l3.Count() != 0)
                 {
                     map.RemoveAnnotations(l3.ToArray());
                 }
 
-                if (ServiceLayer.SharedInstance.Level2Raids && l2.Count() == 0)
+                if (settings.Level2Raids && l2.Count() == 0)
                 {
                     var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 2);
                     map.AddAnnotations(removeRaids.ToArray());
                 }
-                else if (!ServiceLayer.SharedInstance.Level2Raids && l2.Count() != 0)
+                else if (!settings.Level2Raids && l2.Count() != 0)
                 {
                     map.RemoveAnnotations(l2.ToArray());
                 }
 
-                if (ServiceLayer.SharedInstance.Level1Raids && l1.Count() == 0)
+                if (settings.Level1Raids && l1.Count() == 0)
                 {
                     var removeRaids = ServiceLayer.SharedInstance.Raids.Where(r => r.level == 1);
                     map.AddAnnotations(removeRaids.ToArray());
                 }
-                else if (!ServiceLayer.SharedInstance.Level1Raids && l1.Count() != 0)
+                else if (!settings.Level1Raids && l1.Count() != 0)
                 {
                     map.RemoveAnnotations(l1.ToArray());
                 }

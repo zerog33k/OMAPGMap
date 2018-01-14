@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reactive.Linq;
 using Akavache;
-using System.Reactive.Linq;
 #if NETCOREAPP2_0
 using OMAPGServiceData.Models;
 #else
@@ -29,7 +28,7 @@ namespace OMAPGMap
         private static string altURL = "http://107.189.42.114:7500";
         private string dataURL = baseURL;
 
-        public UserSettings Settings;
+        public UserSettings Settings; 
 
         private string pokemonURL => $"{dataURL}/data";
         private string gymsURL => $"{dataURL}/gym_data";
@@ -75,9 +74,18 @@ namespace OMAPGMap
             }
         }
 
-        public async Task InitalizeSettings()
+        public void InitalizeSettings()
         {
-            Settings = await BlobCache.UserAccount.GetObjectAsync<UserSettings>("settings").Catch(Observable.Return(new UserSettings()));
+            BlobCache.UserAccount.GetObject<UserSettings>("settings").Subscribe(s => Settings = s, ex => Console.WriteLine("No Key!"));
+            if (Settings == null)
+            {
+                Settings = new UserSettings();
+            }
+        }
+
+        public void SaveSettings()
+        {
+            BlobCache.UserAccount.InsertObject("settings", Settings);
         }
 
         public async Task<bool> VerifyCredentials()
