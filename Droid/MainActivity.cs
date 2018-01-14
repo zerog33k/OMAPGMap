@@ -46,6 +46,7 @@ namespace OMAPGMap.Droid
         private EditText password;
         private CardView loginHolder;
         private  ISharedPreferences prefs;
+        private CardView settingsHolder;
 
         public static int NumPokes = 378;
         private int[] pokeResourceMap = new int[NumPokes];
@@ -130,7 +131,13 @@ namespace OMAPGMap.Droid
 
             var loginButton = FindViewById(Resource.Id.signInButton) as Button;
             loginButton.Click += LoginButton_Click;
-
+            var settingButton = FindViewById(Resource.Id.settingsButton);
+            settingButton.Click += SettingButton_Click;
+            var layerButton = FindViewById(Resource.Id.layerssButton);
+            layerButton.Click += LayerButton_Click;
+            settingsHolder = FindViewById(Resource.Id.settingsHolder) as CardView;
+            var settingsDone = settingsHolder.FindViewById(Resource.Id.settingsDoneButton);
+            settingsDone.Click += SettingsDone_Click;
         }
 
         private void refreshMap(object state)
@@ -424,6 +431,24 @@ namespace OMAPGMap.Droid
         public View GetInfoWindow(Marker marker)
         {
             return null;
+        }
+
+        void SettingButton_Click(object sender, EventArgs e)
+        {
+            settingsHolder.Visibility = ViewStates.Visible;
+        }
+
+        void LayerButton_Click(object sender, EventArgs e)
+        {
+            var button = sender as ImageButton;
+            var layersMenu = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.map_layers, null);
+            var popup = new PopupWindow(layersMenu);
+            popup.ShowAsDropDown(button, 40, 40, GravityFlags.Bottom);
+        }
+
+        void SettingsDone_Click(object sender, EventArgs e)
+        {
+            settingsHolder.Visibility = ViewStates.Gone;
         }
     }
 }

@@ -43,7 +43,7 @@ namespace OMAPGMap.iOS
                 }
                 if (DistInput != null)
                 {
-                    ServiceLayer.SharedInstance.NotifyDistance = int.Parse(DistInput.Text);
+                    ServiceLayer.SharedInstance.Settings.NotifyDistance = int.Parse(DistInput.Text);
                 }
                 ParentVC.ApplySettings();
                 DismissViewController(true, null);
@@ -111,25 +111,25 @@ namespace OMAPGMap.iOS
                         var s = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "All Notifications";
-                        s.On = ServiceLayer.SharedInstance.NotifyEnabled;
+                        s.On = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
                     case 5:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s1 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "> 90% IV Notify";
-                        s1.On = ServiceLayer.SharedInstance.Notify90Enabled;
-                        label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
-                        s1.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
+                        s1.On = ServiceLayer.SharedInstance.Settings.Notify90Enabled;
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        s1.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
                     case 6:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s2 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "100% IV Notify";
-                        s2.On = ServiceLayer.SharedInstance.Notify100Enabled;
-                        label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
-                        s2.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
+                        s2.On = ServiceLayer.SharedInstance.Settings.Notify100Enabled;
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        s2.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
                     case 7:
                         cell = tableView.DequeueReusableCell("NotifyDistanceCell", indexPath);
@@ -139,57 +139,57 @@ namespace OMAPGMap.iOS
                             DistInput = input;
                             input.ValueChanged += (sender, e) =>
                             {
-                                ServiceLayer.SharedInstance.NotifyDistance = int.Parse(DistInput.Text);
+                                ServiceLayer.SharedInstance.Settings.NotifyDistance = int.Parse(DistInput.Text);
                             };
                             var tool = new UIToolbar();
                             tool.SizeToFit();
                             var done = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
                             {
-                                ServiceLayer.SharedInstance.NotifyDistance = int.Parse(DistInput.Text);
+                                ServiceLayer.SharedInstance.Settings.NotifyDistance = int.Parse(DistInput.Text);
                                 DistInput.ResignFirstResponder();
                             });
                             tool.SetItems(new UIBarButtonItem[] { done }, false);
                             DistInput.InputAccessoryView = tool;
                         }
                         label = cell.ViewWithTag(1) as UILabel;
-                        input.Text = ServiceLayer.SharedInstance.NotifyDistance.ToString();
-                        label.TextColor = ServiceLayer.SharedInstance.NotifyEnabled ? UIColor.Black : UIColor.Gray;
-                        input.Enabled = ServiceLayer.SharedInstance.NotifyEnabled;
+                        input.Text = ServiceLayer.SharedInstance.Settings.NotifyDistance.ToString();
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        input.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
                     case 8:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s3 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Legendary Raids";
-                        s3.On = ServiceLayer.SharedInstance.LegondaryRaids;
+                        s3.On = ServiceLayer.SharedInstance.Settings.LegondaryRaids;
                         break;
                     case 9:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s4 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 4 Raids";
-                        s4.On = ServiceLayer.SharedInstance.Level4Raids;
+                        s4.On = ServiceLayer.SharedInstance.Settings.Level4Raids;
                         break;
                     case 10:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s5 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 3 Raids";
-                        s5.On = ServiceLayer.SharedInstance.Level3Raids;
+                        s5.On = ServiceLayer.SharedInstance.Settings.Level3Raids;
                         break;
                     case 11:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s6 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 2 Raids";
-                        s6.On = ServiceLayer.SharedInstance.Level2Raids;
+                        s6.On = ServiceLayer.SharedInstance.Settings.Level2Raids;
                         break;
                     case 12:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s7 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 1 Raids";
-                        s7.On = ServiceLayer.SharedInstance.Level1Raids;
+                        s7.On = ServiceLayer.SharedInstance.Settings.Level1Raids;
                         break;
                 }
                 return cell;
@@ -208,15 +208,15 @@ namespace OMAPGMap.iOS
                 var pokemonid = ConvertRowToID(indexPath.Row);
 
                 img.Image = UIImage.FromBundle(pokemonid.ToString("D3"));
-                if (!ServiceLayer.SharedInstance.PokemonHidden.Contains(pokemonid))
+                if (!ServiceLayer.SharedInstance.Settings.PokemonHidden.Contains(pokemonid))
                 {
                     img.Alpha = 1.0f;
                     notifyLbl.TextColor = UIColor.Black;
                     trashLbl.TextColor = UIColor.Black;
                     trashSwitch.Enabled = true;
-                    trashSwitch.On = ServiceLayer.SharedInstance.PokemonTrash.Contains(pokemonid);
+                    trashSwitch.On = ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(pokemonid);
                     notifySwitch.Enabled = true;
-                    notifySwitch.On = ServiceLayer.SharedInstance.NotifyPokemon.Contains(pokemonid);
+                    notifySwitch.On = ServiceLayer.SharedInstance.Settings.NotifyPokemon.Contains(pokemonid);
                 }
                 else
                 {
@@ -270,12 +270,12 @@ namespace OMAPGMap.iOS
                 {
                     TrashAdded.Add(pokemonid);
                     TrashRemoved.Remove(pokemonid);
-                    ServiceLayer.SharedInstance.PokemonTrash.Add(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.PokemonTrash.Add(pokemonid);
                 } else 
                 {
                     TrashRemoved.Add(pokemonid);
                     TrashAdded.Remove(pokemonid);
-                    ServiceLayer.SharedInstance.PokemonTrash.Remove(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.PokemonTrash.Remove(pokemonid);
                 }
             }
         }
@@ -290,11 +290,11 @@ namespace OMAPGMap.iOS
                 var pokemonid = ConvertRowToID(path.Row);
                 if (notifySwitch.On)
                 {
-                    ServiceLayer.SharedInstance.NotifyPokemon.Add(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.NotifyPokemon.Add(pokemonid);
                 }
                 else
                 {
-                    ServiceLayer.SharedInstance.NotifyPokemon.Remove(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.NotifyPokemon.Remove(pokemonid);
                 }
             }
         }
@@ -308,36 +308,37 @@ namespace OMAPGMap.iOS
 					{
                         var i2 = ConvertRowToID(i);
                         TrashRemoved.Clear();
-                        if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && !TrashAdded.Contains(i2))
+                        if (!ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i2) && !TrashAdded.Contains(i2))
 						{
 							TrashAdded.Add(i2);
-                            ServiceLayer.SharedInstance.PokemonTrash.Add(i2);
+                            ServiceLayer.SharedInstance.Settings.PokemonTrash.Add(i2);
 						}
 					}
 					
                     TableView.ReloadData();
                     break;
                 case 1: //reset trash
+                    var trashCopy = new List<int>(ServiceLayer.SharedInstance.Settings.PokemonTrash);
+                    ServiceLayer.SharedInstance.Settings.ResetTrash();
                     for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
 					{
                         var i2 = ConvertRowToID(i);
-						if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && ServiceLayer.DefaultTrash.Contains(i2))
+                        if (ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i2) && !trashCopy.Contains(i2))
 						{
 							TrashAdded.Add(i2);
                             TrashRemoved.Remove(i2);
 						}
-						else if (ServiceLayer.SharedInstance.PokemonTrash.Contains(i2) && !ServiceLayer.DefaultTrash.Contains(i2))
+                        else if (!ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i2) && trashCopy.Contains(i2))
 						{
 							TrashRemoved.Add(i2);
                             TrashAdded.Remove(i2);
 						}
 					}
-					ServiceLayer.SharedInstance.PokemonTrash.Clear();
-					ServiceLayer.SharedInstance.PokemonTrash.AddRange(ServiceLayer.DefaultTrash);
+                    ServiceLayer.SharedInstance.Settings.ResetTrash();
 					TableView.ReloadData();
                     break;
                 case 2: //save current trash
-					var trashStrings = ServiceLayer.SharedInstance.PokemonTrash.Select(t => t.ToString()).ToArray();
+                    var trashStrings = ServiceLayer.SharedInstance.Settings.PokemonTrash.Select(t => t.ToString()).ToArray();
 					var tosave = NSArray.FromStrings(trashStrings);
 					NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trashSaved"));
                     break;
@@ -348,19 +349,19 @@ namespace OMAPGMap.iOS
 						var trashInt = trash.Select(l => int.Parse(l));
                         for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
                         {
-                            if (!ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && trashInt.Contains(i))
+                            if (!ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i) && trashInt.Contains(i))
 							{
 								TrashAdded.Add(i);
                                 TrashRemoved.Remove(i);
 							}
-							else if (ServiceLayer.SharedInstance.PokemonTrash.Contains(i) && !trashInt.Contains(i))
+                            else if (ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i) && !trashInt.Contains(i))
 							{
 								TrashRemoved.Add(i);
                                 TrashAdded.Remove(i);
 							}
                         }
-						ServiceLayer.SharedInstance.PokemonTrash.Clear();
-                        ServiceLayer.SharedInstance.PokemonTrash.AddRange(trashInt);
+						ServiceLayer.SharedInstance.Settings.PokemonTrash.Clear();
+                        ServiceLayer.SharedInstance.Settings.PokemonTrash.AddRange(trashInt);
 						TableView.ReloadData();
 					}
                     break;
@@ -392,28 +393,28 @@ namespace OMAPGMap.iOS
                 var path = TableView.IndexPathForCell(cell);
                 if(path.Row == 4)
                 {
-                    ServiceLayer.SharedInstance.NotifyEnabled = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.NotifyEnabled = toggle.On;
                 } else if(path.Row == 5)
                 {
-                    ServiceLayer.SharedInstance.Notify90Enabled = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.Notify90Enabled = toggle.On;
                 } else if(path.Row == 6)
                 {
-                    ServiceLayer.SharedInstance.Notify100Enabled = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.Notify100Enabled = toggle.On;
                 }else if (path.Row == 8)
                 {
-                    ServiceLayer.SharedInstance.LegondaryRaids = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.LegondaryRaids = toggle.On;
                 } else if (path.Row == 9)
                 {
-                    ServiceLayer.SharedInstance.Level4Raids = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.Level4Raids = toggle.On;
                 } else if (path.Row == 10)
                 {
-                    ServiceLayer.SharedInstance.Level3Raids = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.Level3Raids = toggle.On;
                 } else if (path.Row == 11)
                 {
-                    ServiceLayer.SharedInstance.Level2Raids = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.Level2Raids = toggle.On;
                 } else if (path.Row == 12)
                 {
-                    ServiceLayer.SharedInstance.Level1Raids = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.Level1Raids = toggle.On;
                 }
 
             }

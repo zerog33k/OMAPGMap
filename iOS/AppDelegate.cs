@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using CoreLocation;
 using Microsoft.AppCenter.iOS.Bindings;
 using System;
+using Akavache;
+using System.Threading.Tasks;
 
 namespace OMAPGMap.iOS
 {
@@ -47,44 +49,9 @@ namespace OMAPGMap.iOS
         {
             AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
             //var helper = new KeychainHelper();
-            var user = NSUserDefaults.StandardUserDefaults.StringForKey("user");
-            var pass = NSUserDefaults.StandardUserDefaults.StringForKey("pass");
-            if (!string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(pass))
-            {
-                ServiceLayer.SharedInstance.Username = user;
-                ServiceLayer.SharedInstance.Password = pass;
-            }
-            var layers = NSUserDefaults.StandardUserDefaults.StringArrayForKey("layers");
-            if(layers != null)
-            {
-                var layersBool = layers.Select(l => bool.Parse(l));
-                ServiceLayer.SharedInstance.LayersEnabled = layersBool.ToArray();
-            }
 
-            var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
-            if (trash != null)
-            {
-                var trashInt = trash.Select(l => int.Parse(l));
-                ServiceLayer.SharedInstance.PokemonTrash = new List<int>(trashInt);
-            }
-            var notify = NSUserDefaults.StandardUserDefaults.StringArrayForKey("notify");
-            if (notify != null)
-            {
-                var notifyInt = notify.Select(l => int.Parse(l));
-                ServiceLayer.SharedInstance.NotifyPokemon = new List<int>(notifyInt);
-                ServiceLayer.SharedInstance.NotifyEnabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notifyEnabled");
-                ServiceLayer.SharedInstance.Notify90Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify90");
-                ServiceLayer.SharedInstance.Notify100Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify100");
-                ServiceLayer.SharedInstance.NotifyDistance = (int) NSUserDefaults.StandardUserDefaults.IntForKey("notifyDistance");
-            }
-            if (NSUserDefaults.StandardUserDefaults.ValueForKey(new NSString("raid5")) != null)
-            {
-                ServiceLayer.SharedInstance.LegondaryRaids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid5");
-                ServiceLayer.SharedInstance.Level4Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid4");
-                ServiceLayer.SharedInstance.Level3Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid3");
-                ServiceLayer.SharedInstance.Level2Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid2");
-                ServiceLayer.SharedInstance.Level1Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid1");
-            }
+
+
             if (launchOptions != null)
             {
                 var loc = launchOptions[UIApplication.LaunchOptionsLocationKey] as NSNumber;
@@ -145,7 +112,7 @@ namespace OMAPGMap.iOS
 
         public override void WillTerminate(UIApplication application)
         {
-            // Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
+            BlobCache.Shutdown().Wait();
         }
 
         public void OpenMapAppAtLocation(double lat, double lon)
@@ -196,21 +163,60 @@ namespace OMAPGMap.iOS
         {
             if(currentLocation != null)
             {
-                var notifyStrings = ServiceLayer.SharedInstance.NotifyPokemon.Select(t => t.ToString()).ToArray();
-                var tosave = NSArray.FromStrings(notifyStrings);
-                NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("notify"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.NotifyEnabled, new NSString("notifyEnabled"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify90Enabled, new NSString("notify90"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Notify100Enabled, new NSString("notify100"));
-                NSUserDefaults.StandardUserDefaults.SetInt(ServiceLayer.SharedInstance.NotifyDistance, new NSString("notifyDistance"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.LegondaryRaids, new NSString("raid5"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level4Raids, new NSString("raid4"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level3Raids, new NSString("raid3"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level2Raids, new NSString("raid2"));
-                NSUserDefaults.StandardUserDefaults.SetBool(ServiceLayer.SharedInstance.Level1Raids, new NSString("raid1"));
-                var installId = MSAppCenter.InstallId();
-                await ServiceLayer.SharedInstance.UpdateDeviceInfo(installId.ToString(), currentLocation.Coordinate.Latitude, currentLocation.Coordinate.Longitude);
+                var deviceID = MSAppCenter.InstallId().ToString();
+                await ServiceLayer.SharedInstance.UpdateDeviceInfo(deviceID, currentLocation.Coordinate.Latitude, currentLocation.Coordinate.Longitude);
             }
+        }
+
+        public void MigrageUserSettings()
+        {
+            if(!NSUserDefaults.StandardUserDefaults.BoolForKey("akavache"))
+            {
+                NSUserDefaults.StandardUserDefaults.SetBool(true, new NSString("akavache"));
+                var user = NSUserDefaults.StandardUserDefaults.StringForKey("user");
+                var pass = NSUserDefaults.StandardUserDefaults.StringForKey("pass");
+                var settings = ServiceLayer.SharedInstance.Settings;
+                if (!string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(pass))
+                {
+                    settings.Username = user;
+                    settings.Password = pass;
+                }
+                var layers = NSUserDefaults.StandardUserDefaults.StringArrayForKey("layers");
+                if (layers != null)
+                {
+                    var layersBool = layers.Select(l => bool.Parse(l)).ToArray();
+                    settings.PokemonEnabled = layersBool[0];
+                    settings.RaidsEnabled = layersBool[1];
+                    settings.GymsEnabled = layersBool[2];
+                }
+
+                var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
+                if (trash != null)
+                {
+                    var trashInt = trash.Select(l => int.Parse(l));
+                    settings.PokemonTrash = new List<int>(trashInt);
+                }
+                var notify = NSUserDefaults.StandardUserDefaults.StringArrayForKey("notify");
+                if (notify != null)
+                {
+                    var notifyInt = notify.Select(l => int.Parse(l));
+                    settings.NotifyPokemon = new List<int>(notifyInt);
+                    settings.NotifyEnabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notifyEnabled");
+                    settings.Notify90Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify90");
+                    settings.Notify100Enabled = NSUserDefaults.StandardUserDefaults.BoolForKey("notify100");
+                    settings.NotifyDistance = (int)NSUserDefaults.StandardUserDefaults.IntForKey("notifyDistance");
+                }
+                if (NSUserDefaults.StandardUserDefaults.ValueForKey(new NSString("raid5")) != null)
+                {
+                    settings.LegondaryRaids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid5");
+                    settings.Level4Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid4");
+                    settings.Level3Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid3");
+                    settings.Level2Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid2");
+                    settings.Level1Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid1");
+                }
+                BlobCache.UserAccount.InsertObject("settings", settings);
+            }
+
         }
     }
 }

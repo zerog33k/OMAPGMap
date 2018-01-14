@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Pokemon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Raid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Coordinates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\UserSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Models\" />

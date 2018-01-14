@@ -28,6 +28,7 @@ namespace OMAPGMap.iOS
         bool mapLoaded = false;
         bool timersVisible = true;
         string notifyID = "";
+        UserSettings settings;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -48,7 +49,11 @@ namespace OMAPGMap.iOS
             CLLocationCoordinate2D coords = new CLLocationCoordinate2D(41.2524, -95.9980);
             MKCoordinateSpan span = new MKCoordinateSpan(Utility.MilesToLatitudeDegrees(2), Utility.MilesToLongitudeDegrees(2, coords.Latitude));
             map.Region = new MKCoordinateRegion(coords, span);
-            var credentialsVerified = ServiceLayer.SharedInstance.Username != "";
+            await ServiceLayer.SharedInstance.InitalizeSettings();
+            app.MigrageUserSettings();
+            settings = ServiceLayer.SharedInstance.Settings;
+
+            var credentialsVerified = settings.Username != "";
             username.Alpha = credentialsVerified ? 0.0f : 1.0f;
             password.Alpha = credentialsVerified ? 0.0f : 1.0f;
             signInButton.Alpha = credentialsVerified ? 0.0f : 1.0f;
@@ -140,23 +145,23 @@ namespace OMAPGMap.iOS
             map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).ToArray());
             map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
             var toAdd = new List<Raid>(ServiceLayer.SharedInstance.Raids);
-            if (!ServiceLayer.SharedInstance.LegondaryRaids)
+            if (!settings.LegondaryRaids)
             {
                 toAdd.RemoveAll(r => r.level == 5);
             }
-            if (!ServiceLayer.SharedInstance.Level4Raids)
+            if (!settings.Level4Raids)
             {
                 toAdd.RemoveAll(r => r.level == 4);
             }
-            if (!ServiceLayer.SharedInstance.Level3Raids)
+            if (!settings.Level3Raids)
             {
                 toAdd.RemoveAll(r => r.level == 3);
             }
-            if (!ServiceLayer.SharedInstance.Level2Raids)
+            if (!settings.Level2Raids)
             {
                 toAdd.RemoveAll(r => r.level == 2);
             }
-            if (!ServiceLayer.SharedInstance.Level1Raids)
+            if (!settings.Level1Raids)
             {
                 toAdd.RemoveAll(r => r.level == 1);
             }
@@ -337,7 +342,7 @@ namespace OMAPGMap.iOS
 				{
 					//swallow exception because it tastes good
 				}
-                if (ServiceLayer.SharedInstance.LayersEnabled[0])
+                if (settings.PokemonEnabled)
                 {
                     if (ServiceLayer.SharedInstance.Pokemon.Count() > 0)
                     {
@@ -353,7 +358,7 @@ namespace OMAPGMap.iOS
                     var toRemoveRaids = onMapRaids.Where(r => r.TimeEnd < DateTime.UtcNow);
                     map.RemoveAnnotations(toRemoveRaids.ToArray());
                     List<Pokemon> toAdd;
-                    if(ServiceLayer.SharedInstance.LayersEnabled[3])
+                    if(settings.NinetyOnlyEnabled)
                     {
                         toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(onMap);
                     } else 
@@ -364,7 +369,7 @@ namespace OMAPGMap.iOS
                     map.AddAnnotations(toAdd.ToArray());
                 }
 
-                if(ServiceLayer.SharedInstance.LayersEnabled[1])
+                if(settings.GymsEnabled)
                 {
                     var gymsOnMap = map.Annotations.OfType<Gym>();
                     if (gymsOnMap.Count() > 0)
@@ -373,7 +378,7 @@ namespace OMAPGMap.iOS
                     }
                     map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
                 }
-				if (ServiceLayer.SharedInstance.LayersEnabled[2])
+                if (settings.RaidsEnabled)
 				{
                     var raidsOnMap = map.Annotations.OfType<Raid>().ToList();
                     var unhatched = raidsOnMap.Where(r => r.pokemon_id == 0);
@@ -384,23 +389,23 @@ namespace OMAPGMap.iOS
                     map.RemoveAnnotations(haveHatched.ToArray());
                     raidsOnMap.RemoveAll(r => haveHatched.Contains(r));
                     var toAdd = ServiceLayer.SharedInstance.Raids.Except(raidsOnMap).ToList();
-                    if(!ServiceLayer.SharedInstance.LegondaryRaids)
+                    if(!settings.LegondaryRaids)
                     {
                         toAdd.RemoveAll(r => r.level == 5);
                     }
-                    if (!ServiceLayer.SharedInstance.Level4Raids)
+                    if (!settings.Level4Raids)
                     {
                         toAdd.RemoveAll(r => r.level == 4);
                     }
-                    if (!ServiceLayer.SharedInstance.Level3Raids)
+                    if (!settings.Level3Raids)
                     {
                         toAdd.RemoveAll(r => r.level == 3);
                     }
-                    if (!ServiceLayer.SharedInstance.Level2Raids)
+                    if (!settings.Level2Raids)
                     {
                         toAdd.RemoveAll(r => r.level == 2);
                     }
-                    if (!ServiceLayer.SharedInstance.Level1Raids)
+                    if (!settings.Level1Raids)
                     {
                         toAdd.RemoveAll(r => r.level == 1);
                     }
