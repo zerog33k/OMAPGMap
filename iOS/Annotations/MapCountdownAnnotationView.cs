@@ -11,12 +11,18 @@ namespace OMAPGMap.iOS.Annotations
 		protected UILabel label = new UILabel(new CGRect(0, 40, 40, 15));
         protected DateTime CountdownDate;
 
+        public UIColor LabelColor { set
+            {
+                label.Layer.BackgroundColor = value.CGColor;
+            }
+        }
+
         public MapCountdownAnnotationView(IMKAnnotation annotate, string resueID) : base(annotate, resueID)
         {
 			AddSubview(img);
 			AddSubview(label);
 			label.Layer.CornerRadius = 3.0f;
-			label.Layer.BackgroundColor = UIColor.LightGray.CGColor;
+            label.Layer.BackgroundColor = UIColor.LightGray.CGColor;
 			label.TextAlignment = UITextAlignment.Center;
 			label.Font = UIFont.SystemFontOfSize(12.0f, UIFontWeight.Light);
             img.ContentMode = UIViewContentMode.ScaleAspectFit;
@@ -24,7 +30,7 @@ namespace OMAPGMap.iOS.Annotations
 
 		public virtual void UpdateTime(DateTime now)
 		{
-			if (CountdownDate != null)
+            if (CountdownDate != null && !label.Hidden)
 			{
 				var diff = CountdownDate - now;
 				label.Text = $"{diff.Minutes}:{diff.Seconds.ToString("D2")}";
