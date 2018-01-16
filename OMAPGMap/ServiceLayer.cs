@@ -74,18 +74,18 @@ namespace OMAPGMap
             }
         }
 
-        public void InitalizeSettings()
+        public async Task InitalizeSettings()
         {
-            BlobCache.UserAccount.GetObject<UserSettings>("settings").Subscribe(s => Settings = s, ex => Console.WriteLine("No Key!"));
+            Settings = await BlobCache.UserAccount.GetObject<UserSettings>("settings");
             if (Settings == null)
             {
                 Settings = new UserSettings();
             }
         }
 
-        public void SaveSettings()
+        public async Task SaveSettings()
         {
-            BlobCache.UserAccount.InsertObject("settings", Settings);
+            await BlobCache.UserAccount.InsertObject("settings", Settings);
         }
 
         public async Task<bool> VerifyCredentials()
@@ -105,12 +105,12 @@ namespace OMAPGMap
         }
 
 
-        public async Task LoadData(int lastId)
+        public async Task LoadData()
         {
             if (Settings.PokemonEnabled)
             {
                 Console.WriteLine("loading Pokemon");
-                await LoadPokemon(lastId);
+                await LoadPokemon();
             }
             if (Settings.GymsEnabled)
             {
@@ -125,21 +125,23 @@ namespace OMAPGMap
 
         }
 
-        public async Task LoadPokemon(int lastId)
+        public async Task LoadPokemon()
         {
             CleanUpExpired();
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             try
             {
-                var lid = _isAltLocation ? 0 : lastId;
+                var lid = _isAltLocation ? 0 : Settings.LastId;
                 var response = await client.GetAsync($"{pokemonURL}?last_id={lid}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
                     Pokemon.AddRange(pokes);
-
+                    Settings.LastId =  Pokemon.MaxBy(p => p?.idValue)?.idValue ?? lid;
+                    Settings.MinId = Pokemon.MinBy(p => p?.idValue)?.idValue ?? 0;
+                    await SaveSettings();
                 }
             }
             catch (Exception e)

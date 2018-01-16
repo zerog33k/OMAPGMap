@@ -31,7 +31,7 @@ namespace OMAPGMap.iOS
         {
             base.ViewDidLoad();
             Title = "Map Settings";
-            NavigationItem.LeftBarButtonItem = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
+            NavigationItem.LeftBarButtonItem = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, async (sender, e) =>
             {
                 if(TrashAdded.Count > 0)
                 {
@@ -45,7 +45,7 @@ namespace OMAPGMap.iOS
                 {
                     ServiceLayer.SharedInstance.Settings.NotifyDistance = int.Parse(DistInput.Text);
                 }
-                ParentVC.ApplySettings();
+                await ParentVC.ApplySettings();
                 DismissViewController(true, null);
                 var app = UIApplication.SharedApplication.Delegate as AppDelegate;
                 app.UpdateDeviceData();

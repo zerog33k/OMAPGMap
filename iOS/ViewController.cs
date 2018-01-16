@@ -24,7 +24,6 @@ namespace OMAPGMap.iOS
         Timer minuteTimer;
         string[] Layers = { "Enabled Pokémon", "Gyms", "Raids", "All 90+ IV Pokémon" };//, "All Perfect Pokémon"};
         UITableViewController layersTableVC = null;
-        int lastId = 0;
         bool mapLoaded = false;
         bool timersVisible = true;
         bool timersPreviouslyVisible = true;
@@ -40,6 +39,7 @@ namespace OMAPGMap.iOS
             base.ViewDidLoad();
             loader.StartAnimating();
             var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+            await ServiceLayer.SharedInstance.InitalizeSettings();
             app.MonitorBackgroundLocation();
             locationManager = new CLLocationManager();
             locationManager.RequestAlwaysAuthorization();
@@ -137,9 +137,8 @@ namespace OMAPGMap.iOS
 
         private async Task LoggedIn()
         {
-            ServiceLayer.SharedInstance.SaveSettings();
-            lastId = (int) NSUserDefaults.StandardUserDefaults.IntForKey("LastId");
-            await ServiceLayer.SharedInstance.LoadData(lastId);
+            await ServiceLayer.SharedInstance.SaveSettings();
+            await ServiceLayer.SharedInstance.LoadData();
             loader.StopAnimating();
             map.Delegate = this;
             map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).ToArray());
@@ -344,7 +343,7 @@ namespace OMAPGMap.iOS
                 activity.StartAnimating();
 				try
 				{
-                    await ServiceLayer.SharedInstance.LoadData(lastId);
+                    await ServiceLayer.SharedInstance.LoadData();
 				}
 				catch (Exception)
 				{
@@ -352,13 +351,6 @@ namespace OMAPGMap.iOS
 				}
                 if (settings.PokemonEnabled)
                 {
-                    if (ServiceLayer.SharedInstance.Pokemon.Count() > 0)
-                    {
-                        lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p?.idValue)?.idValue ?? lastId;
-                        var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p?.idValue)?.idValue ?? 0;
-                        NSUserDefaults.StandardUserDefaults.SetInt(l, "LastId");
-                        NSUserDefaults.StandardUserDefaults.Synchronize();
-                    }
                     var onMap = map.Annotations.OfType<Pokemon>();
                     var toRemove = onMap.Where(p => p.ExpiresDate < DateTime.UtcNow);
                     map.RemoveAnnotations(toRemove.ToArray());
@@ -512,7 +504,7 @@ namespace OMAPGMap.iOS
         }
 
         [Export("tableView:didSelectRowAtIndexPath:")]
-        public void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        public async void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             switch(indexPath.Row)
             {
@@ -576,7 +568,7 @@ namespace OMAPGMap.iOS
             }
             tableView.DeselectRow(indexPath, true);
             tableView.ReloadData();
-            SaveTrashSettings();
+            await ServiceLayer.SharedInstance.SaveSettings();
             layersTableVC.DismissViewController(true, () => { refreshMap(null); });
         }
 
@@ -605,26 +597,14 @@ namespace OMAPGMap.iOS
         {
             var toRemove = map.Annotations.OfType<Pokemon>().Where(p => trash.Contains(p.pokemon_id)).ToArray();
             map.RemoveAnnotations(toRemove);
-            SaveTrashSettings();
         }
 
         public void TrashRemoved(List<int> notTrash)
         {
-            ServiceLayer.SharedInstance.SaveSettings();
             var onMap = map.Annotations.OfType<Pokemon>().Where(p => notTrash.Contains(p.pokemon_id));
             var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => notTrash.Contains(p.pokemon_id)).ToList();
             var add = toAdd.Except(onMap).ToArray();
             map.AddAnnotations(add);
-        }
-
-        public void SaveTrashSettings()
-        {
-            SaveTrashSettings();
-
-            ServiceLayer.SharedInstance.SaveSettings();
-            var trashStrings = settings.PokemonTrash.Select(t => t.ToString()).ToArray();
-			var tosave = NSArray.FromStrings(trashStrings);
-			NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trash"));
         }
 
         public async Task NotificationLaunched(string pokemonID, DateTime expires, float lat, float lon)
@@ -642,7 +622,7 @@ namespace OMAPGMap.iOS
                 var coords = new CLLocationCoordinate2D(lat, lon);
                 var reg = new MKCoordinateRegion(coords, span);
                 map.SetRegion(reg, true);
-                await ServiceLayer.SharedInstance.LoadData(lastId);
+                await ServiceLayer.SharedInstance.LoadData();
                 var poke = map.Annotations.OfType<Pokemon>().Where(p => p.id == pokemonID).FirstOrDefault();
                 if (poke != null)
                 {
@@ -652,9 +632,9 @@ namespace OMAPGMap.iOS
             }
         }
 
-        public void ApplySettings()
+        public async Task ApplySettings()
         {
-            ServiceLayer.SharedInstance.SaveSettings();
+            await ServiceLayer.SharedInstance.SaveSettings();
             if(settings.RaidsEnabled)
             {
                 var l5 = map.Annotations.OfType<Raid>().Where(r => r.level == 5);

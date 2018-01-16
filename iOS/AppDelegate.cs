@@ -49,7 +49,6 @@ namespace OMAPGMap.iOS
         {
             AppCenter.Start("10303f1b-f9aa-47dd-873d-495ba59a22d6", typeof(Analytics), typeof(Crashes), typeof(Push));
             //var helper = new KeychainHelper();
-            ServiceLayer.SharedInstance.InitalizeSettings();
 
 
             if (launchOptions != null)
@@ -153,8 +152,9 @@ namespace OMAPGMap.iOS
             locManager.LocationsUpdated += LocationsUpdated;
         }
 
-        void LocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
+        async void LocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
         {
+            await ServiceLayer.SharedInstance.InitalizeSettings();
             CurrentLocation = e.Locations.First();
             UpdateDeviceData();
         }
