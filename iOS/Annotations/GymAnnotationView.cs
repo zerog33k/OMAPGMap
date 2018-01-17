@@ -56,6 +56,17 @@ namespace OMAPGMap.iOS.Annotations
 					distLabel.Text = $"{distMiles.ToString("F1")} miles away";
 					stack.AddArrangedSubview(distLabel);
 				}
+                var line4 = new UIButton();
+                line4.SetTitle("Directions", UIControlState.Normal);
+                line4.SetTitleColor(UIColor.Blue, UIControlState.Normal);
+                line4.Font = UIFont.SystemFontOfSize(14.0f, UIFontWeight.Light);
+                line4.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
+                line4.TouchUpInside += (sender, e) =>
+                {
+                    var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+                    app.OpenMapAppAtLocation(_gym.lat, _gym.lon);
+                };
+                stack.AddArrangedSubview(line4);
                 return stack;
             }
         }

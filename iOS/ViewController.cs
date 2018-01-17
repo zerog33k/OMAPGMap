@@ -141,7 +141,14 @@ namespace OMAPGMap.iOS
             await ServiceLayer.SharedInstance.LoadData();
             loader.StopAnimating();
             map.Delegate = this;
-            map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).ToArray());
+            if (settings.PokemonEnabled)
+            {
+                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).ToArray());
+            }
+            if(settings.NinetyOnlyEnabled)
+            {
+                map.AddAnnotations(ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9f).ToArray());
+            }
             map.AddAnnotations(ServiceLayer.SharedInstance.Gyms.Values.ToArray());
             var toAdd = new List<Raid>(ServiceLayer.SharedInstance.Raids);
             if (!settings.LegondaryRaids)
@@ -238,10 +245,15 @@ namespace OMAPGMap.iOS
                 pokeAV.UpdateTime(DateTime.Now);
                 pokeAV.Map = mapView;
                 pokeAV.ParentVC = this;
-                if(pokemon.iv > 0.9f)
+                if(pokemon.iv > 0.99f)
+                {
+                    pokeAV.LabelColor = UIColor.FromRGB(175, 116, 232);
+                }
+                else if (pokemon.iv > 0.9f)
                 {
                     pokeAV.LabelColor = UIColor.FromRGB(106, 175, 106);
-                } else 
+                }
+                else
                 {
                     pokeAV.LabelColor = UIColor.LightGray;
                 }
@@ -349,7 +361,7 @@ namespace OMAPGMap.iOS
 				{
 					//swallow exception because it tastes good
 				}
-                if (settings.PokemonEnabled)
+                if (settings.PokemonEnabled || settings.NotifyEnabled)
                 {
                     var onMap = map.Annotations.OfType<Pokemon>();
                     var toRemove = onMap.Where(p => p.ExpiresDate < DateTime.UtcNow);
@@ -357,13 +369,14 @@ namespace OMAPGMap.iOS
                     var onMapRaids = map.Annotations.OfType<Raid>();
                     var toRemoveRaids = onMapRaids.Where(r => r.TimeEnd < DateTime.UtcNow);
                     map.RemoveAnnotations(toRemoveRaids.ToArray());
-                    List<Pokemon> toAdd;
+                    List<Pokemon> toAdd = new List<Pokemon>();
                     if(settings.NinetyOnlyEnabled)
                     {
-                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(onMap).ToList();
-                    } else 
+                        toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(onMap));
+                    }
+                    if(settings.PokemonEnabled)
                     {
-                        toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(onMap).ToList();
+                        toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(onMap));
                     }
                     Console.WriteLine($"Adding {toAdd.Count()} mons to the map");
                     map.AddAnnotations(toAdd.ToArray());
@@ -560,7 +573,7 @@ namespace OMAPGMap.iOS
                         var toRemove = map.Annotations.OfType<Pokemon>().Where(p => p.iv > 0.9f);
                         if(settings.PokemonEnabled)
                         {
-                            toRemove = toRemove.Except(toRemove.Where(p => settings.PokemonTrash.Contains(p.pokemon_id)));
+                            toRemove = toRemove.Except(toRemove.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)));
                         }
                         map.RemoveAnnotations(toRemove.ToArray());
                     }

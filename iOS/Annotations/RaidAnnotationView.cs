@@ -100,6 +100,17 @@ namespace OMAPGMap.iOS.Annotations
 					distLabel.Text = $"{distMiles.ToString("F1")} miles away";
 					stack.AddArrangedSubview(distLabel);
 				}
+                var line6 = new UIButton();
+                line6.SetTitle("Directions", UIControlState.Normal);
+                line6.SetTitleColor(UIColor.Blue, UIControlState.Normal);
+                line6.Font = UIFont.SystemFontOfSize(14.0f, UIFontWeight.Light);
+                line6.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
+                line6.TouchUpInside += (sender, e) => 
+                {
+                    var app = UIApplication.SharedApplication.Delegate as AppDelegate;
+                    app.OpenMapAppAtLocation(_raid.lat, _raid.lon);
+                };
+                stack.AddArrangedSubview(line6);
                 return stack;
             }
             set

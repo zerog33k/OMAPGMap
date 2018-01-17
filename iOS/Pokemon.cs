@@ -25,7 +25,7 @@ namespace OMAPGMap.Models
                 var t = $"{name} ({gender}) - #{pokemon_id}";
                 if(!string.IsNullOrEmpty(move1))
                 {
-					t = $"{t} - {iv.ToString("F1")}%";
+					t = $"{t} - {(iv * 100).ToString("F1")}%";
                 }
                 return t;
             } 

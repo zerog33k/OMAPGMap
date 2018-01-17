@@ -107,7 +107,7 @@ namespace OMAPGMap
 
         public async Task LoadData()
         {
-            if (Settings.PokemonEnabled)
+            if (Settings.PokemonEnabled || Settings.NinetyOnlyEnabled)
             {
                 Console.WriteLine("loading Pokemon");
                 await LoadPokemon();
