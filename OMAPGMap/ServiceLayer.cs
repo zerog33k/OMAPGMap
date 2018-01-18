@@ -76,11 +76,7 @@ namespace OMAPGMap
 
         public async Task InitalizeSettings()
         {
-            Settings = await BlobCache.UserAccount.GetObject<UserSettings>("settings");
-            if (Settings == null)
-            {
-                Settings = new UserSettings();
-            }
+            Settings = await BlobCache.UserAccount.GetObject<UserSettings>("settings").Catch(Observable.Return(new UserSettings()));
         }
 
         public async Task SaveSettings()
@@ -132,7 +128,8 @@ namespace OMAPGMap
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             try
             {
-                var lid = _isAltLocation ? 0 : Settings.LastId;
+                var lid = Pokemon.Count() > 0 ? Settings.LastId : Settings.MinId;
+                lid = _isAltLocation ? 0 : lid;
                 var response = await client.GetAsync($"{pokemonURL}?last_id={lid}");
                 if (response.IsSuccessStatusCode)
                 {

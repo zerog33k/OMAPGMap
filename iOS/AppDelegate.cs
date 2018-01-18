@@ -214,6 +214,8 @@ namespace OMAPGMap.iOS
                     settings.Level2Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid2");
                     settings.Level1Raids = NSUserDefaults.StandardUserDefaults.BoolForKey("raid1");
                 }
+                settings.LastId = (int)NSUserDefaults.StandardUserDefaults.IntForKey("lastId");
+                settings.MinId = settings.LastId;
                 BlobCache.UserAccount.InsertObject("settings", settings);
             }
 

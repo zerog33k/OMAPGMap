@@ -78,6 +78,6 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To let you know when Pokémon are near you!</string>
 	<key>CFBundleVersion</key>
-	<string>82</string>
+	<string>83</string>
 </dict>
 </plist>
