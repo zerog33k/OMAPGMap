@@ -186,8 +186,8 @@ namespace OMAPGMap.iOS
                 {
                     var layersBool = layers.Select(l => bool.Parse(l)).ToArray();
                     settings.PokemonEnabled = layersBool[0];
-                    settings.RaidsEnabled = layersBool[1];
-                    settings.GymsEnabled = layersBool[2];
+                    settings.RaidsEnabled = layersBool[2];
+                    settings.GymsEnabled = layersBool[1];
                 }
 
                 var trash = NSUserDefaults.StandardUserDefaults.StringArrayForKey("trash");
