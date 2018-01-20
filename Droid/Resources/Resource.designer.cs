@@ -27,6 +27,7 @@ namespace OMAPGMap.Droid
 		public static void UpdateIdValues()
 		{
 			global::Microsoft.AppCenter.Push.Android.Resource.String.library_name = global::OMAPGMap.Droid.Resource.String.library_name;
+			global::Splat.Resource.String.library_name = global::OMAPGMap.Droid.Resource.String.library_name;
 		}
 		
 		public partial class Animation

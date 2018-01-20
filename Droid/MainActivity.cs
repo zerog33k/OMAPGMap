@@ -50,12 +50,12 @@ namespace OMAPGMap.Droid
 
         public static int NumPokes = 378;
         private int[] pokeResourceMap = new int[NumPokes];
-        private int lastId = 0;
         private List<Pokemon> PokesOnMap = new List<Pokemon>();
         private List<Pokemon> PokesVisible = new List<Pokemon>();
 
         private Timer secondTimer;
         private Timer minuteTimer;
+        private UserSettings settings => ServiceLayer.SharedInstance.Settings;
 
         private Location userLocation;
 
@@ -72,6 +72,7 @@ namespace OMAPGMap.Droid
             AppCenter.Start("7ac229ee-9940-46b8-becc-d2611c48b2ad", typeof(Analytics), typeof(Crashes));
 
             prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+            await ServiceLayer.SharedInstance.InitalizeSettings();
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
@@ -86,7 +87,6 @@ namespace OMAPGMap.Droid
                     Console.WriteLine($"poke {i} not found");
                 }
             }
-            lastId = prefs.GetInt("lastId", 0);
             _mapFragment = FragmentManager.FindFragmentByTag("map") as MapFragment;
             if (_mapFragment == null)
             {
@@ -101,18 +101,9 @@ namespace OMAPGMap.Droid
                 fragTx.Commit();
             }
 
-            var user = prefs.GetString("username", "empty");
-            if(user != "empty")
-            {
-                var pass = prefs.GetString("password", "empty");
-                ServiceLayer.SharedInstance.Username = user;
-                ServiceLayer.SharedInstance.Password = pass;
-                await ServiceLayer.SharedInstance.VerifyCredentials();
-            }
-
             loginHolder = FindViewById(Resource.Id.loginHolder) as CardView;
             username = FindViewById(Resource.Id.username) as EditText;
-            if(ServiceLayer.SharedInstance.LoggedIn)
+            if(settings.LoggedIn)
             {
                 loginHolder.Visibility = ViewStates.Gone;
                 _mapFragment.GetMapAsync(this);
@@ -144,7 +135,7 @@ namespace OMAPGMap.Droid
         {
             RunOnUiThread(async () =>
             {
-                await ServiceLayer.SharedInstance.LoadData(lastId);
+                await ServiceLayer.SharedInstance.LoadData();
                 UpdateMapPokemon();
             });
         }
@@ -167,17 +158,10 @@ namespace OMAPGMap.Droid
             progress.SetCancelable(false);  
             progress.Show();
 
-            await ServiceLayer.SharedInstance.LoadData(lastId);
+            await ServiceLayer.SharedInstance.LoadData();
             progress.Dismiss();
-            if (ServiceLayer.SharedInstance.Pokemon.Count() > 0)
-            {
-                lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p?.idValue)?.idValue ?? lastId;
-                var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p?.idValue)?.idValue ?? 0;
-                var editor = prefs.Edit();
-                editor.PutInt("lastId", l);
-                editor.Apply();
-            }
-            var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id));
+
+            var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id));
             var bounds = map.Projection.VisibleRegion.LatLngBounds;
             var visible = toAdd.Where(p => bounds.Contains(p.Location));
             foreach(var p in visible)
@@ -191,19 +175,11 @@ namespace OMAPGMap.Droid
         {
             try
             {
-                await ServiceLayer.SharedInstance.LoadData(lastId);
+                await ServiceLayer.SharedInstance.LoadData();
             }
             catch (Exception)
             {
                 //swallow exception because it tastes good
-            }
-            if (ServiceLayer.SharedInstance.Pokemon.Count() > 0)
-            {
-                lastId = ServiceLayer.SharedInstance.Pokemon.MaxBy(p => p?.idValue)?.idValue ?? lastId;
-                var l = ServiceLayer.SharedInstance.Pokemon.MinBy(p => p?.idValue)?.idValue ?? 0;
-                var editor = prefs.Edit();
-                editor.PutInt("lastId", l);
-                editor.Apply();
             }
             UpdateMapPokemon();
         }
@@ -219,13 +195,13 @@ namespace OMAPGMap.Droid
                 PokesOnMap.Remove(p);
             }
             IEnumerable<Pokemon> toAdd;
-            if (ServiceLayer.SharedInstance.LayersEnabled[3])
+            if (settings.NinetyOnlyEnabled)
             {
                 toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(PokesOnMap);
             }
             else
             {
-                toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !ServiceLayer.SharedInstance.PokemonTrash.Contains(p.pokemon_id)).Except(PokesOnMap);
+                toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(PokesOnMap);
             }
 
             var visible = toAdd.Where(p => bounds.Contains(p.Location));
@@ -257,30 +233,6 @@ namespace OMAPGMap.Droid
             marker.Tag = $"poke:{p.id}";
             p.PokeMarker = marker;
             PokesOnMap.Add(p);
-        }
-
-        private void LoadUserData()
-        {
-            
-            var trash = prefs.GetString("trash", "").Split(':');
-            if (trash.Count() > 0)
-            {
-                var trashInt = trash.Select(l => int.Parse(l));
-                ServiceLayer.SharedInstance.PokemonTrash = new List<int>(trashInt);
-            }
-            var notify = prefs.GetString("notify", "").Split(':');
-            var notifyInt = notify.Select(l => int.Parse(l));
-            ServiceLayer.SharedInstance.NotifyPokemon = new List<int>(notifyInt);
-            ServiceLayer.SharedInstance.NotifyEnabled = prefs.GetBoolean("notifyEnabled", true);
-            ServiceLayer.SharedInstance.Notify90Enabled = prefs.GetBoolean("notify90", true);
-            ServiceLayer.SharedInstance.Notify100Enabled = prefs.GetBoolean("notify100", true);
-            ServiceLayer.SharedInstance.NotifyDistance = prefs.GetInt("notifyDistance", 3);
-
-            ServiceLayer.SharedInstance.LegondaryRaids = prefs.GetBoolean("raid5", true);
-            ServiceLayer.SharedInstance.Level4Raids = prefs.GetBoolean("raid4", true);
-            ServiceLayer.SharedInstance.Level3Raids = prefs.GetBoolean("raid3", true);
-            ServiceLayer.SharedInstance.Level2Raids = prefs.GetBoolean("raid2", true);
-            ServiceLayer.SharedInstance.Level1Raids = prefs.GetBoolean("raid1", true);
         }
 
         public void OnMapReady(GoogleMap mapp)

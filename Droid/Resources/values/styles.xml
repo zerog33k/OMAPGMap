@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <!-- Inherit from the light Material Theme -->
-    <style name="MapTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="MapTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:colorPrimary">#1B5E20</item>
