@@ -47,6 +47,7 @@ namespace OMAPGMap.Droid
         private CardView loginHolder;
         private  ISharedPreferences prefs;
         private CardView settingsHolder;
+        private TextView loginMessage;
 
         public static int NumPokes = 378;
         private int[] pokeResourceMap = new int[NumPokes];
@@ -325,15 +326,11 @@ namespace OMAPGMap.Droid
 
         async void LoginButton_Click(object sender, EventArgs e)
         {
-            ServiceLayer.SharedInstance.Username = username.Text;
-            ServiceLayer.SharedInstance.Password = password.Text;
+            settings.Username = username.Text;
+            settings.Password = password.Text;
             var loggedIn = await ServiceLayer.SharedInstance.VerifyCredentials();
             if(loggedIn)
             {
-                var editor = prefs.Edit();
-                editor.PutString("username", ServiceLayer.SharedInstance.Username);
-                editor.PutString("password", ServiceLayer.SharedInstance.Password);
-                editor.Apply();
                 loginHolder.Visibility = ViewStates.Gone;
                 await LoadData();
             } else 

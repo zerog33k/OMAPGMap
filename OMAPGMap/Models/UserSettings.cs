@@ -23,8 +23,29 @@ namespace OMAPGMap.Models
             //gen 3 list
             252, 255, 258, 261, 263, 265, 273, 280, 296, 300, 307, 309, 315, 316, 325, 361, 363 };
 
-        public List<int> PokemonTrash = new List<int>(DefaultTrash);
-        public List<int> PokemonHidden = new List<int>(DefaultHidden);
+        private List<int> _trash =  new List<int>(DefaultTrash);
+        public List<int> PokemonTrash 
+        {
+            get 
+            {
+                return _trash;
+            }
+            set {
+                _trash = value;
+            }
+        }
+        private List<int> _notify = new List<int>(DefaultHidden);
+        public List<int> PokemonHidden
+        {
+            get
+            {
+                return _notify;
+            }
+            set
+            {
+                _notify = value;
+            }
+        }
         public List<int> NotifyPokemon = new List<int>();
 
         public string Username { get; set; } = "";

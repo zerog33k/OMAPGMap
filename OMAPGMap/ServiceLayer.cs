@@ -28,7 +28,7 @@ namespace OMAPGMap
         private static string altURL = "http://107.189.42.114:7500";
         private string dataURL = baseURL;
 
-        public UserSettings Settings; 
+        public UserSettings Settings { get; set; }
 
         private string pokemonURL => $"{dataURL}/data";
         private string gymsURL => $"{dataURL}/gym_data";
