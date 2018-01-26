@@ -13,7 +13,6 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Android.Views;
 using Android.Support.V7.App;
-using Android.Support.Design.Widget;
 using Android.Support.V7.Widget;
 using System;
 using System.Threading.Tasks;
@@ -130,6 +129,8 @@ namespace OMAPGMap.Droid
             settingsHolder = FindViewById(Resource.Id.settingsHolder) as CardView;
             var settingsDone = settingsHolder.FindViewById(Resource.Id.settingsDoneButton);
             settingsDone.Click += SettingsDone_Click;
+
+            var settingsList = FindViewById(Resource.Id.settingsListView)
         }
 
         private void refreshMap(object state)
