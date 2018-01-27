@@ -128,7 +128,7 @@ namespace OMAPGMap
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             try
             {
-                var lid = Pokemon.Count() > 0 ? Settings.LastId : Settings.MinId;
+                var lid = Pokemon.Any() ? Settings.LastId : Settings.MinId;
                 lid = _isAltLocation ? 0 : lid;
                 var response = await client.GetAsync($"{pokemonURL}?last_id={lid}");
                 if (response.IsSuccessStatusCode)

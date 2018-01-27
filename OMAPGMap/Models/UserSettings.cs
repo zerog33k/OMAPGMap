@@ -41,10 +41,6 @@ namespace OMAPGMap.Models
             {
                 return _notify;
             }
-            set
-            {
-                _notify = value;
-            }
         }
         public List<int> NotifyPokemon = new List<int>();
 

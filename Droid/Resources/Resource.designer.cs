@@ -2812,11 +2812,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b000a
 			public const int ghost_view = 2131427338;
 			
-			// aapt resource value: 0x7f0b00cb
-			public const int hiddenLabel = 2131427531;
-			
-			// aapt resource value: 0x7f0b00cc
-			public const int hiddenSwitch = 2131427532;
+			// aapt resource value: 0x7f0b00ca
+			public const int hiddenSwitch = 2131427530;
 			
 			// aapt resource value: 0x7f0b0005
 			public const int home = 2131427333;
@@ -2908,14 +2905,14 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b00b1
 			public const int marker_text = 2131427505;
 			
-			// aapt resource value: 0x7f0b00d2
-			public const int masked = 2131427538;
+			// aapt resource value: 0x7f0b00d0
+			public const int masked = 2131427536;
 			
 			// aapt resource value: 0x7f0b00b8
 			public const int media_actions = 2131427512;
 			
-			// aapt resource value: 0x7f0b00d0
-			public const int message = 2131427536;
+			// aapt resource value: 0x7f0b00ce
+			public const int message = 2131427534;
 			
 			// aapt resource value: 0x7f0b003b
 			public const int middle = 2131427387;
@@ -2947,11 +2944,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b00ba
 			public const int notification_main_column_container = 2131427514;
 			
-			// aapt resource value: 0x7f0b00ca
-			public const int notifySwitch = 2131427530;
-			
 			// aapt resource value: 0x7f0b00c9
-			public const int notifyText = 2131427529;
+			public const int notifySwitch = 2131427529;
 			
 			// aapt resource value: 0x7f0b0055
 			public const int parallax = 2131427413;
@@ -3058,14 +3052,14 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b00ac
 			public const int settingsButton = 2131427500;
 			
-			// aapt resource value: 0x7f0b00ce
-			public const int settingsDoneButton = 2131427534;
+			// aapt resource value: 0x7f0b00cc
+			public const int settingsDoneButton = 2131427532;
 			
 			// aapt resource value: 0x7f0b00aa
 			public const int settingsHolder = 2131427498;
 			
-			// aapt resource value: 0x7f0b00cf
-			public const int settingsListView = 2131427535;
+			// aapt resource value: 0x7f0b00cd
+			public const int settingsListView = 2131427533;
 			
 			// aapt resource value: 0x7f0b007d
 			public const int shortcut = 2131427453;
@@ -3163,8 +3157,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0078
 			public const int title_template = 2131427448;
 			
-			// aapt resource value: 0x7f0b00cd
-			public const int toolbar = 2131427533;
+			// aapt resource value: 0x7f0b00cb
+			public const int toolbar = 2131427531;
 			
 			// aapt resource value: 0x7f0b0048
 			public const int top = 2131427400;
@@ -3208,8 +3202,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0016
 			public const int view_offset_helper = 2131427350;
 			
-			// aapt resource value: 0x7f0b00d1
-			public const int visible = 2131427537;
+			// aapt resource value: 0x7f0b00cf
+			public const int visible = 2131427535;
 			
 			// aapt resource value: 0x7f0b0025
 			public const int wide = 2131427365;

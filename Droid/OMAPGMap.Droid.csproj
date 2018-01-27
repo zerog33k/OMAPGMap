@@ -182,6 +182,7 @@
     <Compile Include="LoginActivity.cs" />
     <Compile Include="Pokemon.cs" />
     <Compile Include="AkavacheSqliteLinkerOverride.cs" />
+    <Compile Include="SettingsAdaptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

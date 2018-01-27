@@ -53,6 +53,8 @@ namespace OMAPGMap.Droid
         private List<Pokemon> PokesOnMap = new List<Pokemon>();
         private List<Pokemon> PokesVisible = new List<Pokemon>();
 
+        private ListView settingsListview;
+
         private Timer secondTimer;
         private Timer minuteTimer;
         private UserSettings settings => ServiceLayer.SharedInstance.Settings;
@@ -81,7 +83,7 @@ namespace OMAPGMap.Droid
             {
                 try
                 {
-                    pokeResourceMap[i] = (int)typeof(Resource.Mipmap).GetField($"p{i}").GetValue(null);
+                    pokeResourceMap[i] = (int)typeof(Resource.Mipmap).GetField($"p{i.ToString("d3")}").GetValue(null);
                 }catch(Exception e)
                 {
                     Console.WriteLine($"poke {i} not found");
@@ -93,7 +95,7 @@ namespace OMAPGMap.Droid
                 GoogleMapOptions mapOptions = new GoogleMapOptions()
                     .InvokeMapType(GoogleMap.MapTypeNormal)
                     .InvokeZoomControlsEnabled(false)
-                    .InvokeCompassEnabled(true);
+                    .InvokeCompassEnabled(true);    
 
                 Android.App.FragmentTransaction fragTx = FragmentManager.BeginTransaction();
                 _mapFragment = MapFragment.NewInstance(mapOptions);
@@ -130,7 +132,8 @@ namespace OMAPGMap.Droid
             var settingsDone = settingsHolder.FindViewById(Resource.Id.settingsDoneButton);
             settingsDone.Click += SettingsDone_Click;
 
-            var settingsList = FindViewById(Resource.Id.settingsListView)
+            settingsListview = FindViewById(Resource.Id.settingsListView) as ListView;
+            settingsListview.Adapter = new SettingsAdaptor(this, pokeResourceMap);
         }
 
         private void refreshMap(object state)
@@ -138,7 +141,7 @@ namespace OMAPGMap.Droid
             RunOnUiThread(async () =>
             {
                 await ServiceLayer.SharedInstance.LoadData();
-                UpdateMapPokemon();
+                UpdateMapPokemon(false);
             });
         }
 
@@ -146,7 +149,7 @@ namespace OMAPGMap.Droid
         {
             RunOnUiThread(() =>
             {
-                UpdateMapPokemon();
+                UpdateMapPokemon(false);
             });
 
         }
@@ -183,13 +186,17 @@ namespace OMAPGMap.Droid
             {
                 //swallow exception because it tastes good
             }
-            UpdateMapPokemon();
+            UpdateMapPokemon(false);
         }
 
-        private void UpdateMapPokemon()
+        private void UpdateMapPokemon(bool reload)
         {
             var bounds = map.Projection.VisibleRegion.LatLngBounds;
             var toRemove = PokesOnMap.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow).ToList();
+            if(reload)
+            {
+                toRemove = PokesOnMap;
+            }
             foreach (var p in toRemove)
             {
                 p.PokeMarker.Remove();
@@ -260,7 +267,7 @@ namespace OMAPGMap.Droid
 
         void Map_CameraIdle(object sender, EventArgs e)
         {
-            UpdateMapPokemon();
+            UpdateMapPokemon(false);
         }
 
         private void RequestLocation()
@@ -399,6 +406,7 @@ namespace OMAPGMap.Droid
         void SettingsDone_Click(object sender, EventArgs e)
         {
             settingsHolder.Visibility = ViewStates.Gone;
+            UpdateMapPokemon(true);
         }
     }
 }
