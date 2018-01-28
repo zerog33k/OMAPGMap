@@ -95,19 +95,19 @@
         android:minHeight="25px">
         <ImageButton
             android:src="@mipmap/layers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/layerssButton"
-            android:background="#00f5f5f5"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp" />
+            android:layout_marginLeft="8dp"
+            android:fadingEdge="vertical" />
         <ImageButton
             android:src="@mipmap/gear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/settingsButton"
-            android:background="#00f5f5f5"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp" />
+            android:layout_marginLeft="8dp"
+            android:fadingEdge="vertical" />
     </LinearLayout>
 </FrameLayout>
