@@ -77,6 +77,7 @@ namespace OMAPGMap
         public async Task InitalizeSettings()
         {
             Settings = await BlobCache.UserAccount.GetObject<UserSettings>("settings").Catch(Observable.Return(new UserSettings()));
+            Settings.LastUpdateTimestamp = Utility.ToUnixTime(DateTime.UtcNow.AddHours(-1.0));
         }
 
         public async Task SaveSettings()
@@ -128,16 +129,17 @@ namespace OMAPGMap
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
             try
             {
-                var lid = Pokemon.Any() ? Settings.LastId : Settings.MinId;
-                lid = _isAltLocation ? 0 : lid;
-                var response = await client.GetAsync($"{pokemonURL}?last_id={lid}");
+                var lastUpdate = Settings.LastUpdateTimestamp;
+                var minTime = Utility.ToUnixTime(DateTime.UtcNow.AddHours(-1.0));
+
+                var lid = lastUpdate > minTime ? lastUpdate : minTime;
+                var response = await client.GetAsync($"{pokemonURL}?timestamp={lid}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
                     Pokemon.AddRange(pokes);
-                    Settings.LastId =  Pokemon.MaxBy(p => p?.idValue)?.idValue ?? lid;
-                    Settings.MinId = Pokemon.MinBy(p => p?.idValue)?.idValue ?? 0;
+                    Settings.LastUpdateTimestamp = Pokemon.MaxBy(p => p?.timestamp)?.timestamp ?? lastUpdate;
                     await SaveSettings();
                 }
             }
@@ -251,5 +253,7 @@ namespace OMAPGMap
                 }
             }
         }
+
+
     }
 }

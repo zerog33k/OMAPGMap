@@ -10,6 +10,11 @@ namespace OMAPGMap
 			return epoch.AddSeconds(unixTime);
 		}
 
+        public static long ToUnixTime(this DateTime date)
+        {
+            return Convert.ToInt64((date - epoch).TotalSeconds);
+        }
+
         private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
 
 		public static double MilesToLatitudeDegrees(double miles)

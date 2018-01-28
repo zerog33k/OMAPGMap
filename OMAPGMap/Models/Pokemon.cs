@@ -46,6 +46,8 @@ namespace OMAPGMap.Models
         public int sta { get; set; }
         public int level { get; set; }
         public int cp { get; set; }
+        public long timestamp { get; set; }
+        public int? form { get; set; }
 
         public float iv { get => (sta + def + atk) / 45.0f; }
 

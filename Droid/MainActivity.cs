@@ -195,7 +195,7 @@ namespace OMAPGMap.Droid
             var toRemove = PokesOnMap.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow).ToList();
             if(reload)
             {
-                toRemove = PokesOnMap;
+                toRemove = PokesOnMap.ToList();
             }
             foreach (var p in toRemove)
             {
@@ -340,6 +340,7 @@ namespace OMAPGMap.Droid
             if(loggedIn)
             {
                 loginHolder.Visibility = ViewStates.Gone;
+                await ServiceLayer.SharedInstance.SaveSettings();
                 await LoadData();
             } else 
             {
@@ -403,9 +404,10 @@ namespace OMAPGMap.Droid
             popup.ShowAsDropDown(button, 40, 40, GravityFlags.Bottom);
         }
 
-        void SettingsDone_Click(object sender, EventArgs e)
+        async void SettingsDone_Click(object sender, EventArgs e)
         {
             settingsHolder.Visibility = ViewStates.Gone;
+            await ServiceLayer.SharedInstance.SaveSettings();
             UpdateMapPokemon(true);
         }
     }

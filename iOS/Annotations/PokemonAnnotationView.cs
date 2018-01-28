@@ -65,6 +65,7 @@ namespace OMAPGMap.iOS.Annotations
 					var iv = (_pokemon.atk + _pokemon.def + _pokemon.sta) / 45.0f;
 				}
                 view.HideButton.TouchUpInside += HideButton_TouchUpInside;
+                view.HideButton.SetTitle("Hide", UIControlState.Normal);
                 view.DirectionsButton.TouchUpInside += DirectionsButton_TouchUpInside;
                 view.NotifyButotn.TouchUpInside += NotifyButotn_TouchUpInside;
                 var notifyLabel = ServiceLayer.SharedInstance.Settings.NotifyPokemon.Contains(_pokemon.pokemon_id) ? "Remove Notify" : "Notify";
@@ -77,12 +78,13 @@ namespace OMAPGMap.iOS.Annotations
             }
         }
 
-        void HideButton_TouchUpInside(object sender, EventArgs e)
+        async void HideButton_TouchUpInside(object sender, EventArgs e)
         {
             ServiceLayer.SharedInstance.Settings.PokemonTrash.Add(_pokemon.pokemon_id);
             var toRemove = new List<int>();
             toRemove.Add(_pokemon.pokemon_id);
             ParentVC.TrashAdded(toRemove);
+            await ServiceLayer.SharedInstance.SaveSettings();
         }
 
         void DirectionsButton_TouchUpInside(object sender, EventArgs e)

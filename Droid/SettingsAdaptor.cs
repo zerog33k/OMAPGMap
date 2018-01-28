@@ -34,7 +34,7 @@ namespace OMAPGMap.Droid
                 var ns = view.FindViewById(Resource.Id.notifySwitch) as Switch;
                 var hs = view.FindViewById(Resource.Id.hiddenSwitch) as Switch;
                 ns.CheckedChange += NotifySwitch_CheckedChange;
-                hs.CheckedChange += HideSwitch_CheckedChange;
+                hs.Click += HideSwitch_CheckedChange;
 
             }
             var img = view.FindViewById(Resource.Id.pokeImgId) as ImageView;
@@ -45,7 +45,7 @@ namespace OMAPGMap.Droid
             notifySwitch.Checked = ServiceLayer.SharedInstance.Settings.NotifyPokemon.Contains(pId);
             notifySwitch.Tag = pId;
             hideSwitch.Enabled = !ServiceLayer.SharedInstance.Settings.PokemonHidden.Contains(pId);
-            hideSwitch.Checked = !ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(pId);
+            hideSwitch.Checked = ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(pId);
             hideSwitch.Tag = pId;
             return view;
         }
@@ -64,7 +64,7 @@ namespace OMAPGMap.Droid
             }
         }
 
-        void HideSwitch_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        void HideSwitch_CheckedChange(object sender, EventArgs e)
         {
             var sw = sender as Switch;
             var pId = (int)sw.Tag;
