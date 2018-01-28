@@ -29,4 +29,12 @@
         android:layout_marginTop="6dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp" />
+    <CheckBox
+        android:text="90+ IV Pokémon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layer90PokeCheck"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp" />
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map_marker_layout"
-    android:layout_width="200dp"
+    android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@android:color/white">
@@ -14,28 +14,72 @@
         android:textSize="12dp"
         android:textColor="@android:color/black"
         android:textStyle="bold" />
-    <LinearLayout
+    <TextView
+        android:text="12.8 miles away"
+        android:id="@+id/info_distance"
+        android:textSize="14dp"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp" />
+    <TextView
+        android:text="Move 1: Blah blah blah"
+        android:id="@+id/info_move1"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
+    <TextView
+        android:text="Move 2: Blah blah blah"
+        android:id="@+id/info_move2"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
+    <TextView
+        android:text="IV: 15atk 15def 15sta"
+        android:id="@+id/info_iv"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
+    <TextView
+        android:text="CP: 1234 Level: 22"
+        android:id="@+id/info_cp_level"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
+    <LinearLayout
         android:orientation="horizontal"
-        android:padding="5dp">
-        <TextView
-            android:text="12.8 miles away"
-            android:id="@+id/info_distance"
-            android:textSize="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        <Button
+            android:text="Hide"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/hide_button"
             android:layout_weight="0.5"
-            android:textColor="@android:color/black" />
-        <TextView
-            android:text="Directions"
-            android:id="@+id/info_directions"
-            android:textSize="12dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" />
+        <Button
+            android:text="Notify"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/notify_button"
             android:layout_weight="0.5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ff00b0ff"
-            android:gravity="center"
-            android:textStyle="bold" />
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" />
     </LinearLayout>
 </LinearLayout>
