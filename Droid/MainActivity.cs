@@ -354,16 +354,36 @@ namespace OMAPGMap.Droid
             }
         }
 
+        private View pokemonInfo = null;
+        private Marker currentMarker;
+
         public View GetInfoContents(Marker marker)
         {
-            var markerInfo = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.pokemon_info, null);
-            var title = markerInfo.FindViewById(Resource.Id.info_title) as TextView;
-            var distLabel = markerInfo.FindViewById(Resource.Id.info_distance) as TextView;
+            View infoView = null;
             var markerTag = marker.Tag.ToString().Split(':');
             var t = markerTag[0];
             var id = markerTag[1];
+            var l = new Location("");
+            l.Latitude = marker.Position.Latitude;
+            l.Longitude = marker.Position.Longitude;
+            var dist = (userLocation?.DistanceTo(l) ?? 0) * 0.000621371;
             if (t == "poke") 
             {
+                Button notifyButton;
+                if (pokemonInfo == null)
+                {
+                    pokemonInfo = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.pokemon_info, null);
+                    var hideButton = pokemonInfo.FindViewById(Resource.Id.hide_button) as Button;
+                    notifyButton = pokemonInfo.FindViewById(Resource.Id.notify_button) as Button;
+                    hideButton.Touch += HideButton_Touch;
+                }
+                infoView = pokemonInfo;
+                var title = pokemonInfo.FindViewById(Resource.Id.info_title) as TextView;
+                var distLabel = pokemonInfo.FindViewById(Resource.Id.info_distance) as TextView;
+                var move1Label = pokemonInfo.FindViewById(Resource.Id.info_move1) as TextView;
+                var move2Label = pokemonInfo.FindViewById(Resource.Id.info_move2) as TextView;
+                var ivLabel = pokemonInfo.FindViewById(Resource.Id.info_iv) as TextView;
+                var cpLabel = pokemonInfo.FindViewById(Resource.Id.info_cp_level) as TextView;
                 var poke = ServiceLayer.SharedInstance.Pokemon.Where(p => p.id == id).FirstOrDefault();
                 var infoTitle = $"{poke.name} ({poke.gender}) - #{poke.pokemon_id}";
                 if (!string.IsNullOrEmpty(poke.move1))
@@ -373,17 +393,62 @@ namespace OMAPGMap.Droid
                 title.Text = infoTitle;
                 if (userLocation != null)
                 {
-                    var l = new Location("");
-                    l.Latitude = marker.Position.Latitude;
-                    l.Longitude = marker.Position.Longitude;
-                    var dist = userLocation.DistanceTo(l) * 0.000621371;
                     distLabel.Text = $"{dist.ToString("F1")} miles away";
                 } else {
                     distLabel.Text = "Dist unknown";
                 }
+                if(!string.IsNullOrEmpty(poke.move1))
+                {
+                    move1Label.Visibility = ViewStates.Visible;
+                    move2Label.Visibility = ViewStates.Visible;
+                    ivLabel.Visibility = ViewStates.Visible;
+                    cpLabel.Visibility = ViewStates.Visible;
+                    move1Label.Text = $"Move 1: {poke.move1} ({poke.damage1} dps)";
+                    move2Label.Text = $"Move 1: {poke.move2} ({poke.damage2} dps)";
+                    ivLabel.Text = $"IV: {poke.atk}atk {poke.def}def {poke.sta}sta";
+                    cpLabel.Text = $"CP: {poke.cp} Level: {poke.level}";
+                } else 
+                {
+                    move1Label.Visibility = ViewStates.Gone;
+                    move2Label.Visibility = ViewStates.Gone;
+                    ivLabel.Visibility = ViewStates.Gone;
+                    cpLabel.Visibility = ViewStates.Gone;
+                }
+
+            } else if(t == "raid")
+            {
+                
+            } else if (t == "gym")
+            {
+
             }
 
-            return markerInfo;
+            return infoView;
+        }
+
+        async void HideButton_Touch(object sender, View.TouchEventArgs e)
+        {
+            if (e.Event.Action == MotionEventActions.Up)
+            {
+                var markerTag = currentMarker.Tag.ToString().Split(':');
+                var t = markerTag[0];
+                var id = markerTag[1];
+                var poke = ServiceLayer.SharedInstance.Pokemon.Where(p => p.id == id).FirstOrDefault();
+                settings.PokemonTrash.Add(poke.pokemon_id);
+                currentMarker.HideInfoWindow();
+                await ServiceLayer.SharedInstance.SaveSettings();
+                UpdateMapPokemon(true);
+            }
+        }
+
+
+
+        void NotifyButton_Click(object sender, EventArgs e)
+        {
+            var markerTag = currentMarker.Tag.ToString().Split(':');
+            var t = markerTag[0];
+            var id = markerTag[1];
+            currentMarker.HideInfoWindow();
         }
 
         public View GetInfoWindow(Marker marker)
