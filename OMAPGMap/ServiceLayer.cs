@@ -223,6 +223,7 @@ namespace OMAPGMap
             using (var client = new HttpClient())
             {
                 var str = Settings.NotifyPokemon.ToDelimitedString(":");
+                var ignoreStr = Settings.IgnorePokemon.ToDelimitedString(":");
                 var jobj = JObject.FromObject(new
                 {
                     DeviceId = deviceId,
@@ -233,7 +234,10 @@ namespace OMAPGMap
                     DistanceAlert = Settings.NotifyDistance,
                     NotifyEnabled = Settings.NotifyEnabled,
                     Notify90 = Settings.Notify90Enabled,
-                    Notify100 = Settings.Notify100Enabled
+                    Notify100 = Settings.Notify100Enabled,
+                    MaxDistance = Settings.NotifyMaxDistance,
+                    MinLevelAlert = Settings.NotifyLevel,
+                    ignorePokemonStr = ignoreStr
                 });
                 var content = new StringContent(jobj.ToString(), Encoding.UTF8, "application/json");
                 try

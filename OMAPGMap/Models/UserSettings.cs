@@ -9,6 +9,8 @@ namespace OMAPGMap.Models
         public bool Notify90Enabled { get; set; } = true;
         public bool Notify100Enabled { get; set; } = true;
         public int NotifyDistance { get; set; } = 3;
+        public int NotifyMaxDistance { get; set; } = 20;
+        public int NotifyLevel { get; set; } = 0;
         public bool LegondaryRaids { get; set; } = true;
         public bool Level4Raids { get; set; } = true;
         public bool Level3Raids { get; set; } = true;
@@ -42,6 +44,8 @@ namespace OMAPGMap.Models
             }
         }
         public List<int> NotifyPokemon = new List<int>();
+
+        public List<int> IgnorePokemon = new List<int>();
 
         public string Username { get; set; } = "";
         public string Password { get; set; } = "";

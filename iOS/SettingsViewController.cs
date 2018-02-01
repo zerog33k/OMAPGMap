@@ -20,19 +20,19 @@ namespace OMAPGMap.iOS
         private List<int> TrashAdded = new List<int>();
         private List<int> TrashRemoved = new List<int>();
         private UITextField DistInput = null;
+        private UITextField MaxInput = null;
+        private UITextField LevelInput = null;
         private UIView HeaderView = null;
         private nint SelectedGen = 0;
         private int gen2start = 152;
         private int gen3start = 252;
-
-        private UserSettings settings => ServiceLayer.SharedInstance.Settings;
 
         public ViewController ParentVC { get; set; }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            Title = "Map Settings";
+            Title = "Map ServiceLayer.SharedInstance.Settings";
             NavigationItem.LeftBarButtonItem = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, async (sender, e) =>
             {
                 if(TrashAdded.Count > 0)
@@ -45,7 +45,7 @@ namespace OMAPGMap.iOS
                 }
                 if (DistInput != null)
                 {
-                    settings.NotifyDistance = int.Parse(DistInput.Text);
+                    ServiceLayer.SharedInstance.Settings.NotifyDistance = int.Parse(DistInput.Text);
                 }
                 await ParentVC.ApplySettings();
                 DismissViewController(true, null);
@@ -53,48 +53,58 @@ namespace OMAPGMap.iOS
                 app.UpdateDeviceData();
             });
             HeaderView = TableView.TableHeaderView;
-            TableView.TableHeaderView = new UIView();
+            TableView.TableHeaderView = new UIView(new CGRect(0, 0, 10, 1));
+            var nib = UINib.FromName("SectionHeaderView", NSBundle.MainBundle);
+            TableView.RegisterNibForHeaderFooterViewReuse(nib, "sectionHeader");
         }
 
         public override nint NumberOfSections(UITableView tableView)
         {
-            return 2;
+            return 4;
         }
 
-        //public override string TitleForHeader(UITableView tableView, nint section)
-        //{
-        //    return section == 0 ? "Settings" : "Pokemon Settings";
-        //}
 
         public override UIView GetViewForHeader(UITableView tableView, nint section)
         {
-            if(section == 0)
-            {
-                return new UIView();
-            }
-            else 
+            if (section == 3)
             {
                 return HeaderView;
             }
+            var view = tableView.DequeueReusableHeaderFooterView("sectionHeader");
+            var label = view.ViewWithTag(1) as UILabel;
+            switch (section)
+            {
+                case 0:
+                    label.Text = "Layer ServiceLayer.SharedInstance.Settings";
+                    break;
+                case 1:
+                    label.Text = "Notification ServiceLayer.SharedInstance.Settings";
+                    break;
+                case 2:
+                    label.Text = "Raid Layers";
+                    break;
+            }
+            return view;
         }
 
         public override nfloat GetHeightForHeader(UITableView tableView, nint section)
         {
-            return section == 0 ? 1.0f : 70.0f;
+            return section < 3 ? 25.0f : 70.0f;
+        }
+
+        public override nfloat GetHeightForFooter(UITableView tableView, nint section)
+        {
+            return 1.0f;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            
+            UITableViewCell cell = null;
             if (indexPath.Section == 0)
             {
-                UITableViewCell cell = null;
-                if(indexPath.Row < 4)
-                {
-                    cell = tableView.DequeueReusableCell("ResetTrashCell", indexPath);
-                }
+                cell = tableView.DequeueReusableCell("ResetTrashCell", indexPath);
                 var label = cell?.ViewWithTag(1) as UILabel;
-                switch(indexPath.Row)
+                switch (indexPath.Row)
                 {
                     case 0:
                         label.Text = "Hide Everything";
@@ -108,156 +118,227 @@ namespace OMAPGMap.iOS
                     case 3:
                         label.Text = "Recall Saved Hidden";
                         break;
-                    case 4:
+                }
+            }
+            else if (indexPath.Section == 1)
+            {
+                var label = cell?.ViewWithTag(1) as UILabel;
+                switch (indexPath.Row)
+                {
+
+                    case 0:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "All Notifications";
-                        s.On = settings.NotifyEnabled;
+                        s.On = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
-                    case 5:
+                    case 1:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s1 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "> 90% IV Notify";
-                        s1.On = settings.Notify90Enabled;
-                        label.TextColor = settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
-                        s1.Enabled = settings.NotifyEnabled;
+                        s1.On = ServiceLayer.SharedInstance.Settings.Notify90Enabled;
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        s1.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
-                    case 6:
+                    case 2:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s2 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "100% IV Notify";
-                        s2.On = settings.Notify100Enabled;
-                        label.TextColor = settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
-                        s2.Enabled = settings.NotifyEnabled;
+                        s2.On = ServiceLayer.SharedInstance.Settings.Notify100Enabled;
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        s2.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
-                    case 7:
+                    case 3:
                         cell = tableView.DequeueReusableCell("NotifyDistanceCell", indexPath);
                         var input = cell.ViewWithTag(2) as UITextField;
-                        if(DistInput == null)
+                        if (DistInput == null)
                         {
                             DistInput = input;
                             input.ValueChanged += (sender, e) =>
                             {
-                                settings.NotifyDistance = int.Parse(DistInput.Text);
+                                ServiceLayer.SharedInstance.Settings.NotifyDistance = int.Parse(DistInput.Text);
                             };
                             var tool = new UIToolbar();
                             tool.SizeToFit();
                             var done = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
                             {
-                                settings.NotifyDistance = int.Parse(DistInput.Text);
+                                ServiceLayer.SharedInstance.Settings.NotifyDistance = int.Parse(DistInput.Text);
                                 DistInput.ResignFirstResponder();
                             });
                             tool.SetItems(new UIBarButtonItem[] { done }, false);
                             DistInput.InputAccessoryView = tool;
                         }
                         label = cell.ViewWithTag(1) as UILabel;
-                        input.Text = settings.NotifyDistance.ToString();
-                        label.TextColor = settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
-                        input.Enabled = settings.NotifyEnabled;
+                        input.Text = ServiceLayer.SharedInstance.Settings.NotifyDistance.ToString();
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        input.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
                         break;
-                    case 8:
+                    case 4:
+                        cell = tableView.DequeueReusableCell("NotifyDistanceCell", indexPath);
+                        var input1 = cell.ViewWithTag(2) as UITextField;
+                        if (MaxInput == null)
+                        {
+                            MaxInput = input1;
+                            input1.ValueChanged += (sender, e) =>
+                            {
+                                ServiceLayer.SharedInstance.Settings.NotifyMaxDistance = int.Parse(MaxInput.Text);
+                            };
+                            var tool = new UIToolbar();
+                            tool.SizeToFit();
+                            var done = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
+                            {
+                                ServiceLayer.SharedInstance.Settings.NotifyMaxDistance = int.Parse(MaxInput.Text);
+                                MaxInput.ResignFirstResponder();
+                            });
+                            tool.SetItems(new UIBarButtonItem[] { done }, false);
+                            MaxInput.InputAccessoryView = tool;
+                        }
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "Maximum Distance (miles)";
+                        input1.Text = ServiceLayer.SharedInstance.Settings.NotifyMaxDistance.ToString();
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        input1.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
+                        break;
+                    case 5:
+                        cell = tableView.DequeueReusableCell("NotifyDistanceCell", indexPath);
+                        var input2 = cell.ViewWithTag(2) as UITextField;
+                        if (LevelInput == null)
+                        {
+                            LevelInput = input2;
+                            input2.ValueChanged += (sender, e) =>
+                            {
+                                ServiceLayer.SharedInstance.Settings.NotifyLevel = int.Parse(LevelInput.Text);
+                            };
+                            var tool = new UIToolbar();
+                            tool.SizeToFit();
+                            var done = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, (sender, e) =>
+                            {
+                                ServiceLayer.SharedInstance.Settings.NotifyLevel = int.Parse(LevelInput.Text);
+                                LevelInput.ResignFirstResponder();
+                            });
+                            tool.SetItems(new UIBarButtonItem[] { done }, false);
+                            LevelInput.InputAccessoryView = tool;
+                        }
+                        label = cell.ViewWithTag(1) as UILabel;
+                        label.Text = "Minimum Level";
+                        input2.Text = ServiceLayer.SharedInstance.Settings.NotifyLevel.ToString();
+                        label.TextColor = ServiceLayer.SharedInstance.Settings.NotifyEnabled ? UIColor.Black : UIColor.Gray;
+                        input2.Enabled = ServiceLayer.SharedInstance.Settings.NotifyEnabled;
+                        break;
+                }
+            }
+            else if (indexPath.Section == 2)
+            {
+                var label = cell?.ViewWithTag(1) as UILabel;
+                switch (indexPath.Row)
+                {
+                    case 0:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s3 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Legendary Raids";
-                        s3.On = settings.LegondaryRaids;
+                        s3.On = ServiceLayer.SharedInstance.Settings.LegondaryRaids;
                         break;
-                    case 9:
+                    case 1:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s4 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 4 Raids";
-                        s4.On = settings.Level4Raids;
+                        s4.On = ServiceLayer.SharedInstance.Settings.Level4Raids;
                         break;
-                    case 10:
+                    case 2:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s5 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 3 Raids";
-                        s5.On = settings.Level3Raids;
+                        s5.On = ServiceLayer.SharedInstance.Settings.Level3Raids;
                         break;
-                    case 11:
+                    case 3:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s6 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 2 Raids";
-                        s6.On = settings.Level2Raids;
+                        s6.On = ServiceLayer.SharedInstance.Settings.Level2Raids;
                         break;
-                    case 12:
+                    case 4:
                         cell = tableView.DequeueReusableCell("AllNotifyCell", indexPath);
                         var s7 = cell.ViewWithTag(2) as UISwitch;
                         label = cell.ViewWithTag(1) as UILabel;
                         label.Text = "Level 1 Raids";
-                        s7.On = settings.Level1Raids;
+                        s7.On = ServiceLayer.SharedInstance.Settings.Level1Raids;
                         break;
                 }
-                return cell;
             }
-
-
-
             else
             {
-                var cell = tableView.DequeueReusableCell("FilterCell", indexPath);
+                cell = tableView.DequeueReusableCell("FilterCell", indexPath);
                 var img = cell.ViewWithTag(1) as UIImageView;
                 var notifyLbl = cell.ViewWithTag(2) as UILabel;
                 var notifySwitch = cell.ViewWithTag(3) as UISwitch;
                 var trashLbl = cell.ViewWithTag(4) as UILabel;
                 var trashSwitch = cell.ViewWithTag(5) as UISwitch;
+                var ignoreLbl = cell.ViewWithTag(6) as UILabel;
+                var ignoreSwitch = cell.ViewWithTag(7) as UISwitch;
                 var pokemonid = ConvertRowToID(indexPath.Row);
 
                 img.Image = UIImage.FromBundle(pokemonid.ToString("D3"));
-                if (!settings.PokemonHidden.Contains(pokemonid))
+                if (!ServiceLayer.SharedInstance.Settings.PokemonHidden.Contains(pokemonid))
                 {
                     img.Alpha = 1.0f;
                     notifyLbl.TextColor = UIColor.Black;
                     trashLbl.TextColor = UIColor.Black;
+                    ignoreLbl.TextColor = UIColor.Black;
                     trashSwitch.Enabled = true;
-                    trashSwitch.On = settings.PokemonTrash.Contains(pokemonid);
+                    trashSwitch.On = ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(pokemonid);
                     notifySwitch.Enabled = true;
-                    notifySwitch.On = settings.NotifyPokemon.Contains(pokemonid);
+                    notifySwitch.On = ServiceLayer.SharedInstance.Settings.NotifyPokemon.Contains(pokemonid);
+                    ignoreSwitch.Enabled = true;
+                    ignoreSwitch.On = ServiceLayer.SharedInstance.Settings.IgnorePokemon.Contains(pokemonid);
                 }
                 else
                 {
                     img.Alpha = 0.7f;
                     notifyLbl.TextColor = UIColor.LightGray;
                     trashLbl.TextColor = UIColor.LightGray;
+                    ignoreLbl.TextColor = UIColor.LightGray;
                     trashSwitch.Enabled = false;
                     trashSwitch.On = false;
                     notifySwitch.Enabled = false;
                     notifySwitch.On = false;
+                    ignoreSwitch.Enabled = false;
+                    ignoreSwitch.On = false;
                 }
                 cell.SelectionStyle = UITableViewCellSelectionStyle.None;
-                return cell;
             }
+            return cell;
         }
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            if (section == 0)
+            switch (section)
             {
-                return 13;
+                case 0:
+                    return 4;
+                case 1:
+                    return 6;
+                case 2:
+                    return 5;
+                case 3:
+                    switch (SelectedGen)
+                    {
+                        case 0:
+                            return 151;
+                        case 1:
+                            return 100;
+                        case 2:
+                            return 134;
+                    }
+                    break;
             }
-            else
-            {
-                var numPokes = 0;
-                switch (SelectedGen)
-                {
-                    case 0:
-                        numPokes = 151;
-                        break;
-                    case 1:
-                        numPokes = 100;
-                        break;
-                    case 2:
-                        numPokes = 134;
-                        break;
-                }
-                return numPokes;
-            }
+            return 0;
         }
 
         partial void TrashToggled(NSObject sender)
@@ -272,12 +353,12 @@ namespace OMAPGMap.iOS
                 {
                     TrashAdded.Add(pokemonid);
                     TrashRemoved.Remove(pokemonid);
-                    settings.PokemonTrash.Add(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.PokemonTrash.Add(pokemonid);
                 } else 
                 {
                     TrashRemoved.Add(pokemonid);
                     TrashAdded.Remove(pokemonid);
-                    settings.PokemonTrash.Remove(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.PokemonTrash.Remove(pokemonid);
                 }
             }
         }
@@ -292,11 +373,11 @@ namespace OMAPGMap.iOS
                 var pokemonid = ConvertRowToID(path.Row);
                 if (notifySwitch.On)
                 {
-                    settings.NotifyPokemon.Add(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.NotifyPokemon.Add(pokemonid);
                 }
                 else
                 {
-                    settings.NotifyPokemon.Remove(pokemonid);
+                    ServiceLayer.SharedInstance.Settings.NotifyPokemon.Remove(pokemonid);
                 }
             }
         }
@@ -310,37 +391,37 @@ namespace OMAPGMap.iOS
 					{
                         var i2 = ConvertRowToID(i);
                         TrashRemoved.Clear();
-                        if (!settings.PokemonTrash.Contains(i2) && !TrashAdded.Contains(i2))
+                        if (!ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i2) && !TrashAdded.Contains(i2))
 						{
 							TrashAdded.Add(i2);
-                            settings.PokemonTrash.Add(i2);
+                            ServiceLayer.SharedInstance.Settings.PokemonTrash.Add(i2);
 						}
 					}
 					
                     TableView.ReloadData();
                     break;
                 case 1: //reset trash
-                    var trashCopy = new List<int>(settings.PokemonTrash);
-                    settings.ResetTrash();
+                    var trashCopy = new List<int>(ServiceLayer.SharedInstance.Settings.PokemonTrash);
+                    ServiceLayer.SharedInstance.Settings.ResetTrash();
                     for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
 					{
                         var i2 = ConvertRowToID(i);
-                        if (settings.PokemonTrash.Contains(i2) && !trashCopy.Contains(i2))
+                        if (ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i2) && !trashCopy.Contains(i2))
 						{
 							TrashAdded.Add(i2);
                             TrashRemoved.Remove(i2);
 						}
-                        else if (!settings.PokemonTrash.Contains(i2) && trashCopy.Contains(i2))
+                        else if (!ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i2) && trashCopy.Contains(i2))
 						{
 							TrashRemoved.Add(i2);
                             TrashAdded.Remove(i2);
 						}
 					}
-                    settings.ResetTrash();
+                    ServiceLayer.SharedInstance.Settings.ResetTrash();
 					TableView.ReloadData();
                     break;
                 case 2: //save current trash
-                    var trashStrings = settings.PokemonTrash.Select(t => t.ToString()).ToArray();
+                    var trashStrings = ServiceLayer.SharedInstance.Settings.PokemonTrash.Select(t => t.ToString()).ToArray();
 					var tosave = NSArray.FromStrings(trashStrings);
 					NSUserDefaults.StandardUserDefaults.SetValueForKey(tosave, new NSString("trashSaved"));
                     break;
@@ -351,19 +432,19 @@ namespace OMAPGMap.iOS
 						var trashInt = trash.Select(l => int.Parse(l));
                         for (var i = 0; i < ServiceLayer.NumberPokemon; i++)
                         {
-                            if (!settings.PokemonTrash.Contains(i) && trashInt.Contains(i))
+                            if (!ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i) && trashInt.Contains(i))
 							{
 								TrashAdded.Add(i);
                                 TrashRemoved.Remove(i);
 							}
-                            else if (settings.PokemonTrash.Contains(i) && !trashInt.Contains(i))
+                            else if (ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i) && !trashInt.Contains(i))
 							{
 								TrashRemoved.Add(i);
                                 TrashAdded.Remove(i);
 							}
                         }
-						settings.PokemonTrash.Clear();
-                        settings.PokemonTrash.AddRange(trashInt);
+						ServiceLayer.SharedInstance.Settings.PokemonTrash.Clear();
+                        ServiceLayer.SharedInstance.Settings.PokemonTrash.AddRange(trashInt);
 						TableView.ReloadData();
 					}
                     break;
@@ -393,34 +474,53 @@ namespace OMAPGMap.iOS
             if (cell != null)
             {
                 var path = TableView.IndexPathForCell(cell);
-                if(path.Row == 4)
+                if(path.Section ==1 && path.Row == 0)
                 {
-                    settings.NotifyEnabled = toggle.On;
-                } else if(path.Row == 5)
+                    ServiceLayer.SharedInstance.Settings.NotifyEnabled = toggle.On;
+                } else if(path.Section == 1 && path.Row == 1)
                 {
-                    settings.Notify90Enabled = toggle.On;
-                } else if(path.Row == 6)
+                    ServiceLayer.SharedInstance.Settings.Notify90Enabled = toggle.On;
+                } else if(path.Section == 1 && path.Row == 2)
                 {
-                    settings.Notify100Enabled = toggle.On;
-                }else if (path.Row == 8)
+                    ServiceLayer.SharedInstance.Settings.Notify100Enabled = toggle.On;
+                }else if (path.Section == 2 && path.Row == 0)
                 {
-                    settings.LegondaryRaids = toggle.On;
-                } else if (path.Row == 9)
+                    ServiceLayer.SharedInstance.Settings.LegondaryRaids = toggle.On;
+                } else if (path.Section == 2 && path.Row == 1)
                 {
-                    settings.Level4Raids = toggle.On;
-                } else if (path.Row == 10)
+                    ServiceLayer.SharedInstance.Settings.Level4Raids = toggle.On;
+                } else if (path.Section == 2 && path.Row == 3)
                 {
-                    settings.Level3Raids = toggle.On;
-                } else if (path.Row == 11)
+                    ServiceLayer.SharedInstance.Settings.Level3Raids = toggle.On;
+                } else if (path.Section == 2 && path.Row == 4)
                 {
-                    settings.Level2Raids = toggle.On;
-                } else if (path.Row == 12)
+                    ServiceLayer.SharedInstance.Settings.Level2Raids = toggle.On;
+                } else if (path.Section == 2 && path.Row == 5)
                 {
-                    settings.Level1Raids = toggle.On;
+                    ServiceLayer.SharedInstance.Settings.Level1Raids = toggle.On;
                 }
 
             }
             TableView.ReloadData();
+        }
+
+        partial void IgnoreToggled(UISwitch sender)
+        {
+            var notifySwitch = sender as UISwitch;
+            var cell = notifySwitch.Superview.Superview as UITableViewCell;
+            if (cell != null)
+            {
+                var path = TableView.IndexPathForCell(cell);
+                var pokemonid = ConvertRowToID(path.Row);
+                if (notifySwitch.On)
+                {
+                    ServiceLayer.SharedInstance.Settings.IgnorePokemon.Add(pokemonid);
+                }
+                else
+                {
+                    ServiceLayer.SharedInstance.Settings.IgnorePokemon.Remove(pokemonid);
+                }
+            }
         }
 
         partial void GenerationSelected(NSObject sender)
