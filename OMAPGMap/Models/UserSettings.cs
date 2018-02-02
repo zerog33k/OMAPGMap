@@ -1,10 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OMAPGMap.Models
 {
     public class UserSettings
     {
+        public UserSettings()
+        {
+            
+        }
+        public UserSettings(bool defaults)
+        {
+            if(defaults)
+            {
+                _trash.AddRange(DefaultTrash);
+            }
+        }
+
         public bool NotifyEnabled { get; set; } = true;
         public bool Notify90Enabled { get; set; } = true;
         public bool Notify100Enabled { get; set; } = true;
@@ -24,7 +37,7 @@ namespace OMAPGMap.Models
             //gen 3 list
             252, 255, 258, 261, 263, 265, 273, 280, 296, 300, 307, 309, 315, 316, 325, 361, 363 };
 
-        private List<int> _trash =  new List<int>(DefaultTrash);
+        private List<int> _trash =  new List<int>();
         public List<int> PokemonTrash 
         {
             get 
@@ -32,9 +45,10 @@ namespace OMAPGMap.Models
                 return _trash;
             }
             set {
-                _trash = value;
+                _trash = value.Distinct().ToList();
             }
         }
+
         private List<int> _notify = new List<int>(DefaultHidden);
         public List<int> PokemonHidden
         {

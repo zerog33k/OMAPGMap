@@ -344,7 +344,7 @@ namespace OMAPGMap.iOS
         partial void TrashToggled(NSObject sender)
         {
             var trashSwitch = sender as UISwitch;
-            var cell = trashSwitch.Superview.Superview as UITableViewCell;
+            var cell = trashSwitch.Superview.Superview.Superview as UITableViewCell;
             if (cell != null)
             {
                 var path = TableView.IndexPathForCell(cell);
@@ -366,7 +366,7 @@ namespace OMAPGMap.iOS
         partial void NotifyToggled(NSObject sender)
         {
             var notifySwitch = sender as UISwitch;
-            var cell = notifySwitch.Superview.Superview as UITableViewCell;
+            var cell = notifySwitch.Superview.Superview.Superview as UITableViewCell;
             if (cell != null)
             {
                 var path = TableView.IndexPathForCell(cell);
@@ -506,13 +506,13 @@ namespace OMAPGMap.iOS
 
         partial void IgnoreToggled(UISwitch sender)
         {
-            var notifySwitch = sender as UISwitch;
-            var cell = notifySwitch.Superview.Superview as UITableViewCell;
+            var ignoreSwitch = sender as UISwitch;
+            var cell = ignoreSwitch.Superview.Superview.Superview as UITableViewCell;
             if (cell != null)
             {
                 var path = TableView.IndexPathForCell(cell);
                 var pokemonid = ConvertRowToID(path.Row);
-                if (notifySwitch.On)
+                if (ignoreSwitch.On)
                 {
                     ServiceLayer.SharedInstance.Settings.IgnorePokemon.Add(pokemonid);
                 }

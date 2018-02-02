@@ -76,7 +76,9 @@ namespace OMAPGMap
 
         public async Task InitalizeSettings()
         {
-            Settings = await BlobCache.UserAccount.GetObject<UserSettings>("settings").Catch(Observable.Return(new UserSettings()));
+            Settings = await BlobCache.UserAccount.GetObject<UserSettings>("settings").Catch(Observable.Return(new UserSettings(true)));
+            Settings.IgnorePokemon = Settings.IgnorePokemon.Distinct().ToList();
+            Settings.NotifyPokemon = Settings.NotifyPokemon.Distinct().ToList();
             Settings.LastUpdateTimestamp = Utility.ToUnixTime(DateTime.UtcNow.AddHours(-1.0));
         }
 
