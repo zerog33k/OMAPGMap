@@ -322,6 +322,15 @@ namespace OMAPGMap.Droid
             }catch(Exception){}
             var imgTitle = mapMarker.FindViewById(Resource.Id.marker_text) as TextView;
             imgTitle.Text = poke.ExpiresDate.AddHours(-6.0).ToShortTimeString();
+            if(poke.iv > 0.99)
+            {
+                var purple = Resources.GetDrawable(Resource.Drawable.rounded_corner_purple);
+                imgTitle.Background = purple;
+            } else if(poke.iv > 0.9)
+            {
+                var green = Resources.GetDrawable(Resource.Drawable.rounded_corner_green);
+                imgTitle.Background = green;
+            }
             mapMarker.Measure(0, 0);
             mapMarker.Layout(0, 0, mapMarker.MeasuredWidth, mapMarker.MeasuredHeight);
             mapMarker.BuildDrawingCache();
@@ -466,6 +475,15 @@ namespace OMAPGMap.Droid
             var button = sender as ImageButton;
             var popup = new Android.Support.V7.Widget.PopupMenu(this, button);
             popup.Inflate(Resource.Menu.layers);
+            var menu = popup.Menu;
+            var item = menu.GetItem(0);
+            item.SetChecked(settings.PokemonEnabled);
+            item = menu.GetItem(1);
+            item.SetChecked(settings.GymsEnabled);
+            item = menu.GetItem(2);
+            item.SetChecked(settings.RaidsEnabled);
+            item = menu.GetItem(3);
+            item.SetChecked(settings.NinetyOnlyEnabled);
             popup.Show();
         }
 
