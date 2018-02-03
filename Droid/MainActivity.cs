@@ -173,6 +173,26 @@ namespace OMAPGMap.Droid
             progress.Dismiss();
 
             UpdateMapPokemon(true);
+            UpdateMapGyms();
+            updateMapRaids();
+        }
+
+        private void updateMapRaids()
+        {
+            
+        }
+
+        private void UpdateMapGyms()
+        {
+            foreach(var g in gymsOnMap)
+            {
+                if (g != null)
+                {
+                    g.GymMarker.Remove();
+                    g.GymMarker = null;
+                    gymsOnMap.Remove(g);
+                }
+            }
         }
 
         private async void RefreshData()
@@ -191,19 +211,19 @@ namespace OMAPGMap.Droid
         private void UpdateMapPokemon(bool reload)
         {
             var bounds = map.Projection.VisibleRegion.LatLngBounds;
-            var toRemove = PokesOnMap.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow).ToList();
+            IEnumerable<Pokemon> toRemove;
             if(reload)
             {
-                toRemove = PokesOnMap.ToList();
+                toRemove = PokesOnMap.AsEnumerable();
+            } else 
+            {
+                toRemove = PokesOnMap.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow);
             }
             foreach (var p in toRemove)
             {
-                if (p != null)
-                {
-                    p.PokeMarker.Remove();
-                    p.PokeMarker = null;
-                    PokesOnMap.Remove(p);
-                }
+                p.PokeMarker.Remove();
+                p.PokeMarker = null;
+                PokesOnMap.Remove(p);
             }
             List<Pokemon> toAdd = new List<Pokemon>();
             if (settings.NinetyOnlyEnabled)
@@ -247,6 +267,31 @@ namespace OMAPGMap.Droid
             PokesOnMap.Add(p);
         }
 
+        private void AddGymMarker(Gym g)
+        {
+            var mOps = new MarkerOptions();
+            mOps.SetPosition(p.Location);
+
+            mOps.SetIcon(BitmapDescriptorFactory.FromBitmap(GetPokemonMarker(p)));
+            mOps.Anchor(0.5f, 0.5f);
+            var marker = map.AddMarker(mOps);
+            marker.Tag = $"poke:{p.id}";
+            p.PokeMarker = marker;
+            PokesOnMap.Add(p);
+        }
+
+        private void AddRaidMarker(Raid r)
+        {
+            var mOps = new MarkerOptions();
+            mOps.SetPosition(r.Location);
+
+            mOps.SetIcon(BitmapDescriptorFactory.FromBitmap(GetPokemonMarker(p)));
+            mOps.Anchor(0.5f, 0.5f);
+            var marker = map.AddMarker(mOps);
+            marker.Tag = $"poke:{p.id}";
+            p.PokeMarker = marker;
+            PokesOnMap.Add(p);
+        }
         public void OnMapReady(GoogleMap mapp)
         {
             map = mapp;

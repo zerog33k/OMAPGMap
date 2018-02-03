@@ -4,13 +4,23 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <ImageView
-        android:id="@+id/marker_raid_img"
+    <FrameLayout
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@null"
-        android:src="@mipmap/egg5" />
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/marker_egg_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/egg5" />
+        <ImageView
+            android:id="@+id/marker_raid_poke"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/p001"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="10dp" />
+    </FrameLayout>
     <TextView
         android:text="9:42 PM"
         android:layout_width="55dp"
