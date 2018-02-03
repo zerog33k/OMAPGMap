@@ -26,6 +26,7 @@ namespace OMAPGMap.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::Microsoft.AppCenter.Push.Android.Resource.Drawable.ic_stat_notify_dot = global::OMAPGMap.Droid.Resource.Drawable.ic_stat_notify_dot;
 			global::Microsoft.AppCenter.Push.Android.Resource.String.library_name = global::OMAPGMap.Droid.Resource.String.library_name;
 			global::Splat.Resource.String.library_name = global::OMAPGMap.Droid.Resource.String.library_name;
 		}
@@ -2424,26 +2425,26 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020081
-			public const int avd_hide_password_1 = 2130837633;
-			
-			// aapt resource value: 0x7f020082
-			public const int avd_hide_password_2 = 2130837634;
-			
 			// aapt resource value: 0x7f020083
-			public const int avd_hide_password_3 = 2130837635;
+			public const int avd_hide_password_1 = 2130837635;
+			
+			// aapt resource value: 0x7f020084
+			public const int avd_hide_password_2 = 2130837636;
+			
+			// aapt resource value: 0x7f020085
+			public const int avd_hide_password_3 = 2130837637;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f020084
-			public const int avd_show_password_1 = 2130837636;
-			
-			// aapt resource value: 0x7f020085
-			public const int avd_show_password_2 = 2130837637;
-			
 			// aapt resource value: 0x7f020086
-			public const int avd_show_password_3 = 2130837638;
+			public const int avd_show_password_1 = 2130837638;
+			
+			// aapt resource value: 0x7f020087
+			public const int avd_show_password_2 = 2130837639;
+			
+			// aapt resource value: 0x7f020088
+			public const int avd_show_password_3 = 2130837640;
 			
 			// aapt resource value: 0x7f020055
 			public const int common_full_open_on_phone = 2130837589;
@@ -2527,55 +2528,61 @@ namespace OMAPGMap.Droid
 			public const int googleg_standard_color_18 = 2130837615;
 			
 			// aapt resource value: 0x7f020070
-			public const int navigation_empty_icon = 2130837616;
+			public const int ic_stat_notify_dot = 2130837616;
 			
 			// aapt resource value: 0x7f020071
-			public const int notification_action_background = 2130837617;
+			public const int navigation_empty_icon = 2130837617;
 			
 			// aapt resource value: 0x7f020072
-			public const int notification_bg = 2130837618;
+			public const int notification_action_background = 2130837618;
 			
 			// aapt resource value: 0x7f020073
-			public const int notification_bg_low = 2130837619;
+			public const int notification_bg = 2130837619;
 			
 			// aapt resource value: 0x7f020074
-			public const int notification_bg_low_normal = 2130837620;
+			public const int notification_bg_low = 2130837620;
 			
 			// aapt resource value: 0x7f020075
-			public const int notification_bg_low_pressed = 2130837621;
+			public const int notification_bg_low_normal = 2130837621;
 			
 			// aapt resource value: 0x7f020076
-			public const int notification_bg_normal = 2130837622;
+			public const int notification_bg_low_pressed = 2130837622;
 			
 			// aapt resource value: 0x7f020077
-			public const int notification_bg_normal_pressed = 2130837623;
+			public const int notification_bg_normal = 2130837623;
 			
 			// aapt resource value: 0x7f020078
-			public const int notification_icon_background = 2130837624;
-			
-			// aapt resource value: 0x7f02007f
-			public const int notification_template_icon_bg = 2130837631;
-			
-			// aapt resource value: 0x7f020080
-			public const int notification_template_icon_low_bg = 2130837632;
+			public const int notification_bg_normal_pressed = 2130837624;
 			
 			// aapt resource value: 0x7f020079
-			public const int notification_tile_bg = 2130837625;
+			public const int notification_icon_background = 2130837625;
+			
+			// aapt resource value: 0x7f020081
+			public const int notification_template_icon_bg = 2130837633;
+			
+			// aapt resource value: 0x7f020082
+			public const int notification_template_icon_low_bg = 2130837634;
 			
 			// aapt resource value: 0x7f02007a
-			public const int notify_panel_notification_icon_bg = 2130837626;
+			public const int notification_tile_bg = 2130837626;
 			
 			// aapt resource value: 0x7f02007b
-			public const int rounded_corner = 2130837627;
+			public const int notify_panel_notification_icon_bg = 2130837627;
 			
 			// aapt resource value: 0x7f02007c
-			public const int rounded_corner_green = 2130837628;
+			public const int rounded_corner = 2130837628;
 			
 			// aapt resource value: 0x7f02007d
-			public const int tooltip_frame_dark = 2130837629;
+			public const int rounded_corner_green = 2130837629;
 			
 			// aapt resource value: 0x7f02007e
-			public const int tooltip_frame_light = 2130837630;
+			public const int rounded_corner_purple = 2130837630;
+			
+			// aapt resource value: 0x7f02007f
+			public const int tooltip_frame_dark = 2130837631;
+			
+			// aapt resource value: 0x7f020080
+			public const int tooltip_frame_light = 2130837632;
 			
 			static Drawable()
 			{
@@ -4617,25 +4624,91 @@ namespace OMAPGMap.Droid
 			public const int p351 = 2130903397;
 			
 			// aapt resource value: 0x7f030166
-			public const int p353 = 2130903398;
+			public const int p352 = 2130903398;
 			
 			// aapt resource value: 0x7f030167
-			public const int p354 = 2130903399;
+			public const int p353 = 2130903399;
 			
 			// aapt resource value: 0x7f030168
-			public const int p355 = 2130903400;
+			public const int p354 = 2130903400;
 			
 			// aapt resource value: 0x7f030169
-			public const int p356 = 2130903401;
+			public const int p355 = 2130903401;
 			
 			// aapt resource value: 0x7f03016a
-			public const int p359 = 2130903402;
+			public const int p356 = 2130903402;
 			
 			// aapt resource value: 0x7f03016b
-			public const int p360 = 2130903403;
+			public const int p357 = 2130903403;
 			
 			// aapt resource value: 0x7f03016c
-			public const int p383 = 2130903404;
+			public const int p358 = 2130903404;
+			
+			// aapt resource value: 0x7f03016d
+			public const int p359 = 2130903405;
+			
+			// aapt resource value: 0x7f03016e
+			public const int p360 = 2130903406;
+			
+			// aapt resource value: 0x7f03016f
+			public const int p361 = 2130903407;
+			
+			// aapt resource value: 0x7f030170
+			public const int p362 = 2130903408;
+			
+			// aapt resource value: 0x7f030171
+			public const int p363 = 2130903409;
+			
+			// aapt resource value: 0x7f030172
+			public const int p364 = 2130903410;
+			
+			// aapt resource value: 0x7f030173
+			public const int p365 = 2130903411;
+			
+			// aapt resource value: 0x7f030174
+			public const int p369 = 2130903412;
+			
+			// aapt resource value: 0x7f030175
+			public const int p370 = 2130903413;
+			
+			// aapt resource value: 0x7f030176
+			public const int p371 = 2130903414;
+			
+			// aapt resource value: 0x7f030177
+			public const int p372 = 2130903415;
+			
+			// aapt resource value: 0x7f030178
+			public const int p373 = 2130903416;
+			
+			// aapt resource value: 0x7f030179
+			public const int p374 = 2130903417;
+			
+			// aapt resource value: 0x7f03017a
+			public const int p375 = 2130903418;
+			
+			// aapt resource value: 0x7f03017b
+			public const int p376 = 2130903419;
+			
+			// aapt resource value: 0x7f03017c
+			public const int p377 = 2130903420;
+			
+			// aapt resource value: 0x7f03017d
+			public const int p378 = 2130903421;
+			
+			// aapt resource value: 0x7f03017e
+			public const int p379 = 2130903422;
+			
+			// aapt resource value: 0x7f03017f
+			public const int p380 = 2130903423;
+			
+			// aapt resource value: 0x7f030180
+			public const int p381 = 2130903424;
+			
+			// aapt resource value: 0x7f030181
+			public const int p382 = 2130903425;
+			
+			// aapt resource value: 0x7f030182
+			public const int p383 = 2130903426;
 			
 			static Mipmap()
 			{

@@ -582,8 +582,6 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\p354.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p355.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p356.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\p359.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\p360.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p383.png" />
     <AndroidResource Include="Resources\layout\pokemon_info.axml" />
     <AndroidResource Include="Resources\layout\settings.axml" />
@@ -594,6 +592,30 @@
     <AndroidResource Include="Resources\menu\layers.axml" />
     <AndroidResource Include="Resources\drawable\rounded_corner_green.axml" />
     <AndroidResource Include="Resources\drawable\rounded_corner_purple.axml" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p352.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p357.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p358.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p359.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p360.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p361.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p362.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p363.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p364.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p365.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p369.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p370.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p371.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p372.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p373.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p374.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p375.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p376.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p377.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p378.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p379.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p380.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p381.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p382.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />

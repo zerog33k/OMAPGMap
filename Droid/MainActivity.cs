@@ -166,14 +166,7 @@ namespace OMAPGMap.Droid
             await ServiceLayer.SharedInstance.LoadData();
             progress.Dismiss();
 
-            var toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id));
-            var bounds = map.Projection.VisibleRegion.LatLngBounds;
-            var visible = toAdd.Where(p => bounds.Contains(p.Location));
-            foreach(var p in visible)
-            {
-                AddPokemonMarker(p);
-            }
-            PokesVisible.AddRange(toAdd.Except(visible));
+            UpdateMapPokemon(true);
         }
 
         private async void RefreshData()
@@ -199,18 +192,21 @@ namespace OMAPGMap.Droid
             }
             foreach (var p in toRemove)
             {
-                p.PokeMarker.Remove();
-                p.PokeMarker = null;
-                PokesOnMap.Remove(p);
+                if (p != null)
+                {
+                    p.PokeMarker.Remove();
+                    p.PokeMarker = null;
+                    PokesOnMap.Remove(p);
+                }
             }
-            IEnumerable<Pokemon> toAdd;
+            List<Pokemon> toAdd = new List<Pokemon>();
             if (settings.NinetyOnlyEnabled)
             {
-                toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(PokesOnMap);
+                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(PokesOnMap));
             }
-            else
+            if(settings.PokemonEnabled)
             {
-                toAdd = ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(PokesOnMap);
+                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(PokesOnMap));
             }
 
             var visible = toAdd.Where(p => bounds.Contains(p.Location));
@@ -484,7 +480,28 @@ namespace OMAPGMap.Droid
             item.SetChecked(settings.RaidsEnabled);
             item = menu.GetItem(3);
             item.SetChecked(settings.NinetyOnlyEnabled);
+            popup.MenuItemClick += Popup_MenuItemClick;
             popup.Show();
+        }
+
+        async void Popup_MenuItemClick(object sender, Android.Support.V7.Widget.PopupMenu.MenuItemClickEventArgs e)
+        {
+            var id = e.Item.ItemId;
+            if(id == Resource.Id.menu_pokemon)
+            {
+                settings.PokemonEnabled = !settings.PokemonEnabled;
+            } else if(id == Resource.Id.menu_gyms)
+            {
+                settings.GymsEnabled = !settings.GymsEnabled;
+            } else if(id == Resource.Id.menu_raids)
+            {
+                settings.RaidsEnabled = !settings.RaidsEnabled;
+            } else if(id == Resource.Id.menu_90plus)
+            {
+                settings.NinetyOnlyEnabled = !settings.NinetyOnlyEnabled;
+            }
+            await ServiceLayer.SharedInstance.SaveSettings();
+            UpdateMapPokemon(true);
         }
 
         async void SettingsDone_Click(object sender, EventArgs e)
