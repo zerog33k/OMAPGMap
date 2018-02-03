@@ -485,7 +485,7 @@ namespace OMAPGMap.iOS
             {
                 layersTableVC = new UITableViewController();
                 layersTableVC.ModalPresentationStyle = UIModalPresentationStyle.Popover;
-                layersTableVC.PreferredContentSize = new CGSize(200, 200);
+                layersTableVC.PreferredContentSize = new CGSize(230, 200);
                 layersTableVC.TableView.DataSource = this;
                 layersTableVC.TableView.Delegate = this;
             }

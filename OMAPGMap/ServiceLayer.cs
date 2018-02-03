@@ -53,7 +53,7 @@ namespace OMAPGMap
             {
                 _userLocation = value;
                 var dist = Coordinates.DistanceBetween(value, BlairLocation);
-                var distMiles = dist * 0.0000062137;
+                double distMiles = MetersToMiles(dist);
                 if (distMiles < 5)
                 {
                     dataURL = altURL;
@@ -62,6 +62,12 @@ namespace OMAPGMap
                 }
             }
         }
+
+        public static double MetersToMiles(double dist)
+        {
+            return dist * 0.0000062137;
+        }
+
         public static Coordinates BlairLocation = new Coordinates(41.543834, -96.137934);
         private bool _isAltLocation = false;
 
@@ -79,6 +85,7 @@ namespace OMAPGMap
             Settings = await BlobCache.UserAccount.GetObject<UserSettings>("settings").Catch(Observable.Return(new UserSettings(true)));
             Settings.IgnorePokemon = Settings.IgnorePokemon.Distinct().ToList();
             Settings.NotifyPokemon = Settings.NotifyPokemon.Distinct().ToList();
+            Settings.PokemonTrash = Settings.PokemonTrash.Distinct().ToList();
             Settings.LastUpdateTimestamp = Utility.ToUnixTime(DateTime.UtcNow.AddHours(-1.0));
         }
 

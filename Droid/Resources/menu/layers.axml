@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_pokemon"
+        android:title="Pokémon"
+        android:checkable="true"
+        />
+    <item
+        android:id="@+id/menu_gyms"
+        android:title="Gyms"
+        android:checkable="true"
+        />
+    <item
+        android:id="@+id/menu_raids"
+        android:title="Raids"
+        android:checkable="true"
+        />
+    <item
+        android:id="@+id/menu_90plus"
+        android:title="90+ IV Pokémon"
+        android:checkable="true"
+        />
+</menu>

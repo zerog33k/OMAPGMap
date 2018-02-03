@@ -464,9 +464,9 @@ namespace OMAPGMap.Droid
         void LayerButton_Click(object sender, EventArgs e)
         {
             var button = sender as ImageButton;
-            var layersMenu = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.map_layers, null);
-            var popup = new PopupWindow(layersMenu);
-            popup.ShowAsDropDown(button, 40, 40, GravityFlags.Bottom);
+            var popup = new Android.Support.V7.Widget.PopupMenu(this, button);
+            popup.Inflate(Resource.Menu.layers);
+            popup.Show();
         }
 
         async void SettingsDone_Click(object sender, EventArgs e)
@@ -478,3 +478,4 @@ namespace OMAPGMap.Droid
     }
 }
 
+    
