@@ -616,6 +616,15 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\p380.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p381.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\p382.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\egg1.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\egg2.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\egg3.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\egg4.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\egg5.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\empty.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\instinct.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\mystic.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\valor.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />
