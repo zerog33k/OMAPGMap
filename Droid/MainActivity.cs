@@ -53,6 +53,12 @@ namespace OMAPGMap.Droid
         private List<Pokemon> PokesOnMap = new List<Pokemon>();
         private List<Pokemon> PokesVisible = new List<Pokemon>();
 
+        private List<Gym> gymsOnMap = new List<Gym>();
+        private List<Gym> gymssVisible = new List<Gym>();
+
+        private List<Raid> raidsOnMap = new List<Raid>();
+        private List<Raid> raidsVisible = new List<Raid>();
+
         private ListView settingsListview;
 
         private Timer secondTimer;
@@ -226,6 +232,7 @@ namespace OMAPGMap.Droid
                 }
             }
         }
+
 
         private void AddPokemonMarker(Pokemon p)
         {

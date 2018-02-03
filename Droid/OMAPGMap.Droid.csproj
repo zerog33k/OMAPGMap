@@ -625,6 +625,7 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\instinct.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\mystic.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\valor.png" />
+    <AndroidResource Include="Resources\layout\map_marker_raid.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />
