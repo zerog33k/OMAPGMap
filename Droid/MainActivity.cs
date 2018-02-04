@@ -149,7 +149,7 @@ namespace OMAPGMap.Droid
                 await ServiceLayer.SharedInstance.LoadData();
                 UpdateMapPokemon(false);
                 UpdateMapGyms(true);
-                updateMapRaids(true);
+                UpdateMapRaids(true);
             });
         }
 
@@ -176,10 +176,10 @@ namespace OMAPGMap.Droid
 
             UpdateMapPokemon(true);
             UpdateMapGyms(true);
-            updateMapRaids(true);
+            UpdateMapRaids(true);
         }
 
-        private void updateMapRaids(bool reload)
+        private void UpdateMapRaids(bool reload)
         {
             var bounds = map.Projection.VisibleRegion.LatLngBounds;
             List<Raid> toRemove = new List<Raid>();
@@ -191,34 +191,36 @@ namespace OMAPGMap.Droid
             {
                 toRemove.AddRange(raidsOnMap.Where((Raid rd) =>
                 {
-                    if(!bounds.Contains(rd.Location))
+                    if (!bounds.Contains(rd.Location))
                     {
                         return true;
                     }
-                    if(rd.TimeEnd > DateTime.UtcNow)
+                    if (rd.TimeEnd < DateTime.UtcNow)
                     {
                         return true;
                     }
-                    if(rd.TimeBattle > DateTime.Now && rd.pokemon_id == 0)
+                    if (rd.TimeBattle < DateTime.UtcNow && rd.pokemon_id == 0)
                     {
                         return true;
                     }
                     return false;
                 }));
-                foreach (var r in toRemove)
-                {
-                    r.RaidMarker.Remove();
-                    r.RaidMarker = null;
-                    raidsOnMap.Remove(r);
-                }
-                List<Raid> toAdd = new List<Raid>();
-                toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsOnMap));
-                foreach (var r in toAdd)
-                {
-                    AddRaidMarker(r);
-                }
-                Console.WriteLine($"Adding {toAdd.Count()} raids to the map");
             }
+            Console.WriteLine($"Removing {toRemove.Count()} raids to the map");
+            foreach (var r in toRemove)
+            {
+                r.RaidMarker.Remove();
+                r.RaidMarker = null;
+                raidsOnMap.Remove(r);
+            }
+            List<Raid> toAdd = new List<Raid>();
+            toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsOnMap));
+            foreach (var r in toAdd)
+            {
+                AddRaidMarker(r);
+            }
+            Console.WriteLine($"Adding {toAdd.Count()} raids to the map");
+
         }
 
         private void UpdateMapGyms(bool reload)
@@ -259,7 +261,7 @@ namespace OMAPGMap.Droid
                 //swallow exception because it tastes good
             }
             UpdateMapPokemon(false);
-            updateMapRaids(false);
+            UpdateMapRaids(false);
             UpdateMapGyms(false);
         }
 
@@ -276,12 +278,10 @@ namespace OMAPGMap.Droid
             }
             foreach (var p in toRemove)
             {
-                if (p != null) // shouldn't have to do this
-                {
-                    p.PokeMarker.Remove();
-                    p.PokeMarker = null;
-                    PokesOnMap.Remove(p);
-                }
+
+                p.PokeMarker.Remove();
+                p.PokeMarker = null;
+                PokesOnMap.Remove(p);
             }
             List<Pokemon> toAdd = new List<Pokemon>();
             if (settings.NinetyOnlyEnabled)
@@ -321,8 +321,11 @@ namespace OMAPGMap.Droid
             mOps.Anchor(0.5f, 0.5f);
             var marker = map.AddMarker(mOps);
             marker.Tag = $"poke:{p.id}";
-            p.PokeMarker = marker;
-            PokesOnMap.Add(p);
+            if (marker != null)
+            {
+                p.PokeMarker = marker;
+                PokesOnMap.Add(p);
+            }
         }
 
         private void AddGymMarker(Gym g)
@@ -390,7 +393,7 @@ namespace OMAPGMap.Droid
         void Map_CameraIdle(object sender, EventArgs e)
         {
             UpdateMapPokemon(false);
-            updateMapRaids(false);
+            UpdateMapRaids(false);
             UpdateMapGyms(false);
         }
 
@@ -488,10 +491,9 @@ namespace OMAPGMap.Droid
                     break;
 
             }
-            var now = DateTime.UtcNow;
             DateTime displayTime = raid.TimeBattle;
             var pokeImg = mapMarker.FindViewById(Resource.Id.marker_raid_poke) as ImageView;
-            if (raid.pokemon_id != 0 || now < raid.TimeEnd)
+            if (raid.pokemon_id != 0 && DateTime.UtcNow < raid.TimeEnd)
             {
                 displayTime = raid.TimeEnd;
                 try
@@ -502,7 +504,7 @@ namespace OMAPGMap.Droid
             } else {
                 pokeImg.Visibility = ViewStates.Gone;
             }
-            var imgTitle = mapMarker.FindViewById(Resource.Id.marker_text) as TextView;
+            var imgTitle = mapMarker.FindViewById(Resource.Id.marker_raid_text) as TextView;
 
             imgTitle.Text = displayTime.AddHours(-6.0).ToShortTimeString();
             mapMarker.Measure(0, 0);
@@ -724,6 +726,8 @@ namespace OMAPGMap.Droid
             }
             await ServiceLayer.SharedInstance.SaveSettings();
             UpdateMapPokemon(true);
+            UpdateMapGyms(true);
+            UpdateMapRaids(true);
         }
 
         async void SettingsDone_Click(object sender, EventArgs e)
