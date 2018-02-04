@@ -48,8 +48,8 @@ namespace OMAPGMap.Droid
         private CardView settingsHolder;
         private TextView loginMessage;
 
-        public static int NumPokes = 378;
-        private int[] pokeResourceMap = new int[NumPokes];
+        public static int NumPokes = ServiceLayer.NumberPokemon;
+        private int[] pokeResourceMap = new int[NumPokes+1];
         private List<Pokemon> PokesOnMap = new List<Pokemon>();
         private List<Pokemon> PokesVisible = new List<Pokemon>();
 
@@ -85,7 +85,7 @@ namespace OMAPGMap.Droid
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            for (int i = 0; i < NumPokes; i++)
+            for (int i = 1; i <= NumPokes; i++)
             {
                 try
                 {
@@ -148,6 +148,8 @@ namespace OMAPGMap.Droid
             {
                 await ServiceLayer.SharedInstance.LoadData();
                 UpdateMapPokemon(false);
+                UpdateMapGyms(true);
+                updateMapRaids(true);
             });
         }
 
@@ -173,26 +175,77 @@ namespace OMAPGMap.Droid
             progress.Dismiss();
 
             UpdateMapPokemon(true);
-            UpdateMapGyms();
-            updateMapRaids();
+            UpdateMapGyms(true);
+            updateMapRaids(true);
         }
 
-        private void updateMapRaids()
+        private void updateMapRaids(bool reload)
         {
-            
-        }
-
-        private void UpdateMapGyms()
-        {
-            foreach(var g in gymsOnMap)
+            var bounds = map.Projection.VisibleRegion.LatLngBounds;
+            List<Raid> toRemove = new List<Raid>();
+            if (reload)
             {
-                if (g != null)
-                {
-                    g.GymMarker.Remove();
-                    g.GymMarker = null;
-                    gymsOnMap.Remove(g);
-                }
+                toRemove.AddRange(raidsOnMap);
             }
+            else
+            {
+                toRemove.AddRange(raidsOnMap.Where((Raid rd) =>
+                {
+                    if(!bounds.Contains(rd.Location))
+                    {
+                        return true;
+                    }
+                    if(rd.TimeEnd > DateTime.UtcNow)
+                    {
+                        return true;
+                    }
+                    if(rd.TimeBattle > DateTime.Now && rd.pokemon_id == 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }));
+                foreach (var r in toRemove)
+                {
+                    r.RaidMarker.Remove();
+                    r.RaidMarker = null;
+                    raidsOnMap.Remove(r);
+                }
+                List<Raid> toAdd = new List<Raid>();
+                toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsOnMap));
+                foreach (var r in toAdd)
+                {
+                    AddRaidMarker(r);
+                }
+                Console.WriteLine($"Adding {toAdd.Count()} raids to the map");
+            }
+        }
+
+        private void UpdateMapGyms(bool reload)
+        {
+            var bounds = map.Projection.VisibleRegion.LatLngBounds;
+            List<Gym> toRemove = new List<Gym>();
+            if (reload)
+            {
+                toRemove.AddRange(gymsOnMap);
+            }
+            else
+            {
+                toRemove.AddRange(gymsOnMap.Where(p => !bounds.Contains(p.Location)));
+            }
+            foreach (var g in toRemove)
+            {
+                g.GymMarker.Remove();
+                g.GymMarker = null;
+                gymsOnMap.Remove(g);
+            }
+            List<Gym> toAdd = new List<Gym>();
+            toAdd.AddRange(ServiceLayer.SharedInstance.Gyms.Values.Where(g => bounds.Contains(g.Location)).Except(gymsOnMap));
+            foreach(var g in toAdd)
+            {
+                AddGymMarker(g);
+            }
+            Console.WriteLine($"Adding {toAdd.Count()} gyms to the map");
         }
 
         private async void RefreshData()
@@ -206,24 +259,29 @@ namespace OMAPGMap.Droid
                 //swallow exception because it tastes good
             }
             UpdateMapPokemon(false);
+            updateMapRaids(false);
+            UpdateMapGyms(false);
         }
 
         private void UpdateMapPokemon(bool reload)
         {
             var bounds = map.Projection.VisibleRegion.LatLngBounds;
-            IEnumerable<Pokemon> toRemove;
+            List<Pokemon> toRemove = new List<Pokemon>();
             if(reload)
             {
-                toRemove = PokesOnMap.AsEnumerable();
+                toRemove.AddRange(PokesOnMap);
             } else 
             {
-                toRemove = PokesOnMap.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow);
+                toRemove.AddRange(PokesOnMap.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow));
             }
             foreach (var p in toRemove)
             {
-                p.PokeMarker.Remove();
-                p.PokeMarker = null;
-                PokesOnMap.Remove(p);
+                if (p != null) // shouldn't have to do this
+                {
+                    p.PokeMarker.Remove();
+                    p.PokeMarker = null;
+                    PokesOnMap.Remove(p);
+                }
             }
             List<Pokemon> toAdd = new List<Pokemon>();
             if (settings.NinetyOnlyEnabled)
@@ -332,6 +390,8 @@ namespace OMAPGMap.Droid
         void Map_CameraIdle(object sender, EventArgs e)
         {
             UpdateMapPokemon(false);
+            updateMapRaids(false);
+            UpdateMapGyms(false);
         }
 
         private void RequestLocation()
@@ -478,6 +538,9 @@ namespace OMAPGMap.Droid
         }
 
         private View pokemonInfo = null;
+        private View gymInfo = null;
+        private View raidInfo = null;
+
         private Marker currentMarker;
 
         public View GetInfoContents(Marker marker)
@@ -489,7 +552,17 @@ namespace OMAPGMap.Droid
             var l = new Location("");
             l.Latitude = marker.Position.Latitude;
             l.Longitude = marker.Position.Longitude;
-            var dist = (userLocation?.DistanceTo(l) ?? 0) * 0.000621371;
+
+            var distText = "";
+            if (userLocation != null)
+            {
+                var dist = (userLocation?.DistanceTo(l) ?? 0) * 0.000621371;
+                distText = $"{dist.ToString("F1")} miles away";
+            }
+            else
+            {
+                distText = "Dist unknown";
+            }
             if (t == "poke") 
             {
                 Button notifyButton;
@@ -511,15 +584,11 @@ namespace OMAPGMap.Droid
                 var infoTitle = $"{poke.name} ({poke.gender}) - #{poke.pokemon_id}";
                 if (!string.IsNullOrEmpty(poke.move1))
                 {
-                    t = $"{t} - {poke.iv.ToString("F1")}%";
+                    var iv = poke.iv * 100;
+                    infoTitle= $"{infoTitle} - {iv.ToString("F1")}%";
                 }
                 title.Text = infoTitle;
-                if (userLocation != null)
-                {
-                    distLabel.Text = $"{dist.ToString("F1")} miles away";
-                } else {
-                    distLabel.Text = "Dist unknown";
-                }
+                distLabel.Text = distText;
                 if(!string.IsNullOrEmpty(poke.move1))
                 {
                     move1Label.Visibility = ViewStates.Visible;
@@ -540,10 +609,45 @@ namespace OMAPGMap.Droid
 
             } else if(t == "raid")
             {
-                
+                if (raidInfo == null)
+                {
+                    raidInfo = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.raid_info, null);
+                }
+                var title = raidInfo.FindViewById(Resource.Id.raid_info_title) as TextView;
+                var distLabel = raidInfo.FindViewById(Resource.Id.raid_info_distance) as TextView;
+                var cpLabel = raidInfo.FindViewById(Resource.Id.raid_info_cp) as TextView;
+                var move1 = raidInfo.FindViewById(Resource.Id.raid_info_move1) as TextView;
+                var move2 = raidInfo.FindViewById(Resource.Id.raid_info_move2) as TextView;
+                var gymName = raidInfo.FindViewById(Resource.Id.raid_info_gym_name) as TextView;
+                var gymCtl = raidInfo.FindViewById(Resource.Id.raid_info_gym_control) as TextView;
+                var raid = ServiceLayer.SharedInstance.Raids.Where(r => r.id == id).FirstOrDefault();
+                title.Text = (raid.pokemon_id == 0) ? $"Upcoming raid level {raid.level}" : $"{raid.pokemon_name} (#{raid.pokemon_id}) Raid - Level {raid.level}";
+                distLabel.Text = distText;
+                cpLabel.Text = $"CP: {raid.cp}";
+                move1.Text = $"Move 1: {raid.move_1}";
+                move2.Text = $"Move 1: {raid.move_2}";
+                gymName.Text = $"Gym Name: {raid.name}";
+                gymCtl.Text = $"Gym Control: {Enum.GetName(typeof(Team), raid.team)}";
+                infoView = raidInfo;
+
             } else if (t == "gym")
             {
-
+                if(gymInfo == null)
+                {
+                    gymInfo = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.gym_info, null);
+                }
+                var title = gymInfo.FindViewById(Resource.Id.gym_info_title) as TextView;
+                var distLabel = gymInfo.FindViewById(Resource.Id.gym_info_distance) as TextView;
+                var modified = gymInfo.FindViewById(Resource.Id.gym_info_mod) as TextView;
+                var guarding = gymInfo.FindViewById(Resource.Id.gym_info_guarding) as TextView;
+                var slots = gymInfo.FindViewById(Resource.Id.gym_info_slots) as TextView;
+                var gym = ServiceLayer.SharedInstance.Gyms[id];
+                title.Text = gym.name;
+                distLabel.Text = distText;
+                modified.Text = $"Last modified {Utility.TimeAgo(gym.LastModifedDate)}";
+                slots.Text = $"Slots Available: {gym.slots_available}";
+                guarding.Text = $"Guarding Pokemon: {gym.pokemon_name}({gym.pokemon_id})";
+                infoView = gymInfo;
             }
 
             return infoView;

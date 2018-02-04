@@ -5,17 +5,17 @@
     android:orientation="vertical"
     android:background="@android:color/white">
     <TextView
-        android:text="Gravler (male) - #75"
+        android:text="Raid Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/info_title"
+        android:id="@+id/raid_info_title"
         android:gravity="center"
         android:textSize="14dp"
         android:textColor="@android:color/black"
         android:textStyle="bold" />
     <TextView
-        android:text="12.8 miles away"
-        android:id="@+id/info_distance"
+        android:text="12.3 Miles away"
+        android:id="@+id/raid_info_distance"
         android:textSize="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,8 +24,8 @@
         android:layout_marginBottom="3dp"
         android:layout_marginTop="3dp" />
     <TextView
-        android:text="Move 1: Blah blah blah"
-        android:id="@+id/info_move1"
+        android:text="CP: 1234"
+        android:id="@+id/raid_info_cp"
         android:textSize="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,8 +33,8 @@
         android:gravity="center"
         android:layout_marginBottom="3dp" />
     <TextView
-        android:text="Move 2: Blah blah blah"
-        android:id="@+id/info_move2"
+        android:text="Move 1: blah blah"
+        android:id="@+id/raid_info_move1"
         android:textSize="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,8 +42,8 @@
         android:gravity="center"
         android:layout_marginBottom="3dp" />
     <TextView
-        android:text="IV: 15atk 15def 15sta"
-        android:id="@+id/info_iv"
+        android:text="Move 2: blah blah"
+        android:id="@+id/raid_info_move2"
         android:textSize="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,34 +51,21 @@
         android:gravity="center"
         android:layout_marginBottom="3dp" />
     <TextView
-        android:text="CP: 1234 Level: 22"
-        android:id="@+id/info_cp_level"
+        android:text="Gym Name"
+        android:id="@+id/raid_info_gym_name"
         android:textSize="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
         android:gravity="center"
         android:layout_marginBottom="3dp" />
-    <LinearLayout
-        android:orientation="horizontal"
+    <TextView
+        android:text="Gym Control"
+        android:id="@+id/raid_info_gym_control"
+        android:textSize="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout1">
-        <Button
-            android:text="Hide"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/hide_button"
-            android:layout_weight="0.5"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp" />
-        <Button
-            android:text="Notify"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/notify_button"
-            android:layout_weight="0.5"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp" />
-    </LinearLayout>
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
 </LinearLayout>

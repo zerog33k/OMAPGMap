@@ -263,9 +263,9 @@ namespace OMAPGMap.iOS
             if(gym != null)
             {
 				annotateView = mapView.DequeueReusableAnnotation("Gym") ?? new GymAnnotationView(gym, "Gym");
-				annotateView.Image = UIImage.FromBundle($"gym{(int)gym.team}");
-				annotateView.Frame = new CGRect(0, 0, 40, 40);
                 var gymAV = annotateView as GymAnnotationView;
+                gymAV.Image = UIImage.FromBundle($"gym{(int)gym.team}");
+                gymAV.Frame = new CGRect(0, 0, 40, 40);
                 gymAV.Map = mapView;
 
 				annotateView.CanShowCallout = true;

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+    <TextView
+        android:text="gym Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gym_info_title"
+        android:gravity="center"
+        android:textSize="14dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+    <TextView
+        android:text="last modified"
+        android:id="@+id/gym_info_mod"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp" />
+    <TextView
+        android:text="Slots Available"
+        android:id="@+id/gym_info_slots"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
+    <TextView
+        android:text="Guarding Pokemon: (noonecares)"
+        android:id="@+id/gym_info_guarding"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
+    <TextView
+        android:text="12.3 Miles away"
+        android:id="@+id/gym_info_distance"
+        android:textSize="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:layout_marginBottom="3dp" />
+</LinearLayout>

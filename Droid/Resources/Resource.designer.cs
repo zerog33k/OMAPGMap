@@ -2615,8 +2615,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0041
 			public const int SYM = 2131427393;
 			
-			// aapt resource value: 0x7f0b00b9
-			public const int action0 = 2131427513;
+			// aapt resource value: 0x7f0b00be
+			public const int action0 = 2131427518;
 			
 			// aapt resource value: 0x7f0b0085
 			public const int action_bar = 2131427461;
@@ -2639,17 +2639,17 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0063
 			public const int action_bar_title = 2131427427;
 			
-			// aapt resource value: 0x7f0b00b6
-			public const int action_container = 2131427510;
+			// aapt resource value: 0x7f0b00bb
+			public const int action_container = 2131427515;
 			
 			// aapt resource value: 0x7f0b0086
 			public const int action_context_bar = 2131427462;
 			
-			// aapt resource value: 0x7f0b00bd
-			public const int action_divider = 2131427517;
+			// aapt resource value: 0x7f0b00c2
+			public const int action_divider = 2131427522;
 			
-			// aapt resource value: 0x7f0b00b7
-			public const int action_image = 2131427511;
+			// aapt resource value: 0x7f0b00bc
+			public const int action_image = 2131427516;
 			
 			// aapt resource value: 0x7f0b0003
 			public const int action_menu_divider = 2131427331;
@@ -2666,11 +2666,11 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0065
 			public const int action_mode_close_button = 2131427429;
 			
-			// aapt resource value: 0x7f0b00b8
-			public const int action_text = 2131427512;
+			// aapt resource value: 0x7f0b00bd
+			public const int action_text = 2131427517;
 			
-			// aapt resource value: 0x7f0b00c6
-			public const int actions = 2131427526;
+			// aapt resource value: 0x7f0b00cb
+			public const int actions = 2131427531;
 			
 			// aapt resource value: 0x7f0b0066
 			public const int activity_chooser_view_content = 2131427430;
@@ -2711,8 +2711,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b006c
 			public const int buttonPanel = 2131427436;
 			
-			// aapt resource value: 0x7f0b00ba
-			public const int cancel_action = 2131427514;
+			// aapt resource value: 0x7f0b00bf
+			public const int cancel_action = 2131427519;
 			
 			// aapt resource value: 0x7f0b004e
 			public const int center = 2131427406;
@@ -2726,8 +2726,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b007c
 			public const int checkbox = 2131427452;
 			
-			// aapt resource value: 0x7f0b00c2
-			public const int chronometer = 2131427522;
+			// aapt resource value: 0x7f0b00c7
+			public const int chronometer = 2131427527;
 			
 			// aapt resource value: 0x7f0b0057
 			public const int clip_horizontal = 2131427415;
@@ -2786,8 +2786,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b003a
 			public const int end = 2131427386;
 			
-			// aapt resource value: 0x7f0b00c8
-			public const int end_padder = 2131427528;
+			// aapt resource value: 0x7f0b00cd
+			public const int end_padder = 2131427533;
 			
 			// aapt resource value: 0x7f0b0049
 			public const int enterAlways = 2131427401;
@@ -2822,11 +2822,26 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b000a
 			public const int ghost_view = 2131427338;
 			
-			// aapt resource value: 0x7f0b00d4
-			public const int hiddenSwitch = 2131427540;
+			// aapt resource value: 0x7f0b00a6
+			public const int gym_info_distance = 2131427494;
 			
-			// aapt resource value: 0x7f0b00d0
-			public const int hide_button = 2131427536;
+			// aapt resource value: 0x7f0b00a5
+			public const int gym_info_guarding = 2131427493;
+			
+			// aapt resource value: 0x7f0b00a3
+			public const int gym_info_mod = 2131427491;
+			
+			// aapt resource value: 0x7f0b00a4
+			public const int gym_info_slots = 2131427492;
+			
+			// aapt resource value: 0x7f0b00a2
+			public const int gym_info_title = 2131427490;
+			
+			// aapt resource value: 0x7f0b00d9
+			public const int hiddenSwitch = 2131427545;
+			
+			// aapt resource value: 0x7f0b00d5
+			public const int hide_button = 2131427541;
 			
 			// aapt resource value: 0x7f0b0005
 			public const int home = 2131427333;
@@ -2840,8 +2855,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b006b
 			public const int icon = 2131427435;
 			
-			// aapt resource value: 0x7f0b00c7
-			public const int icon_group = 2131427527;
+			// aapt resource value: 0x7f0b00cc
+			public const int icon_group = 2131427532;
 			
 			// aapt resource value: 0x7f0b0023
 			public const int icon_only = 2131427363;
@@ -2852,26 +2867,26 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0068
 			public const int image = 2131427432;
 			
-			// aapt resource value: 0x7f0b00c3
-			public const int info = 2131427523;
+			// aapt resource value: 0x7f0b00c8
+			public const int info = 2131427528;
+			
+			// aapt resource value: 0x7f0b00d3
+			public const int info_cp_level = 2131427539;
+			
+			// aapt resource value: 0x7f0b00cf
+			public const int info_distance = 2131427535;
+			
+			// aapt resource value: 0x7f0b00d2
+			public const int info_iv = 2131427538;
+			
+			// aapt resource value: 0x7f0b00d0
+			public const int info_move1 = 2131427536;
+			
+			// aapt resource value: 0x7f0b00d1
+			public const int info_move2 = 2131427537;
 			
 			// aapt resource value: 0x7f0b00ce
-			public const int info_cp_level = 2131427534;
-			
-			// aapt resource value: 0x7f0b00ca
-			public const int info_distance = 2131427530;
-			
-			// aapt resource value: 0x7f0b00cd
-			public const int info_iv = 2131427533;
-			
-			// aapt resource value: 0x7f0b00cb
-			public const int info_move1 = 2131427531;
-			
-			// aapt resource value: 0x7f0b00cc
-			public const int info_move2 = 2131427532;
-			
-			// aapt resource value: 0x7f0b00c9
-			public const int info_title = 2131427529;
+			public const int info_title = 2131427534;
 			
 			// aapt resource value: 0x7f0b0062
 			public const int italic = 2131427426;
@@ -2882,17 +2897,17 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0095
 			public const int largeLabel = 2131427477;
 			
-			// aapt resource value: 0x7f0b00af
-			public const int layer90PokeCheck = 2131427503;
+			// aapt resource value: 0x7f0b00b4
+			public const int layer90PokeCheck = 2131427508;
 			
-			// aapt resource value: 0x7f0b00ae
-			public const int layerGymsCheck = 2131427502;
+			// aapt resource value: 0x7f0b00b3
+			public const int layerGymsCheck = 2131427507;
 			
-			// aapt resource value: 0x7f0b00ad
-			public const int layerPokeCheck = 2131427501;
+			// aapt resource value: 0x7f0b00b2
+			public const int layerPokeCheck = 2131427506;
 			
-			// aapt resource value: 0x7f0b00ab
-			public const int layerssButton = 2131427499;
+			// aapt resource value: 0x7f0b00b0
+			public const int layerssButton = 2131427504;
 			
 			// aapt resource value: 0x7f0b0052
 			public const int left = 2131427410;
@@ -2906,8 +2921,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0018
 			public const int line3 = 2131427352;
 			
-			// aapt resource value: 0x7f0b00cf
-			public const int linearLayout1 = 2131427535;
+			// aapt resource value: 0x7f0b00d4
+			public const int linearLayout1 = 2131427540;
 			
 			// aapt resource value: 0x7f0b0029
 			public const int listMode = 2131427369;
@@ -2915,53 +2930,53 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b006a
 			public const int list_item = 2131427434;
 			
-			// aapt resource value: 0x7f0b00a3
-			public const int loginHolder = 2131427491;
+			// aapt resource value: 0x7f0b00a8
+			public const int loginHolder = 2131427496;
 			
-			// aapt resource value: 0x7f0b00a9
-			public const int loginMessage = 2131427497;
+			// aapt resource value: 0x7f0b00ae
+			public const int loginMessage = 2131427502;
 			
-			// aapt resource value: 0x7f0b00a2
-			public const int map = 2131427490;
-			
-			// aapt resource value: 0x7f0b00b0
-			public const int map_marker_layout = 2131427504;
-			
-			// aapt resource value: 0x7f0b00b3
-			public const int marker_egg_img = 2131427507;
-			
-			// aapt resource value: 0x7f0b00b1
-			public const int marker_img = 2131427505;
-			
-			// aapt resource value: 0x7f0b00b4
-			public const int marker_raid_poke = 2131427508;
+			// aapt resource value: 0x7f0b00a7
+			public const int map = 2131427495;
 			
 			// aapt resource value: 0x7f0b00b5
-			public const int marker_raid_text = 2131427509;
+			public const int map_marker_layout = 2131427509;
 			
-			// aapt resource value: 0x7f0b00b2
-			public const int marker_text = 2131427506;
+			// aapt resource value: 0x7f0b00b8
+			public const int marker_egg_img = 2131427512;
 			
-			// aapt resource value: 0x7f0b00da
-			public const int masked = 2131427546;
+			// aapt resource value: 0x7f0b00b6
+			public const int marker_img = 2131427510;
 			
-			// aapt resource value: 0x7f0b00bc
-			public const int media_actions = 2131427516;
+			// aapt resource value: 0x7f0b00b9
+			public const int marker_raid_poke = 2131427513;
 			
-			// aapt resource value: 0x7f0b00de
-			public const int menu_90plus = 2131427550;
+			// aapt resource value: 0x7f0b00ba
+			public const int marker_raid_text = 2131427514;
 			
-			// aapt resource value: 0x7f0b00dc
-			public const int menu_gyms = 2131427548;
+			// aapt resource value: 0x7f0b00b7
+			public const int marker_text = 2131427511;
 			
-			// aapt resource value: 0x7f0b00db
-			public const int menu_pokemon = 2131427547;
+			// aapt resource value: 0x7f0b00e6
+			public const int masked = 2131427558;
 			
-			// aapt resource value: 0x7f0b00dd
-			public const int menu_raids = 2131427549;
+			// aapt resource value: 0x7f0b00c1
+			public const int media_actions = 2131427521;
 			
-			// aapt resource value: 0x7f0b00d8
-			public const int message = 2131427544;
+			// aapt resource value: 0x7f0b00ea
+			public const int menu_90plus = 2131427562;
+			
+			// aapt resource value: 0x7f0b00e8
+			public const int menu_gyms = 2131427560;
+			
+			// aapt resource value: 0x7f0b00e7
+			public const int menu_pokemon = 2131427559;
+			
+			// aapt resource value: 0x7f0b00e9
+			public const int menu_raids = 2131427561;
+			
+			// aapt resource value: 0x7f0b00e4
+			public const int message = 2131427556;
 			
 			// aapt resource value: 0x7f0b003b
 			public const int middle = 2131427387;
@@ -2984,20 +2999,20 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b001e
 			public const int normal = 2131427358;
 			
-			// aapt resource value: 0x7f0b00c5
-			public const int notification_background = 2131427525;
+			// aapt resource value: 0x7f0b00ca
+			public const int notification_background = 2131427530;
 			
-			// aapt resource value: 0x7f0b00bf
-			public const int notification_main_column = 2131427519;
+			// aapt resource value: 0x7f0b00c4
+			public const int notification_main_column = 2131427524;
 			
-			// aapt resource value: 0x7f0b00be
-			public const int notification_main_column_container = 2131427518;
+			// aapt resource value: 0x7f0b00c3
+			public const int notification_main_column_container = 2131427523;
 			
-			// aapt resource value: 0x7f0b00d3
-			public const int notifySwitch = 2131427539;
+			// aapt resource value: 0x7f0b00d8
+			public const int notifySwitch = 2131427544;
 			
-			// aapt resource value: 0x7f0b00d1
-			public const int notify_button = 2131427537;
+			// aapt resource value: 0x7f0b00d6
+			public const int notify_button = 2131427542;
 			
 			// aapt resource value: 0x7f0b0055
 			public const int parallax = 2131427413;
@@ -3008,17 +3023,17 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b000b
 			public const int parent_matrix = 2131427339;
 			
-			// aapt resource value: 0x7f0b00a7
-			public const int password = 2131427495;
+			// aapt resource value: 0x7f0b00ac
+			public const int password = 2131427500;
 			
-			// aapt resource value: 0x7f0b00a6
-			public const int passwordWrapper = 2131427494;
+			// aapt resource value: 0x7f0b00ab
+			public const int passwordWrapper = 2131427499;
 			
 			// aapt resource value: 0x7f0b0056
 			public const int pin = 2131427414;
 			
-			// aapt resource value: 0x7f0b00d2
-			public const int pokeImgId = 2131427538;
+			// aapt resource value: 0x7f0b00d7
+			public const int pokeImgId = 2131427543;
 			
 			// aapt resource value: 0x7f0b0006
 			public const int progress_circular = 2131427334;
@@ -3029,14 +3044,35 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b007e
 			public const int radio = 2131427454;
 			
+			// aapt resource value: 0x7f0b00dc
+			public const int raid_info_cp = 2131427548;
+			
+			// aapt resource value: 0x7f0b00db
+			public const int raid_info_distance = 2131427547;
+			
+			// aapt resource value: 0x7f0b00e0
+			public const int raid_info_gym_control = 2131427552;
+			
+			// aapt resource value: 0x7f0b00df
+			public const int raid_info_gym_name = 2131427551;
+			
+			// aapt resource value: 0x7f0b00dd
+			public const int raid_info_move1 = 2131427549;
+			
+			// aapt resource value: 0x7f0b00de
+			public const int raid_info_move2 = 2131427550;
+			
+			// aapt resource value: 0x7f0b00da
+			public const int raid_info_title = 2131427546;
+			
 			// aapt resource value: 0x7f0b0053
 			public const int right = 2131427411;
 			
-			// aapt resource value: 0x7f0b00c4
-			public const int right_icon = 2131427524;
+			// aapt resource value: 0x7f0b00c9
+			public const int right_icon = 2131427529;
 			
-			// aapt resource value: 0x7f0b00c0
-			public const int right_side = 2131427520;
+			// aapt resource value: 0x7f0b00c5
+			public const int right_side = 2131427525;
 			
 			// aapt resource value: 0x7f0b001f
 			public const int satellite = 2131427359;
@@ -3101,17 +3137,17 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0093
 			public const int select_dialog_listview = 2131427475;
 			
-			// aapt resource value: 0x7f0b00ac
-			public const int settingsButton = 2131427500;
+			// aapt resource value: 0x7f0b00b1
+			public const int settingsButton = 2131427505;
 			
-			// aapt resource value: 0x7f0b00d6
-			public const int settingsDoneButton = 2131427542;
+			// aapt resource value: 0x7f0b00e2
+			public const int settingsDoneButton = 2131427554;
 			
-			// aapt resource value: 0x7f0b00aa
-			public const int settingsHolder = 2131427498;
+			// aapt resource value: 0x7f0b00af
+			public const int settingsHolder = 2131427503;
 			
-			// aapt resource value: 0x7f0b00d7
-			public const int settingsListView = 2131427543;
+			// aapt resource value: 0x7f0b00e3
+			public const int settingsListView = 2131427555;
 			
 			// aapt resource value: 0x7f0b007d
 			public const int shortcut = 2131427453;
@@ -3125,8 +3161,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b002f
 			public const int showTitle = 2131427375;
 			
-			// aapt resource value: 0x7f0b00a8
-			public const int signInButton = 2131427496;
+			// aapt resource value: 0x7f0b00ad
+			public const int signInButton = 2131427501;
 			
 			// aapt resource value: 0x7f0b0094
 			public const int smallLabel = 2131427476;
@@ -3161,8 +3197,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0054
 			public const int start = 2131427412;
 			
-			// aapt resource value: 0x7f0b00bb
-			public const int status_bar_latest_event_content = 2131427515;
+			// aapt resource value: 0x7f0b00c0
+			public const int status_bar_latest_event_content = 2131427520;
 			
 			// aapt resource value: 0x7f0b007f
 			public const int submenuarrow = 2131427455;
@@ -3197,8 +3233,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0015
 			public const int textinput_error = 2131427349;
 			
-			// aapt resource value: 0x7f0b00c1
-			public const int time = 2131427521;
+			// aapt resource value: 0x7f0b00c6
+			public const int time = 2131427526;
 			
 			// aapt resource value: 0x7f0b001b
 			public const int title = 2131427355;
@@ -3209,8 +3245,8 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0078
 			public const int title_template = 2131427448;
 			
-			// aapt resource value: 0x7f0b00d5
-			public const int toolbar = 2131427541;
+			// aapt resource value: 0x7f0b00e1
+			public const int toolbar = 2131427553;
 			
 			// aapt resource value: 0x7f0b0048
 			public const int top = 2131427400;
@@ -3245,17 +3281,17 @@ namespace OMAPGMap.Droid
 			// aapt resource value: 0x7f0b0030
 			public const int useLogo = 2131427376;
 			
-			// aapt resource value: 0x7f0b00a5
-			public const int username = 2131427493;
+			// aapt resource value: 0x7f0b00aa
+			public const int username = 2131427498;
 			
-			// aapt resource value: 0x7f0b00a4
-			public const int usernameWrapper = 2131427492;
+			// aapt resource value: 0x7f0b00a9
+			public const int usernameWrapper = 2131427497;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int view_offset_helper = 2131427350;
 			
-			// aapt resource value: 0x7f0b00d9
-			public const int visible = 2131427545;
+			// aapt resource value: 0x7f0b00e5
+			public const int visible = 2131427557;
 			
 			// aapt resource value: 0x7f0b0025
 			public const int wide = 2131427365;
@@ -3449,88 +3485,94 @@ namespace OMAPGMap.Droid
 			public const int design_text_input_password_icon = 2130968616;
 			
 			// aapt resource value: 0x7f040029
-			public const int Login = 2130968617;
+			public const int gym_info = 2130968617;
 			
 			// aapt resource value: 0x7f04002a
-			public const int Main = 2130968618;
+			public const int Login = 2130968618;
 			
 			// aapt resource value: 0x7f04002b
-			public const int map_layers = 2130968619;
+			public const int Main = 2130968619;
 			
 			// aapt resource value: 0x7f04002c
-			public const int map_marker = 2130968620;
+			public const int map_layers = 2130968620;
 			
 			// aapt resource value: 0x7f04002d
-			public const int map_marker_raid = 2130968621;
+			public const int map_marker = 2130968621;
 			
 			// aapt resource value: 0x7f04002e
-			public const int notification_action = 2130968622;
+			public const int map_marker_raid = 2130968622;
 			
 			// aapt resource value: 0x7f04002f
-			public const int notification_action_tombstone = 2130968623;
+			public const int notification_action = 2130968623;
 			
 			// aapt resource value: 0x7f040030
-			public const int notification_media_action = 2130968624;
+			public const int notification_action_tombstone = 2130968624;
 			
 			// aapt resource value: 0x7f040031
-			public const int notification_media_cancel_action = 2130968625;
+			public const int notification_media_action = 2130968625;
 			
 			// aapt resource value: 0x7f040032
-			public const int notification_template_big_media = 2130968626;
+			public const int notification_media_cancel_action = 2130968626;
 			
 			// aapt resource value: 0x7f040033
-			public const int notification_template_big_media_custom = 2130968627;
+			public const int notification_template_big_media = 2130968627;
 			
 			// aapt resource value: 0x7f040034
-			public const int notification_template_big_media_narrow = 2130968628;
+			public const int notification_template_big_media_custom = 2130968628;
 			
 			// aapt resource value: 0x7f040035
-			public const int notification_template_big_media_narrow_custom = 2130968629;
+			public const int notification_template_big_media_narrow = 2130968629;
 			
 			// aapt resource value: 0x7f040036
-			public const int notification_template_custom_big = 2130968630;
+			public const int notification_template_big_media_narrow_custom = 2130968630;
 			
 			// aapt resource value: 0x7f040037
-			public const int notification_template_icon_group = 2130968631;
+			public const int notification_template_custom_big = 2130968631;
 			
 			// aapt resource value: 0x7f040038
-			public const int notification_template_lines_media = 2130968632;
+			public const int notification_template_icon_group = 2130968632;
 			
 			// aapt resource value: 0x7f040039
-			public const int notification_template_media = 2130968633;
+			public const int notification_template_lines_media = 2130968633;
 			
 			// aapt resource value: 0x7f04003a
-			public const int notification_template_media_custom = 2130968634;
+			public const int notification_template_media = 2130968634;
 			
 			// aapt resource value: 0x7f04003b
-			public const int notification_template_part_chronometer = 2130968635;
+			public const int notification_template_media_custom = 2130968635;
 			
 			// aapt resource value: 0x7f04003c
-			public const int notification_template_part_time = 2130968636;
+			public const int notification_template_part_chronometer = 2130968636;
 			
 			// aapt resource value: 0x7f04003d
-			public const int pokemon_info = 2130968637;
+			public const int notification_template_part_time = 2130968637;
 			
 			// aapt resource value: 0x7f04003e
-			public const int pokemon_list_item = 2130968638;
+			public const int pokemon_info = 2130968638;
 			
 			// aapt resource value: 0x7f04003f
-			public const int select_dialog_item_material = 2130968639;
+			public const int pokemon_list_item = 2130968639;
 			
 			// aapt resource value: 0x7f040040
-			public const int select_dialog_multichoice_material = 2130968640;
+			public const int raid_info = 2130968640;
 			
 			// aapt resource value: 0x7f040041
-			public const int select_dialog_singlechoice_material = 2130968641;
+			public const int select_dialog_item_material = 2130968641;
 			
 			// aapt resource value: 0x7f040042
-			public const int settings = 2130968642;
+			public const int select_dialog_multichoice_material = 2130968642;
 			
 			// aapt resource value: 0x7f040043
-			public const int support_simple_spinner_dropdown_item = 2130968643;
+			public const int select_dialog_singlechoice_material = 2130968643;
 			
 			// aapt resource value: 0x7f040044
-			public const int tooltip = 2130968644;
+			public const int settings = 2130968644;
+			
+			// aapt resource value: 0x7f040045
+			public const int support_simple_spinner_dropdown_item = 2130968645;
+			
+			// aapt resource value: 0x7f040046
+			public const int tooltip = 2130968646;
 			
 			static Layout()
 			{
@@ -4702,52 +4744,61 @@ namespace OMAPGMap.Droid
 			public const int p365 = 2130903419;
 			
 			// aapt resource value: 0x7f03017c
-			public const int p369 = 2130903420;
+			public const int p366 = 2130903420;
 			
 			// aapt resource value: 0x7f03017d
-			public const int p370 = 2130903421;
+			public const int p367 = 2130903421;
 			
 			// aapt resource value: 0x7f03017e
-			public const int p371 = 2130903422;
+			public const int p368 = 2130903422;
 			
 			// aapt resource value: 0x7f03017f
-			public const int p372 = 2130903423;
+			public const int p369 = 2130903423;
 			
 			// aapt resource value: 0x7f030180
-			public const int p373 = 2130903424;
+			public const int p370 = 2130903424;
 			
 			// aapt resource value: 0x7f030181
-			public const int p374 = 2130903425;
+			public const int p371 = 2130903425;
 			
 			// aapt resource value: 0x7f030182
-			public const int p375 = 2130903426;
+			public const int p372 = 2130903426;
 			
 			// aapt resource value: 0x7f030183
-			public const int p376 = 2130903427;
+			public const int p373 = 2130903427;
 			
 			// aapt resource value: 0x7f030184
-			public const int p377 = 2130903428;
+			public const int p374 = 2130903428;
 			
 			// aapt resource value: 0x7f030185
-			public const int p378 = 2130903429;
+			public const int p375 = 2130903429;
 			
 			// aapt resource value: 0x7f030186
-			public const int p379 = 2130903430;
+			public const int p376 = 2130903430;
 			
 			// aapt resource value: 0x7f030187
-			public const int p380 = 2130903431;
+			public const int p377 = 2130903431;
 			
 			// aapt resource value: 0x7f030188
-			public const int p381 = 2130903432;
+			public const int p378 = 2130903432;
 			
 			// aapt resource value: 0x7f030189
-			public const int p382 = 2130903433;
+			public const int p379 = 2130903433;
 			
 			// aapt resource value: 0x7f03018a
-			public const int p383 = 2130903434;
+			public const int p380 = 2130903434;
 			
 			// aapt resource value: 0x7f03018b
-			public const int valor = 2130903435;
+			public const int p381 = 2130903435;
+			
+			// aapt resource value: 0x7f03018c
+			public const int p382 = 2130903436;
+			
+			// aapt resource value: 0x7f03018d
+			public const int p383 = 2130903437;
+			
+			// aapt resource value: 0x7f03018e
+			public const int valor = 2130903438;
 			
 			static Mipmap()
 			{
