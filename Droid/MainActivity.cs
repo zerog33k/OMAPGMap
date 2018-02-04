@@ -270,14 +270,30 @@ namespace OMAPGMap.Droid
         private void AddGymMarker(Gym g)
         {
             var mOps = new MarkerOptions();
-            mOps.SetPosition(p.Location);
+            mOps.SetPosition(g.Location);
+            int img = 0;
+            switch(g.team)
+            {
+                case Team.Mystic:
+                    img = Resource.Mipmap.mystic;
+                    break;
+                case Team.Valor:
+                    img = Resource.Mipmap.valor;
+                    break;
+                case Team.Instinct:
+                    img = Resource.Mipmap.instinct;
+                    break;
+                case Team.None:
+                    img = Resource.Mipmap.empty;
+                    break;
+            }
 
-            mOps.SetIcon(BitmapDescriptorFactory.FromBitmap(GetPokemonMarker(p)));
+            mOps.SetIcon(BitmapDescriptorFactory.FromResource(img));
             mOps.Anchor(0.5f, 0.5f);
             var marker = map.AddMarker(mOps);
-            marker.Tag = $"poke:{p.id}";
-            p.PokeMarker = marker;
-            PokesOnMap.Add(p);
+            marker.Tag = $"gym:{g.id}";
+            g.GymMarker = marker;
+            gymsOnMap.Add(g);
         }
 
         private void AddRaidMarker(Raid r)
@@ -285,12 +301,12 @@ namespace OMAPGMap.Droid
             var mOps = new MarkerOptions();
             mOps.SetPosition(r.Location);
 
-            mOps.SetIcon(BitmapDescriptorFactory.FromBitmap(GetPokemonMarker(p)));
+            mOps.SetIcon(BitmapDescriptorFactory.FromBitmap(GetRaidMarker(r)));
             mOps.Anchor(0.5f, 0.5f);
             var marker = map.AddMarker(mOps);
-            marker.Tag = $"poke:{p.id}";
-            p.PokeMarker = marker;
-            PokesOnMap.Add(p);
+            marker.Tag = $"raid:{r.id}";
+            r.RaidMarker = marker;
+            raidsOnMap.Add(r);
         }
         public void OnMapReady(GoogleMap mapp)
         {
@@ -379,6 +395,56 @@ namespace OMAPGMap.Droid
                 var green = Resources.GetDrawable(Resource.Drawable.rounded_corner_green);
                 imgTitle.Background = green;
             }
+            mapMarker.Measure(0, 0);
+            mapMarker.Layout(0, 0, mapMarker.MeasuredWidth, mapMarker.MeasuredHeight);
+            mapMarker.BuildDrawingCache();
+            var rval = Bitmap.CreateBitmap(mapMarker.MeasuredWidth, mapMarker.MeasuredHeight, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(rval);
+            canvas.DrawColor(Color.White, PorterDuff.Mode.SrcIn);
+            mapMarker.Draw(canvas);
+            return rval;
+        }
+
+        Bitmap GetRaidMarker(Raid raid)
+        {
+            var mapMarker = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.map_marker_raid, null);
+            var img = mapMarker.FindViewById(Resource.Id.marker_egg_img) as ImageView;
+            switch(raid.level)
+            {
+                case 1:
+                    img.SetImageResource(Resource.Mipmap.egg1);
+                    break;
+                case 2:
+                    img.SetImageResource(Resource.Mipmap.egg2);
+                    break;
+                case 3:
+                    img.SetImageResource(Resource.Mipmap.egg3);
+                    break;
+                case 4:
+                    img.SetImageResource(Resource.Mipmap.egg4);
+                    break;
+                case 5:
+                    img.SetImageResource(Resource.Mipmap.egg5);
+                    break;
+
+            }
+            var now = DateTime.UtcNow;
+            DateTime displayTime = raid.TimeBattle;
+            var pokeImg = mapMarker.FindViewById(Resource.Id.marker_raid_poke) as ImageView;
+            if (raid.pokemon_id != 0 || now < raid.TimeEnd)
+            {
+                displayTime = raid.TimeEnd;
+                try
+                {
+                    pokeImg.SetImageResource(pokeResourceMap[raid.pokemon_id]);
+                }
+                catch (Exception) { pokeImg.Visibility = ViewStates.Gone; }
+            } else {
+                pokeImg.Visibility = ViewStates.Gone;
+            }
+            var imgTitle = mapMarker.FindViewById(Resource.Id.marker_text) as TextView;
+
+            imgTitle.Text = displayTime.AddHours(-6.0).ToShortTimeString();
             mapMarker.Measure(0, 0);
             mapMarker.Layout(0, 0, mapMarker.MeasuredWidth, mapMarker.MeasuredHeight);
             mapMarker.BuildDrawingCache();
