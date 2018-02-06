@@ -59,26 +59,14 @@
         android:layout_weight="1.0"
         android:gravity="center"
         android:layout_marginBottom="3dp" />
-    <LinearLayout
-        android:orientation="horizontal"
+    <TextView
+        android:text="Long press the info window\n to hide this type of Pokémon"
         android:layout_width="match_parent"
+        android:lines="2"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout1">
-        <Button
-            android:text="Hide"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/hide_button"
-            android:layout_weight="0.5"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp" />
-        <Button
-            android:text="Notify"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/notify_button"
-            android:layout_weight="0.5"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp" />
-    </LinearLayout>
+        android:id="@+id/info_title"
+        android:gravity="center"
+        android:textSize="12dp"
+        android:textStyle="italic"
+        android:layout_marginTop="4dp" />
 </LinearLayout>

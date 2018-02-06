@@ -61,6 +61,8 @@ namespace OMAPGMap.Models
 
         public List<int> IgnorePokemon = new List<int>();
 
+        public List<int> SavedHiddenPokemon = new List<int>();
+
         public string Username { get; set; } = "";
         public string Password { get; set; } = "";
         public bool LoggedIn { get; set; } = false;

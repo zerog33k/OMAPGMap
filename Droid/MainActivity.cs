@@ -29,7 +29,7 @@ using static Android.Gms.Maps.GoogleMap;
 
 namespace OMAPGMap.Droid
 {
-    [Activity(Label = "OMA PGMap", MainLauncher = true, Icon = "@mipmap/ic_launcher", WindowSoftInputMode = SoftInput.AdjustResize)]
+    [Activity(Label = "OMA PGMap", MainLauncher = true, Icon = "@mipmap/ic_launcher", WindowSoftInputMode = SoftInput.AdjustResize, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : AppCompatActivity, IOnMapReadyCallback, IInfoWindowAdapter
     {
         MapFragment _mapFragment = null;
@@ -119,7 +119,7 @@ namespace OMAPGMap.Droid
                 imm.HideSoftInputFromWindow(username.WindowToken, 0);
                 await LoadData();
                 secondTimer = new Timer(HandleTimerCallback, null, 5000, 5000);
-                minuteTimer = new Timer(refreshMap, null, 60000, 60000);
+                minuteTimer = new Timer(RefreshMapData, null, 60000, 60000);
             } else 
             {
                 
@@ -142,7 +142,7 @@ namespace OMAPGMap.Droid
             settingsListview.Adapter = new SettingsAdaptor(this, pokeResourceMap);
         }
 
-        private void refreshMap(object state)
+        private void RefreshMapData(object state)
         {
             RunOnUiThread(async () =>
             {
@@ -174,9 +174,7 @@ namespace OMAPGMap.Droid
             await ServiceLayer.SharedInstance.LoadData();
             progress.Dismiss();
 
-            UpdateMapPokemon(true);
-            UpdateMapGyms(true);
-            UpdateMapRaids(true);
+            RefreshMapMarkers(true);
         }
 
         private void UpdateMapRaids(bool reload)
@@ -214,7 +212,10 @@ namespace OMAPGMap.Droid
                 raidsOnMap.Remove(r);
             }
             List<Raid> toAdd = new List<Raid>();
-            toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsOnMap));
+            if (settings.RaidsEnabled)
+            {
+                toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsOnMap));
+            }
             foreach (var r in toAdd)
             {
                 AddRaidMarker(r);
@@ -242,27 +243,15 @@ namespace OMAPGMap.Droid
                 gymsOnMap.Remove(g);
             }
             List<Gym> toAdd = new List<Gym>();
-            toAdd.AddRange(ServiceLayer.SharedInstance.Gyms.Values.Where(g => bounds.Contains(g.Location)).Except(gymsOnMap));
+            if (settings.GymsEnabled)
+            {
+                toAdd.AddRange(ServiceLayer.SharedInstance.Gyms.Values.Where(g => bounds.Contains(g.Location)).Except(gymsOnMap));
+            }
             foreach(var g in toAdd)
             {
                 AddGymMarker(g);
             }
             Console.WriteLine($"Adding {toAdd.Count()} gyms to the map");
-        }
-
-        private async void RefreshData()
-        {
-            try
-            {
-                await ServiceLayer.SharedInstance.LoadData();
-            }
-            catch (Exception)
-            {
-                //swallow exception because it tastes good
-            }
-            UpdateMapPokemon(false);
-            UpdateMapRaids(false);
-            UpdateMapGyms(false);
         }
 
         private void UpdateMapPokemon(bool reload)
@@ -278,9 +267,11 @@ namespace OMAPGMap.Droid
             }
             foreach (var p in toRemove)
             {
-
-                p.PokeMarker.Remove();
-                p.PokeMarker = null;
+                if (p.PokeMarker != null)
+                {
+                    p.PokeMarker.Remove();
+                    p.PokeMarker = null;
+                }
                 PokesOnMap.Remove(p);
             }
             List<Pokemon> toAdd = new List<Pokemon>();
@@ -388,13 +379,12 @@ namespace OMAPGMap.Droid
             };
             map.SetInfoWindowAdapter(this);
             map.CameraIdle += Map_CameraIdle;
+            map.InfoWindowLongClick += Map_InfoWindowLongClick;
         }
 
         void Map_CameraIdle(object sender, EventArgs e)
         {
-            UpdateMapPokemon(false);
-            UpdateMapRaids(false);
-            UpdateMapGyms(false);
+            RefreshMapData(false);
         }
 
         private void RequestLocation()
@@ -567,13 +557,9 @@ namespace OMAPGMap.Droid
             }
             if (t == "poke") 
             {
-                Button notifyButton;
                 if (pokemonInfo == null)
                 {
                     pokemonInfo = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.pokemon_info, null);
-                    var hideButton = pokemonInfo.FindViewById(Resource.Id.hide_button) as Button;
-                    notifyButton = pokemonInfo.FindViewById(Resource.Id.notify_button) as Button;
-                    hideButton.Touch += HideButton_Touch;
                 }
                 infoView = pokemonInfo;
                 var title = pokemonInfo.FindViewById(Resource.Id.info_title) as TextView;
@@ -608,7 +594,6 @@ namespace OMAPGMap.Droid
                     ivLabel.Visibility = ViewStates.Gone;
                     cpLabel.Visibility = ViewStates.Gone;
                 }
-
             } else if(t == "raid")
             {
                 if (raidInfo == null)
@@ -711,23 +696,32 @@ namespace OMAPGMap.Droid
         async void Popup_MenuItemClick(object sender, Android.Support.V7.Widget.PopupMenu.MenuItemClickEventArgs e)
         {
             var id = e.Item.ItemId;
-            if(id == Resource.Id.menu_pokemon)
+            if (id == Resource.Id.menu_pokemon)
             {
                 settings.PokemonEnabled = !settings.PokemonEnabled;
-            } else if(id == Resource.Id.menu_gyms)
+            }
+            else if (id == Resource.Id.menu_gyms)
             {
                 settings.GymsEnabled = !settings.GymsEnabled;
-            } else if(id == Resource.Id.menu_raids)
+            }
+            else if (id == Resource.Id.menu_raids)
             {
                 settings.RaidsEnabled = !settings.RaidsEnabled;
-            } else if(id == Resource.Id.menu_90plus)
+            }
+            else if (id == Resource.Id.menu_90plus)
             {
                 settings.NinetyOnlyEnabled = !settings.NinetyOnlyEnabled;
             }
             await ServiceLayer.SharedInstance.SaveSettings();
-            UpdateMapPokemon(true);
-            UpdateMapGyms(true);
-            UpdateMapRaids(true);
+            RefreshMapMarkers(true);
+            RefreshMapData(null);
+        }
+
+        private void RefreshMapMarkers(bool force)
+        {
+            UpdateMapPokemon(force);
+            UpdateMapGyms(force);
+            UpdateMapRaids(force);
         }
 
         async void SettingsDone_Click(object sender, EventArgs e)
@@ -735,6 +729,25 @@ namespace OMAPGMap.Droid
             settingsHolder.Visibility = ViewStates.Gone;
             await ServiceLayer.SharedInstance.SaveSettings();
             UpdateMapPokemon(true);
+        }
+
+        async void Map_InfoWindowLongClick(object sender, InfoWindowLongClickEventArgs e)
+        {
+            var marker = e.Marker;
+            var markerTag = marker.Tag.ToString().Split(':');
+            var t = markerTag[0];
+            var id = markerTag[1];
+            if (t == "poke")
+            {
+                var poke = ServiceLayer.SharedInstance.Pokemon.Where(p => p.id == id).FirstOrDefault();
+                marker.HideInfoWindow();
+                if (settings.PokemonTrash.Where(p => p == poke.pokemon_id).Count() == 0)
+                {
+                    settings.PokemonTrash.Add(poke.pokemon_id);
+                }
+                UpdateMapPokemon(true);
+                await ServiceLayer.SharedInstance.SaveSettings();
+            }
         }
     }
 }

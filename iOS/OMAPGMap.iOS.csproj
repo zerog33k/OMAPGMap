@@ -25,7 +25,7 @@
     <IOSDebuggerPort>13923</IOSDebuggerPort>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>i386, x86_64</MtouchArch>
-    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <PlatformTarget>x86</PlatformTarget>
     <CodesignProvision></CodesignProvision>
   </PropertyGroup>
@@ -76,7 +76,7 @@
     <IOSDebuggerPort>61337</IOSDebuggerPort>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchHttpClientHandler>CFNetworkHandler</MtouchHttpClientHandler>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <PlatformTarget>x86</PlatformTarget>
     <CodesignProvision>VS: net.zerogeek.OMA-PGMap Development</CodesignProvision>
   </PropertyGroup>
@@ -1048,7 +1048,6 @@
     <ImageAsset Include="Raids.xcassets\raid91.imageset\raid91.png" />
     <ImageAsset Include="Raids.xcassets\raid94.imageset\Contents.json" />
     <ImageAsset Include="Raids.xcassets\raid94.imageset\raid94.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\pokemon.xcassets\.DS_Store" />
     <ImageAsset Include="Assets.xcassets\currentLocation.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\currentLocation.imageset\currentLocation.png" />
     <ImageAsset Include="gen3.xcassets\252.imageset\252.png" />

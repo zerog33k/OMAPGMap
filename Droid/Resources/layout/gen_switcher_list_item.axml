@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:id="@+id/radioGenGroup">
+        <RadioButton
+            android:text="Gen 1"
+            android:gravity="center"
+            android:id="@+id/radioGen1"
+            android:checked="true"
+            android:layout_weight="0.33"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <RadioButton
+            android:text="Gen 2"
+            android:gravity="center"
+            android:id="@+id/radioGen2"
+            android:layout_width="wrap_content"
+            android:layout_weight="0.33"
+            android:layout_height="match_parent" />
+        <RadioButton
+            android:text="Gen 3"
+            android:gravity="center"
+            android:id="@+id/radioGen3"
+            android:layout_width="wrap_content"
+            android:layout_weight="0.33"
+            android:layout_height="match_parent" />
+    </RadioGroup>
+</LinearLayout>
