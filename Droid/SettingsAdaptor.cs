@@ -100,7 +100,7 @@ namespace OMAPGMap.Droid
                 view.Tag = "radioItem";
                 return view;
             }
-            var pId = position;
+            var pId = position - numExtraRows + 1;
             switch (currentGen)
             {
                 case 2:
