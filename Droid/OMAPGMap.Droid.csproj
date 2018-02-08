@@ -635,6 +635,7 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\p378.png" />
     <AndroidResource Include="Resources\layout\gen_switcher_list_item.axml" />
     <AndroidResource Include="Resources\layout\settings_button_item.axml" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\p201.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />
