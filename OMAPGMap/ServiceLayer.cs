@@ -39,7 +39,7 @@ namespace OMAPGMap
             BlobCache.ApplicationName = "OMAPGMap.zerogeek.net";
         }
 
-        public List<Pokemon> Pokemon = new List<Pokemon>();
+        public Dictionary<string,Pokemon> Pokemon = new Dictionary<string,Pokemon>();
         public Dictionary<string, Gym> Gyms = new Dictionary<string, Gym>();
         public List<Raid> Raids = new List<Raid>();
         //pokemon, gyms, raids, trash
@@ -86,7 +86,7 @@ namespace OMAPGMap
             Settings.IgnorePokemon = Settings.IgnorePokemon.Distinct().ToList();
             Settings.NotifyPokemon = Settings.NotifyPokemon.Distinct().ToList();
             Settings.PokemonTrash = Settings.PokemonTrash.Distinct().ToList();
-            Settings.LastUpdateTimestamp = Utility.ToUnixTime(DateTime.UtcNow.AddHours(-1.0));
+            Settings.LastUpdateTimestamp = Utility.ToUnixTime(DateTime.UtcNow.AddMinutes(-50.0));
         }
 
         public async Task SaveSettings()
@@ -139,7 +139,7 @@ namespace OMAPGMap
             try
             {
                 var lastUpdate = Settings.LastUpdateTimestamp;
-                var minTime = Utility.ToUnixTime(DateTime.UtcNow.AddHours(-1.0));
+                var minTime = Utility.ToUnixTime(DateTime.UtcNow.AddMinutes(-50.0f));
 
                 var lid = lastUpdate > minTime ? lastUpdate : minTime;
                 var response = await client.GetAsync($"{pokemonURL}?timestamp={lid}");
@@ -147,8 +147,11 @@ namespace OMAPGMap
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
-                    Pokemon.AddRange(pokes);
-                    Settings.LastUpdateTimestamp = Pokemon.MaxBy(p => p?.timestamp)?.timestamp ?? lastUpdate;
+                    foreach(var p in pokes)
+                    {
+                        Pokemon.Add(p.id, p);   
+                    }
+                    Settings.LastUpdateTimestamp = Pokemon.Values.MaxBy(p => p?.timestamp)?.timestamp ?? lastUpdate;
                     await SaveSettings();
                 }
             }
@@ -218,7 +221,12 @@ namespace OMAPGMap
         public void CleanUpExpired()
         {
             var now = DateTime.UtcNow;
-            Pokemon.RemoveAll(p => p.ExpiresDate < now);
+
+            var toRemove = Pokemon.Values.Where(p => p.ExpiresDate < now).Select(p => p.id).ToList();
+            foreach(var pid in toRemove)
+            {
+                Pokemon.Remove(pid);
+            }
         }
 
         public void CleanUpExpiredRaids()

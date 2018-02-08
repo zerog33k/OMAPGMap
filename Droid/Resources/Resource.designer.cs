@@ -4264,556 +4264,553 @@ namespace OMAPGMap.Droid
 			public const int p200 = 2130903255;
 			
 			// aapt resource value: 0x7f0300d8
-			public const int p201 = 2130903256;
+			public const int p202 = 2130903256;
 			
 			// aapt resource value: 0x7f0300d9
-			public const int p202 = 2130903257;
+			public const int p203 = 2130903257;
 			
 			// aapt resource value: 0x7f0300da
-			public const int p203 = 2130903258;
+			public const int p204 = 2130903258;
 			
 			// aapt resource value: 0x7f0300db
-			public const int p204 = 2130903259;
+			public const int p205 = 2130903259;
 			
 			// aapt resource value: 0x7f0300dc
-			public const int p205 = 2130903260;
+			public const int p206 = 2130903260;
 			
 			// aapt resource value: 0x7f0300dd
-			public const int p206 = 2130903261;
+			public const int p207 = 2130903261;
 			
 			// aapt resource value: 0x7f0300de
-			public const int p207 = 2130903262;
+			public const int p208 = 2130903262;
 			
 			// aapt resource value: 0x7f0300df
-			public const int p208 = 2130903263;
+			public const int p209 = 2130903263;
 			
 			// aapt resource value: 0x7f0300e0
-			public const int p209 = 2130903264;
+			public const int p210 = 2130903264;
 			
 			// aapt resource value: 0x7f0300e1
-			public const int p210 = 2130903265;
+			public const int p211 = 2130903265;
 			
 			// aapt resource value: 0x7f0300e2
-			public const int p211 = 2130903266;
+			public const int p212 = 2130903266;
 			
 			// aapt resource value: 0x7f0300e3
-			public const int p212 = 2130903267;
+			public const int p213 = 2130903267;
 			
 			// aapt resource value: 0x7f0300e4
-			public const int p213 = 2130903268;
+			public const int p214 = 2130903268;
 			
 			// aapt resource value: 0x7f0300e5
-			public const int p214 = 2130903269;
+			public const int p215 = 2130903269;
 			
 			// aapt resource value: 0x7f0300e6
-			public const int p215 = 2130903270;
+			public const int p216 = 2130903270;
 			
 			// aapt resource value: 0x7f0300e7
-			public const int p216 = 2130903271;
+			public const int p217 = 2130903271;
 			
 			// aapt resource value: 0x7f0300e8
-			public const int p217 = 2130903272;
+			public const int p218 = 2130903272;
 			
 			// aapt resource value: 0x7f0300e9
-			public const int p218 = 2130903273;
+			public const int p219 = 2130903273;
 			
 			// aapt resource value: 0x7f0300ea
-			public const int p219 = 2130903274;
+			public const int p220 = 2130903274;
 			
 			// aapt resource value: 0x7f0300eb
-			public const int p220 = 2130903275;
+			public const int p221 = 2130903275;
 			
 			// aapt resource value: 0x7f0300ec
-			public const int p221 = 2130903276;
+			public const int p222 = 2130903276;
 			
 			// aapt resource value: 0x7f0300ed
-			public const int p222 = 2130903277;
+			public const int p223 = 2130903277;
 			
 			// aapt resource value: 0x7f0300ee
-			public const int p223 = 2130903278;
+			public const int p224 = 2130903278;
 			
 			// aapt resource value: 0x7f0300ef
-			public const int p224 = 2130903279;
+			public const int p225 = 2130903279;
 			
 			// aapt resource value: 0x7f0300f0
-			public const int p225 = 2130903280;
+			public const int p226 = 2130903280;
 			
 			// aapt resource value: 0x7f0300f1
-			public const int p226 = 2130903281;
+			public const int p227 = 2130903281;
 			
 			// aapt resource value: 0x7f0300f2
-			public const int p227 = 2130903282;
+			public const int p228 = 2130903282;
 			
 			// aapt resource value: 0x7f0300f3
-			public const int p228 = 2130903283;
+			public const int p229 = 2130903283;
 			
 			// aapt resource value: 0x7f0300f4
-			public const int p229 = 2130903284;
+			public const int p230 = 2130903284;
 			
 			// aapt resource value: 0x7f0300f5
-			public const int p230 = 2130903285;
+			public const int p231 = 2130903285;
 			
 			// aapt resource value: 0x7f0300f6
-			public const int p231 = 2130903286;
+			public const int p232 = 2130903286;
 			
 			// aapt resource value: 0x7f0300f7
-			public const int p232 = 2130903287;
+			public const int p233 = 2130903287;
 			
 			// aapt resource value: 0x7f0300f8
-			public const int p233 = 2130903288;
+			public const int p234 = 2130903288;
 			
 			// aapt resource value: 0x7f0300f9
-			public const int p234 = 2130903289;
+			public const int p235 = 2130903289;
 			
 			// aapt resource value: 0x7f0300fa
-			public const int p235 = 2130903290;
+			public const int p236 = 2130903290;
 			
 			// aapt resource value: 0x7f0300fb
-			public const int p236 = 2130903291;
+			public const int p237 = 2130903291;
 			
 			// aapt resource value: 0x7f0300fc
-			public const int p237 = 2130903292;
+			public const int p238 = 2130903292;
 			
 			// aapt resource value: 0x7f0300fd
-			public const int p238 = 2130903293;
+			public const int p239 = 2130903293;
 			
 			// aapt resource value: 0x7f0300fe
-			public const int p239 = 2130903294;
+			public const int p240 = 2130903294;
 			
 			// aapt resource value: 0x7f0300ff
-			public const int p240 = 2130903295;
+			public const int p241 = 2130903295;
 			
 			// aapt resource value: 0x7f030100
-			public const int p241 = 2130903296;
+			public const int p242 = 2130903296;
 			
 			// aapt resource value: 0x7f030101
-			public const int p242 = 2130903297;
+			public const int p243 = 2130903297;
 			
 			// aapt resource value: 0x7f030102
-			public const int p243 = 2130903298;
+			public const int p244 = 2130903298;
 			
 			// aapt resource value: 0x7f030103
-			public const int p244 = 2130903299;
+			public const int p245 = 2130903299;
 			
 			// aapt resource value: 0x7f030104
-			public const int p245 = 2130903300;
+			public const int p246 = 2130903300;
 			
 			// aapt resource value: 0x7f030105
-			public const int p246 = 2130903301;
+			public const int p247 = 2130903301;
 			
 			// aapt resource value: 0x7f030106
-			public const int p247 = 2130903302;
+			public const int p248 = 2130903302;
 			
 			// aapt resource value: 0x7f030107
-			public const int p248 = 2130903303;
+			public const int p249 = 2130903303;
 			
 			// aapt resource value: 0x7f030108
-			public const int p249 = 2130903304;
+			public const int p250 = 2130903304;
 			
 			// aapt resource value: 0x7f030109
-			public const int p250 = 2130903305;
+			public const int p251 = 2130903305;
 			
 			// aapt resource value: 0x7f03010a
-			public const int p251 = 2130903306;
+			public const int p252 = 2130903306;
 			
 			// aapt resource value: 0x7f03010b
-			public const int p252 = 2130903307;
+			public const int p253 = 2130903307;
 			
 			// aapt resource value: 0x7f03010c
-			public const int p253 = 2130903308;
+			public const int p254 = 2130903308;
 			
 			// aapt resource value: 0x7f03010d
-			public const int p254 = 2130903309;
+			public const int p255 = 2130903309;
 			
 			// aapt resource value: 0x7f03010e
-			public const int p255 = 2130903310;
+			public const int p256 = 2130903310;
 			
 			// aapt resource value: 0x7f03010f
-			public const int p256 = 2130903311;
+			public const int p257 = 2130903311;
 			
 			// aapt resource value: 0x7f030110
-			public const int p257 = 2130903312;
+			public const int p258 = 2130903312;
 			
 			// aapt resource value: 0x7f030111
-			public const int p258 = 2130903313;
+			public const int p259 = 2130903313;
 			
 			// aapt resource value: 0x7f030112
-			public const int p259 = 2130903314;
+			public const int p260 = 2130903314;
 			
 			// aapt resource value: 0x7f030113
-			public const int p260 = 2130903315;
+			public const int p261 = 2130903315;
 			
 			// aapt resource value: 0x7f030114
-			public const int p261 = 2130903316;
+			public const int p262 = 2130903316;
 			
 			// aapt resource value: 0x7f030115
-			public const int p262 = 2130903317;
+			public const int p263 = 2130903317;
 			
 			// aapt resource value: 0x7f030116
-			public const int p263 = 2130903318;
+			public const int p264 = 2130903318;
 			
 			// aapt resource value: 0x7f030117
-			public const int p264 = 2130903319;
+			public const int p265 = 2130903319;
 			
 			// aapt resource value: 0x7f030118
-			public const int p265 = 2130903320;
+			public const int p266 = 2130903320;
 			
 			// aapt resource value: 0x7f030119
-			public const int p266 = 2130903321;
+			public const int p267 = 2130903321;
 			
 			// aapt resource value: 0x7f03011a
-			public const int p267 = 2130903322;
+			public const int p268 = 2130903322;
 			
 			// aapt resource value: 0x7f03011b
-			public const int p268 = 2130903323;
+			public const int p269 = 2130903323;
 			
 			// aapt resource value: 0x7f03011c
-			public const int p269 = 2130903324;
+			public const int p270 = 2130903324;
 			
 			// aapt resource value: 0x7f03011d
-			public const int p270 = 2130903325;
+			public const int p271 = 2130903325;
 			
 			// aapt resource value: 0x7f03011e
-			public const int p271 = 2130903326;
+			public const int p272 = 2130903326;
 			
 			// aapt resource value: 0x7f03011f
-			public const int p272 = 2130903327;
+			public const int p273 = 2130903327;
 			
 			// aapt resource value: 0x7f030120
-			public const int p273 = 2130903328;
+			public const int p274 = 2130903328;
 			
 			// aapt resource value: 0x7f030121
-			public const int p274 = 2130903329;
+			public const int p275 = 2130903329;
 			
 			// aapt resource value: 0x7f030122
-			public const int p275 = 2130903330;
+			public const int p276 = 2130903330;
 			
 			// aapt resource value: 0x7f030123
-			public const int p276 = 2130903331;
+			public const int p277 = 2130903331;
 			
 			// aapt resource value: 0x7f030124
-			public const int p277 = 2130903332;
+			public const int p278 = 2130903332;
 			
 			// aapt resource value: 0x7f030125
-			public const int p278 = 2130903333;
+			public const int p279 = 2130903333;
 			
 			// aapt resource value: 0x7f030126
-			public const int p279 = 2130903334;
+			public const int p280 = 2130903334;
 			
 			// aapt resource value: 0x7f030127
-			public const int p280 = 2130903335;
+			public const int p281 = 2130903335;
 			
 			// aapt resource value: 0x7f030128
-			public const int p281 = 2130903336;
+			public const int p282 = 2130903336;
 			
 			// aapt resource value: 0x7f030129
-			public const int p282 = 2130903337;
+			public const int p283 = 2130903337;
 			
 			// aapt resource value: 0x7f03012a
-			public const int p283 = 2130903338;
+			public const int p284 = 2130903338;
 			
 			// aapt resource value: 0x7f03012b
-			public const int p284 = 2130903339;
+			public const int p285 = 2130903339;
 			
 			// aapt resource value: 0x7f03012c
-			public const int p285 = 2130903340;
+			public const int p286 = 2130903340;
 			
 			// aapt resource value: 0x7f03012d
-			public const int p286 = 2130903341;
+			public const int p287 = 2130903341;
 			
 			// aapt resource value: 0x7f03012e
-			public const int p287 = 2130903342;
+			public const int p288 = 2130903342;
 			
 			// aapt resource value: 0x7f03012f
-			public const int p288 = 2130903343;
+			public const int p289 = 2130903343;
 			
 			// aapt resource value: 0x7f030130
-			public const int p289 = 2130903344;
+			public const int p290 = 2130903344;
 			
 			// aapt resource value: 0x7f030131
-			public const int p290 = 2130903345;
+			public const int p291 = 2130903345;
 			
 			// aapt resource value: 0x7f030132
-			public const int p291 = 2130903346;
+			public const int p292 = 2130903346;
 			
 			// aapt resource value: 0x7f030133
-			public const int p292 = 2130903347;
+			public const int p293 = 2130903347;
 			
 			// aapt resource value: 0x7f030134
-			public const int p293 = 2130903348;
+			public const int p294 = 2130903348;
 			
 			// aapt resource value: 0x7f030135
-			public const int p294 = 2130903349;
+			public const int p295 = 2130903349;
 			
 			// aapt resource value: 0x7f030136
-			public const int p295 = 2130903350;
+			public const int p296 = 2130903350;
 			
 			// aapt resource value: 0x7f030137
-			public const int p296 = 2130903351;
+			public const int p297 = 2130903351;
 			
 			// aapt resource value: 0x7f030138
-			public const int p297 = 2130903352;
+			public const int p298 = 2130903352;
 			
 			// aapt resource value: 0x7f030139
-			public const int p298 = 2130903353;
+			public const int p299 = 2130903353;
 			
 			// aapt resource value: 0x7f03013a
-			public const int p299 = 2130903354;
+			public const int p300 = 2130903354;
 			
 			// aapt resource value: 0x7f03013b
-			public const int p300 = 2130903355;
+			public const int p301 = 2130903355;
 			
 			// aapt resource value: 0x7f03013c
-			public const int p301 = 2130903356;
+			public const int p302 = 2130903356;
 			
 			// aapt resource value: 0x7f03013d
-			public const int p302 = 2130903357;
+			public const int p303 = 2130903357;
 			
 			// aapt resource value: 0x7f03013e
-			public const int p303 = 2130903358;
+			public const int p304 = 2130903358;
 			
 			// aapt resource value: 0x7f03013f
-			public const int p304 = 2130903359;
+			public const int p305 = 2130903359;
 			
 			// aapt resource value: 0x7f030140
-			public const int p305 = 2130903360;
+			public const int p306 = 2130903360;
 			
 			// aapt resource value: 0x7f030141
-			public const int p306 = 2130903361;
+			public const int p307 = 2130903361;
 			
 			// aapt resource value: 0x7f030142
-			public const int p307 = 2130903362;
+			public const int p308 = 2130903362;
 			
 			// aapt resource value: 0x7f030143
-			public const int p308 = 2130903363;
+			public const int p309 = 2130903363;
 			
 			// aapt resource value: 0x7f030144
-			public const int p309 = 2130903364;
+			public const int p310 = 2130903364;
 			
 			// aapt resource value: 0x7f030145
-			public const int p310 = 2130903365;
+			public const int p311 = 2130903365;
 			
 			// aapt resource value: 0x7f030146
-			public const int p311 = 2130903366;
+			public const int p312 = 2130903366;
 			
 			// aapt resource value: 0x7f030147
-			public const int p312 = 2130903367;
+			public const int p313 = 2130903367;
 			
 			// aapt resource value: 0x7f030148
-			public const int p313 = 2130903368;
+			public const int p314 = 2130903368;
 			
 			// aapt resource value: 0x7f030149
-			public const int p314 = 2130903369;
+			public const int p315 = 2130903369;
 			
 			// aapt resource value: 0x7f03014a
-			public const int p315 = 2130903370;
+			public const int p316 = 2130903370;
 			
 			// aapt resource value: 0x7f03014b
-			public const int p316 = 2130903371;
+			public const int p317 = 2130903371;
 			
 			// aapt resource value: 0x7f03014c
-			public const int p317 = 2130903372;
+			public const int p318 = 2130903372;
 			
 			// aapt resource value: 0x7f03014d
-			public const int p318 = 2130903373;
+			public const int p319 = 2130903373;
 			
 			// aapt resource value: 0x7f03014e
-			public const int p319 = 2130903374;
+			public const int p320 = 2130903374;
 			
 			// aapt resource value: 0x7f03014f
-			public const int p320 = 2130903375;
+			public const int p321 = 2130903375;
 			
 			// aapt resource value: 0x7f030150
-			public const int p321 = 2130903376;
+			public const int p322 = 2130903376;
 			
 			// aapt resource value: 0x7f030151
-			public const int p322 = 2130903377;
+			public const int p323 = 2130903377;
 			
 			// aapt resource value: 0x7f030152
-			public const int p323 = 2130903378;
+			public const int p324 = 2130903378;
 			
 			// aapt resource value: 0x7f030153
-			public const int p324 = 2130903379;
+			public const int p325 = 2130903379;
 			
 			// aapt resource value: 0x7f030154
-			public const int p325 = 2130903380;
+			public const int p326 = 2130903380;
 			
 			// aapt resource value: 0x7f030155
-			public const int p326 = 2130903381;
+			public const int p327 = 2130903381;
 			
 			// aapt resource value: 0x7f030156
-			public const int p327 = 2130903382;
+			public const int p328 = 2130903382;
 			
 			// aapt resource value: 0x7f030157
-			public const int p328 = 2130903383;
+			public const int p329 = 2130903383;
 			
 			// aapt resource value: 0x7f030158
-			public const int p329 = 2130903384;
+			public const int p330 = 2130903384;
 			
 			// aapt resource value: 0x7f030159
-			public const int p330 = 2130903385;
+			public const int p331 = 2130903385;
 			
 			// aapt resource value: 0x7f03015a
-			public const int p331 = 2130903386;
+			public const int p332 = 2130903386;
 			
 			// aapt resource value: 0x7f03015b
-			public const int p332 = 2130903387;
+			public const int p333 = 2130903387;
 			
 			// aapt resource value: 0x7f03015c
-			public const int p333 = 2130903388;
+			public const int p334 = 2130903388;
 			
 			// aapt resource value: 0x7f03015d
-			public const int p334 = 2130903389;
+			public const int p335 = 2130903389;
 			
 			// aapt resource value: 0x7f03015e
-			public const int p335 = 2130903390;
+			public const int p336 = 2130903390;
 			
 			// aapt resource value: 0x7f03015f
-			public const int p336 = 2130903391;
+			public const int p337 = 2130903391;
 			
 			// aapt resource value: 0x7f030160
-			public const int p337 = 2130903392;
+			public const int p338 = 2130903392;
 			
 			// aapt resource value: 0x7f030161
-			public const int p338 = 2130903393;
+			public const int p339 = 2130903393;
 			
 			// aapt resource value: 0x7f030162
-			public const int p339 = 2130903394;
+			public const int p340 = 2130903394;
 			
 			// aapt resource value: 0x7f030163
-			public const int p340 = 2130903395;
+			public const int p341 = 2130903395;
 			
 			// aapt resource value: 0x7f030164
-			public const int p341 = 2130903396;
+			public const int p342 = 2130903396;
 			
 			// aapt resource value: 0x7f030165
-			public const int p342 = 2130903397;
+			public const int p343 = 2130903397;
 			
 			// aapt resource value: 0x7f030166
-			public const int p343 = 2130903398;
+			public const int p344 = 2130903398;
 			
 			// aapt resource value: 0x7f030167
-			public const int p344 = 2130903399;
+			public const int p345 = 2130903399;
 			
 			// aapt resource value: 0x7f030168
-			public const int p345 = 2130903400;
+			public const int p346 = 2130903400;
 			
 			// aapt resource value: 0x7f030169
-			public const int p346 = 2130903401;
+			public const int p347 = 2130903401;
 			
 			// aapt resource value: 0x7f03016a
-			public const int p347 = 2130903402;
+			public const int p348 = 2130903402;
 			
 			// aapt resource value: 0x7f03016b
-			public const int p348 = 2130903403;
+			public const int p349 = 2130903403;
 			
 			// aapt resource value: 0x7f03016c
-			public const int p349 = 2130903404;
+			public const int p350 = 2130903404;
 			
 			// aapt resource value: 0x7f03016d
-			public const int p350 = 2130903405;
+			public const int p351 = 2130903405;
 			
 			// aapt resource value: 0x7f03016e
-			public const int p351 = 2130903406;
+			public const int p352 = 2130903406;
 			
 			// aapt resource value: 0x7f03016f
-			public const int p352 = 2130903407;
+			public const int p353 = 2130903407;
 			
 			// aapt resource value: 0x7f030170
-			public const int p353 = 2130903408;
+			public const int p354 = 2130903408;
 			
 			// aapt resource value: 0x7f030171
-			public const int p354 = 2130903409;
+			public const int p355 = 2130903409;
 			
 			// aapt resource value: 0x7f030172
-			public const int p355 = 2130903410;
+			public const int p356 = 2130903410;
 			
 			// aapt resource value: 0x7f030173
-			public const int p356 = 2130903411;
+			public const int p357 = 2130903411;
 			
 			// aapt resource value: 0x7f030174
-			public const int p357 = 2130903412;
+			public const int p358 = 2130903412;
 			
 			// aapt resource value: 0x7f030175
-			public const int p358 = 2130903413;
+			public const int p359 = 2130903413;
 			
 			// aapt resource value: 0x7f030176
-			public const int p359 = 2130903414;
+			public const int p360 = 2130903414;
 			
 			// aapt resource value: 0x7f030177
-			public const int p360 = 2130903415;
+			public const int p361 = 2130903415;
 			
 			// aapt resource value: 0x7f030178
-			public const int p361 = 2130903416;
+			public const int p362 = 2130903416;
 			
 			// aapt resource value: 0x7f030179
-			public const int p362 = 2130903417;
+			public const int p363 = 2130903417;
 			
 			// aapt resource value: 0x7f03017a
-			public const int p363 = 2130903418;
+			public const int p364 = 2130903418;
 			
 			// aapt resource value: 0x7f03017b
-			public const int p364 = 2130903419;
+			public const int p365 = 2130903419;
 			
 			// aapt resource value: 0x7f03017c
-			public const int p365 = 2130903420;
+			public const int p366 = 2130903420;
 			
 			// aapt resource value: 0x7f03017d
-			public const int p366 = 2130903421;
+			public const int p367 = 2130903421;
 			
 			// aapt resource value: 0x7f03017e
-			public const int p367 = 2130903422;
+			public const int p368 = 2130903422;
 			
 			// aapt resource value: 0x7f03017f
-			public const int p368 = 2130903423;
+			public const int p369 = 2130903423;
 			
 			// aapt resource value: 0x7f030180
-			public const int p369 = 2130903424;
+			public const int p370 = 2130903424;
 			
 			// aapt resource value: 0x7f030181
-			public const int p370 = 2130903425;
+			public const int p371 = 2130903425;
 			
 			// aapt resource value: 0x7f030182
-			public const int p371 = 2130903426;
+			public const int p372 = 2130903426;
 			
 			// aapt resource value: 0x7f030183
-			public const int p372 = 2130903427;
+			public const int p373 = 2130903427;
 			
 			// aapt resource value: 0x7f030184
-			public const int p373 = 2130903428;
+			public const int p374 = 2130903428;
 			
 			// aapt resource value: 0x7f030185
-			public const int p374 = 2130903429;
+			public const int p375 = 2130903429;
 			
 			// aapt resource value: 0x7f030186
-			public const int p375 = 2130903430;
+			public const int p376 = 2130903430;
 			
 			// aapt resource value: 0x7f030187
-			public const int p376 = 2130903431;
+			public const int p377 = 2130903431;
 			
 			// aapt resource value: 0x7f030188
-			public const int p377 = 2130903432;
+			public const int p378 = 2130903432;
 			
 			// aapt resource value: 0x7f030189
-			public const int p378 = 2130903433;
+			public const int p379 = 2130903433;
 			
 			// aapt resource value: 0x7f03018a
-			public const int p379 = 2130903434;
+			public const int p380 = 2130903434;
 			
 			// aapt resource value: 0x7f03018b
-			public const int p380 = 2130903435;
+			public const int p381 = 2130903435;
 			
 			// aapt resource value: 0x7f03018c
-			public const int p381 = 2130903436;
+			public const int p382 = 2130903436;
 			
 			// aapt resource value: 0x7f03018d
-			public const int p382 = 2130903437;
+			public const int p383 = 2130903437;
 			
 			// aapt resource value: 0x7f03018e
-			public const int p383 = 2130903438;
-			
-			// aapt resource value: 0x7f03018f
-			public const int valor = 2130903439;
+			public const int valor = 2130903438;
 			
 			static Mipmap()
 			{

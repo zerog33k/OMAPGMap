@@ -50,13 +50,10 @@ namespace OMAPGMap.Droid
 
         public static int NumPokes = ServiceLayer.NumberPokemon;
         private int[] pokeResourceMap = new int[NumPokes+1];
-        private List<Pokemon> PokesOnMap = new List<Pokemon>();
         private List<Pokemon> PokesVisible = new List<Pokemon>();
 
-        private List<Gym> gymsOnMap = new List<Gym>();
-        private List<Gym> gymssVisible = new List<Gym>();
+        private List<Gym> gymsVisible = new List<Gym>();
 
-        private List<Raid> raidsOnMap = new List<Raid>();
         private List<Raid> raidsVisible = new List<Raid>();
 
         private ListView settingsListview;
@@ -183,11 +180,11 @@ namespace OMAPGMap.Droid
             List<Raid> toRemove = new List<Raid>();
             if (reload)
             {
-                toRemove.AddRange(raidsOnMap);
+                toRemove.AddRange(raidsVisible);
             }
             else
             {
-                toRemove.AddRange(raidsOnMap.Where((Raid rd) =>
+                toRemove.AddRange(raidsVisible.Where((Raid rd) =>
                 {
                     if (!bounds.Contains(rd.Location))
                     {
@@ -209,12 +206,12 @@ namespace OMAPGMap.Droid
             {
                 r.RaidMarker.Remove();
                 r.RaidMarker = null;
-                raidsOnMap.Remove(r);
+                raidsVisible.Remove(r);
             }
             List<Raid> toAdd = new List<Raid>();
             if (settings.RaidsEnabled)
             {
-                toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsOnMap));
+                toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsVisible));
             }
             foreach (var r in toAdd)
             {
@@ -230,22 +227,22 @@ namespace OMAPGMap.Droid
             List<Gym> toRemove = new List<Gym>();
             if (reload)
             {
-                toRemove.AddRange(gymsOnMap);
+                toRemove.AddRange(gymsVisible);
             }
             else
             {
-                toRemove.AddRange(gymsOnMap.Where(p => !bounds.Contains(p.Location)));
+                toRemove.AddRange(gymsVisible.Where(p => !bounds.Contains(p.Location)));
             }
             foreach (var g in toRemove)
             {
                 g.GymMarker.Remove();
                 g.GymMarker = null;
-                gymsOnMap.Remove(g);
+                gymsVisible.Remove(g);
             }
             List<Gym> toAdd = new List<Gym>();
             if (settings.GymsEnabled)
             {
-                toAdd.AddRange(ServiceLayer.SharedInstance.Gyms.Values.Where(g => bounds.Contains(g.Location)).Except(gymsOnMap));
+                toAdd.AddRange(ServiceLayer.SharedInstance.Gyms.Values.Where(g => bounds.Contains(g.Location)).Except(gymsVisible));
             }
             foreach(var g in toAdd)
             {
@@ -260,10 +257,10 @@ namespace OMAPGMap.Droid
             List<Pokemon> toRemove = new List<Pokemon>();
             if(reload)
             {
-                toRemove.AddRange(PokesOnMap);
+                toRemove.AddRange(PokesVisible);
             } else 
             {
-                toRemove.AddRange(PokesOnMap.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow));
+                toRemove.AddRange(PokesVisible.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow));
             }
             foreach (var p in toRemove)
             {
@@ -272,16 +269,16 @@ namespace OMAPGMap.Droid
                     p.PokeMarker.Remove();
                     p.PokeMarker = null;
                 }
-                PokesOnMap.Remove(p);
+                PokesVisible.Remove(p);
             }
             List<Pokemon> toAdd = new List<Pokemon>();
             if (settings.NinetyOnlyEnabled)
             {
-                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Where(p => p.iv > 0.9).Except(PokesOnMap));
+                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => p.iv > 0.9).Except(PokesVisible));
             }
             if(settings.PokemonEnabled)
             {
-                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(PokesOnMap));
+                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(PokesVisible));
             }
 
             var visible = toAdd.Where(p => bounds.Contains(p.Location));
@@ -289,10 +286,9 @@ namespace OMAPGMap.Droid
             {
                 AddPokemonMarker(p);
             }
-            PokesVisible.AddRange(toAdd.Except(visible));
-            Console.WriteLine($"Adding {visible.Count()} mons to the map");
+            Console.WriteLine($"Adding {visible.Count()} mons to the map - total of {PokesVisible.Count()} on map");
             var now = DateTime.UtcNow;
-            foreach(var p in PokesOnMap)
+            foreach(var p in PokesVisible)
             {
                 var diff = p.ExpiresDate - now;
                 if (diff.Minutes < 1)
@@ -308,14 +304,21 @@ namespace OMAPGMap.Droid
             var mOps = new MarkerOptions();
             mOps.SetPosition(p.Location);
 
-            mOps.SetIcon(BitmapDescriptorFactory.FromBitmap(GetPokemonMarker(p)));
+            if (PokesVisible.Count() < 100)
+            {
+                mOps.SetIcon(BitmapDescriptorFactory.FromBitmap(GetPokemonMarker(p)));
+            } else 
+            {
+                var img = BitmapDescriptorFactory.FromResource(pokeResourceMap[p.pokemon_id]);
+                mOps.SetIcon(img);
+            }
             mOps.Anchor(0.5f, 0.5f);
             var marker = map.AddMarker(mOps);
             marker.Tag = $"poke:{p.id}";
             if (marker != null)
             {
                 p.PokeMarker = marker;
-                PokesOnMap.Add(p);
+                PokesVisible.Add(p);
             }
         }
 
@@ -345,7 +348,7 @@ namespace OMAPGMap.Droid
             var marker = map.AddMarker(mOps);
             marker.Tag = $"gym:{g.id}";
             g.GymMarker = marker;
-            gymsOnMap.Add(g);
+            gymsVisible.Add(g);
         }
 
         private void AddRaidMarker(Raid r)
@@ -358,7 +361,7 @@ namespace OMAPGMap.Droid
             var marker = map.AddMarker(mOps);
             marker.Tag = $"raid:{r.id}";
             r.RaidMarker = marker;
-            raidsOnMap.Add(r);
+            raidsVisible.Add(r);
         }
         public void OnMapReady(GoogleMap mapp)
         {
@@ -568,7 +571,11 @@ namespace OMAPGMap.Droid
                 var move2Label = pokemonInfo.FindViewById(Resource.Id.info_move2) as TextView;
                 var ivLabel = pokemonInfo.FindViewById(Resource.Id.info_iv) as TextView;
                 var cpLabel = pokemonInfo.FindViewById(Resource.Id.info_cp_level) as TextView;
-                var poke = ServiceLayer.SharedInstance.Pokemon.Where(p => p.id == id).FirstOrDefault();
+                var poke = ServiceLayer.SharedInstance.Pokemon[id];
+                if(poke == null)
+                {
+                    return null;
+                }
                 var infoTitle = $"{poke.name} ({poke.gender}) - #{poke.pokemon_id}";
                 if (!string.IsNullOrEmpty(poke.move1))
                 {
@@ -647,7 +654,7 @@ namespace OMAPGMap.Droid
                 var markerTag = currentMarker.Tag.ToString().Split(':');
                 var t = markerTag[0];
                 var id = markerTag[1];
-                var poke = ServiceLayer.SharedInstance.Pokemon.Where(p => p.id == id).FirstOrDefault();
+                var poke = ServiceLayer.SharedInstance.Pokemon[id];
                 settings.PokemonTrash.Add(poke.pokemon_id);
                 currentMarker.HideInfoWindow();
                 await ServiceLayer.SharedInstance.SaveSettings();
@@ -739,7 +746,7 @@ namespace OMAPGMap.Droid
             var id = markerTag[1];
             if (t == "poke")
             {
-                var poke = ServiceLayer.SharedInstance.Pokemon.Where(p => p.id == id).FirstOrDefault();
+                var poke = ServiceLayer.SharedInstance.Pokemon[id];
                 marker.HideInfoWindow();
                 if (settings.PokemonTrash.Where(p => p == poke.pokemon_id).Count() == 0)
                 {
