@@ -494,19 +494,19 @@ namespace OMAPGMap.iOS
                 } else if(path.Section == 1 && path.Row == 2)
                 {
                     settings.Notify100Enabled = toggle.On;
-                }else if (path.Section == 3 && path.Row == 0)
+                }else if (path.Section == 2 && path.Row == 0)
                 {
                     settings.LegondaryRaids = toggle.On;
-                } else if (path.Section == 3 && path.Row == 1)
+                } else if (path.Section == 2 && path.Row == 1)
                 {
                     settings.Level4Raids = toggle.On;
-                } else if (path.Section == 3 && path.Row == 3)
+                } else if (path.Section == 2 && path.Row == 2)
                 {
                     settings.Level3Raids = toggle.On;
-                } else if (path.Section == 3 && path.Row == 4)
+                } else if (path.Section == 2 && path.Row == 3)
                 {
                     settings.Level2Raids = toggle.On;
-                } else if (path.Section == 3 && path.Row == 5)
+                } else if (path.Section == 2 && path.Row == 4)
                 {
                     settings.Level1Raids = toggle.On;
                 }

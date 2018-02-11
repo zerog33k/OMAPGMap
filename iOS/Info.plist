@@ -78,7 +78,7 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To let you know when Pokémon are near you!</string>
 	<key>CFBundleVersion</key>
-	<string>88</string>
+	<string>89</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<string>NO</string>
 </dict>
