@@ -44,7 +44,7 @@ namespace OMAPGMap
         public List<Raid> Raids = new List<Raid>();
         //pokemon, gyms, raids, trash
 
-        public static int NumberPokemon = 383;
+        public static int NumberPokemon = 384;
 
         private Coordinates _userLocation;
         public Coordinates UserLocation

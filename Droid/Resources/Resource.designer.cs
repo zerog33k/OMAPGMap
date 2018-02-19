@@ -4822,7 +4822,10 @@ namespace OMAPGMap.Droid
 			public const int p383 = 2130903438;
 			
 			// aapt resource value: 0x7f03018f
-			public const int valor = 2130903439;
+			public const int p384 = 2130903439;
+			
+			// aapt resource value: 0x7f030190
+			public const int valor = 2130903440;
 			
 			static Mipmap()
 			{
