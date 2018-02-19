@@ -29,7 +29,7 @@ using static Android.Gms.Maps.GoogleMap;
 
 namespace OMAPGMap.Droid
 {
-    [Activity(Label = "OMA PGMap", MainLauncher = true, Icon = "@mipmap/ic_launcher", WindowSoftInputMode = SoftInput.AdjustResize, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "OMA PGMap", MainLauncher = true, Icon = "@mipmap/ic_launcher", WindowSoftInputMode = SoftInput.AdjustResize, LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : AppCompatActivity, IOnMapReadyCallback, IInfoWindowAdapter
     {
         MapFragment _mapFragment = null;
@@ -43,10 +43,8 @@ namespace OMAPGMap.Droid
         private bool centeredMap = false;
         private EditText username;
         private EditText password;
-        private CardView loginHolder;
-        private  ISharedPreferences prefs;
         private CardView settingsHolder;
-        private TextView loginMessage;
+        private CardView loginHolder;
 
         public static int NumPokes = ServiceLayer.NumberPokemon;
         private int[] pokeResourceMap = new int[NumPokes+1];
@@ -63,6 +61,7 @@ namespace OMAPGMap.Droid
         private UserSettings settings => ServiceLayer.SharedInstance.Settings;
 
         private Location userLocation;
+        private SaveState currState = null;
 
         readonly string[] PermissionsLocation =
         {
@@ -73,32 +72,64 @@ namespace OMAPGMap.Droid
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            Console.WriteLine("OnCreate Called");
             Window.RequestFeature(WindowFeatures.NoTitle);
             AppCenter.Start("7ac229ee-9940-46b8-becc-d2611c48b2ad", typeof(Analytics), typeof(Crashes));
 
-            prefs = PreferenceManager.GetDefaultSharedPreferences(this);
-            await ServiceLayer.SharedInstance.InitalizeSettings();
-
-            // Set our view from the "main" layout resource
+            currState = LastCustomNonConfigurationInstance as SaveState;
             SetContentView(Resource.Layout.Main);
 
-            for (int i = 1; i <= NumPokes; i++)
+
+            if (currState == null)
             {
-                try
+                await ServiceLayer.SharedInstance.InitalizeSettings();
+                for (int i = 1; i <= NumPokes; i++)
                 {
-                    pokeResourceMap[i] = (int)typeof(Resource.Mipmap).GetField($"p{i.ToString("d3")}").GetValue(null);
-                }catch(Exception e)
-                {
-                    Console.WriteLine($"poke {i} not found");
+                    try
+                    {
+                        pokeResourceMap[i] = (int)typeof(Resource.Mipmap).GetField($"p{i.ToString("d3")}").GetValue(null);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"poke {i} not found");
+                    }
                 }
+                Console.WriteLine("No saved state");
+            } else 
+            {
+                pokeResourceMap = currState.ResourceMap;
+                Console.WriteLine("saved state recalled");
             }
+
+            if(savedInstanceState != null && savedInstanceState.ContainsKey("centerLat") && currState == null)
+            {
+                var cLat = savedInstanceState.GetDouble("centerLat");
+                var cLon = savedInstanceState.GetDouble("centerLon");
+                var zoom = savedInstanceState.GetFloat("centerZoom");
+                currState = new SaveState()
+                {
+                    CurrentCenter = new LatLng(cLat, cLon),
+                    CurrentZoom = zoom
+                };
+            }
+
             _mapFragment = FragmentManager.FindFragmentByTag("map") as MapFragment;
             if (_mapFragment == null)
             {
+                CameraPosition startCam;
+                if (currState == null)
+                {
+                    startCam = new CameraPosition(mDefaultLocation, defaultZoom, 0.0f, 0.0f); //CameraUpdateFactory.NewLatLngZoom(mDefaultLocation, defaultZoom);
+                } else 
+                {
+                    startCam = new CameraPosition(currState.CurrentCenter, currState.CurrentZoom, 0.0f, 0.0f);
+                }
                 GoogleMapOptions mapOptions = new GoogleMapOptions()
                     .InvokeMapType(GoogleMap.MapTypeNormal)
                     .InvokeZoomControlsEnabled(false)
-                    .InvokeCompassEnabled(true);    
+                    .InvokeCompassEnabled(true)
+                    .InvokeRotateGesturesEnabled(false)
+                    .InvokeCamera(startCam);
 
                 Android.App.FragmentTransaction fragTx = FragmentManager.BeginTransaction();
                 _mapFragment = MapFragment.NewInstance(mapOptions);
@@ -108,18 +139,21 @@ namespace OMAPGMap.Droid
 
             loginHolder = FindViewById(Resource.Id.loginHolder) as CardView;
             username = FindViewById(Resource.Id.username) as EditText;
-            if(settings.LoggedIn)
+            if (settings.LoggedIn)
             {
                 loginHolder.Visibility = ViewStates.Gone;
                 _mapFragment.GetMapAsync(this);
                 var imm = GetSystemService(Context.InputMethodService) as InputMethodManager;
                 imm.HideSoftInputFromWindow(username.WindowToken, 0);
-                await LoadData();
+                if (currState == null)
+                {
+                    await LoadData();
+                }
                 secondTimer = new Timer(HandleTimerCallback, null, 5000, 5000);
                 minuteTimer = new Timer(RefreshMapData, null, 60000, 60000);
-            } else 
+            }
+            else
             {
-                
                 password = FindViewById(Resource.Id.password) as EditText;
                 username.RequestFocus();
                 _mapFragment.GetMapAsync(this);
@@ -137,6 +171,57 @@ namespace OMAPGMap.Droid
 
             settingsListview = FindViewById(Resource.Id.settingsListView) as ListView;
             settingsListview.Adapter = new SettingsAdaptor(this, pokeResourceMap);
+
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            Console.WriteLine("OnResume Called");
+            //await Initalize(false);
+        }
+
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            Console.WriteLine("activity paused");
+            if (minuteTimer != null)
+            {
+                minuteTimer.Dispose();
+                minuteTimer = null;
+                secondTimer.Dispose();
+                secondTimer = null;
+            }
+        }
+
+        public override Java.Lang.Object OnRetainCustomNonConfigurationInstance()
+        {
+            Console.WriteLine("state saved");
+            var currentSate = new SaveState()
+            {
+                Service = ServiceLayer.SharedInstance,
+                CurrentBounds = map.Projection.VisibleRegion.LatLngBounds,
+                CurrentCenter = map.CameraPosition.Target,
+                CurrentZoom = map.CameraPosition.Zoom,
+                ResourceMap = pokeResourceMap
+            };
+            return currentSate;
+        }
+
+        protected override void OnSaveInstanceState(Bundle outState)
+        {
+            base.OnSaveInstanceState(outState);
+            Console.WriteLine("instance state saved");
+            outState.PutDouble("centerLat", map.CameraPosition.Target.Latitude);
+            outState.PutDouble("centerLon", map.CameraPosition.Target.Longitude);
+            outState.PutFloat("centerZoom", map.CameraPosition.Zoom);
+        }
+
+        protected override void OnRestoreInstanceState(Bundle savedInstanceState)
+        {
+            base.OnRestoreInstanceState(savedInstanceState);
+
         }
 
         private void RefreshMapData(object state)
@@ -158,6 +243,8 @@ namespace OMAPGMap.Droid
             });
 
         }
+
+
 
         private async Task LoadData()
         {
@@ -366,8 +453,13 @@ namespace OMAPGMap.Droid
         public void OnMapReady(GoogleMap mapp)
         {
             map = mapp;
-            var camUpdate = CameraUpdateFactory.NewLatLngZoom(mDefaultLocation, defaultZoom);
-            map.MoveCamera(camUpdate);
+            if (currState != null) 
+            {
+                var camUpdate = CameraUpdateFactory.NewLatLngZoom(currState.CurrentCenter, currState.CurrentZoom);
+                map.MoveCamera(camUpdate);
+                centeredMap = true;
+                RefreshMapMarkers(true);
+            }
             DisplayUserLocation();
 
             map.MyLocationChange += (sender, e) => 
@@ -756,6 +848,15 @@ namespace OMAPGMap.Droid
                 await ServiceLayer.SharedInstance.SaveSettings();
             }
         }
+    }
+
+    class SaveState : Java.Lang.Object
+    {
+        public ServiceLayer Service { get; set; }
+        public LatLngBounds CurrentBounds { get; set; }
+        public LatLng CurrentCenter { get; set; }
+        public float CurrentZoom { get; set; }
+        public int[] ResourceMap { get; set; }
     }
 }
 
