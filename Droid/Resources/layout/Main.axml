@@ -104,7 +104,8 @@
             android:id="@+id/layerssButton"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
-            android:fadingEdge="vertical" />
+            android:fadingEdge="vertical"
+            android:background="#B3FFFFFF" />
         <ImageButton
             android:src="@mipmap/gear"
             android:layout_width="50dp"
@@ -112,6 +113,14 @@
             android:id="@+id/settingsButton"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
-            android:fadingEdge="vertical" />
+            android:fadingEdge="vertical"
+            android:background="#B3FFFFFF" />
     </LinearLayout>
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="bottom"
+        android:visibility="gone" />
 </FrameLayout>

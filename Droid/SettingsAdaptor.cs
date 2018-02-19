@@ -17,7 +17,7 @@ namespace OMAPGMap.Droid
 
         private int currentGen = 1;
 
-        private int numExtraRows = 5;
+        private int numExtraRows = 10;
 
         public override int this[int position] => position;
 
@@ -48,7 +48,48 @@ namespace OMAPGMap.Droid
             View view = convertView;
             var t = view?.Tag?.ToString();
 
-            if(position < 4)
+            if (position < 5)
+            {
+                Switch s;
+                if (view == null || t != "switchItem")
+                {
+                    view = context.LayoutInflater.Inflate(Resource.Layout.settings_switch_item, null);
+                    s = view.FindViewById(Resource.Id.settingSwitch) as Switch;
+                    s.CheckedChange += S_CheckedChange;
+                }
+                else
+                {
+                    s = view.FindViewById(Resource.Id.settingSwitch) as Switch;
+                }
+                s.Tag = position.ToString();
+                if(position != 4)
+                {
+                    s.Text = $"Level {position + 1} Raids:";
+                } else 
+                {
+                    s.Text = "Legendary Raids:";
+                }
+                switch (position)
+                {
+                    case 0:
+                        s.Checked = ServiceLayer.SharedInstance.Settings.Level1Raids;
+                        break;
+                    case 1:
+                        s.Checked = ServiceLayer.SharedInstance.Settings.Level2Raids;
+                        break;
+                    case 2:
+                        s.Checked = ServiceLayer.SharedInstance.Settings.Level3Raids;
+                        break;
+                    case 3:
+                        s.Checked = ServiceLayer.SharedInstance.Settings.Level4Raids;
+                        break;
+                    case 4:
+                        s.Checked = ServiceLayer.SharedInstance.Settings.LegondaryRaids;
+                        break;
+                }
+                return view;
+            }
+            else if(position < 9)
             {
                 Button b;
                 if(view == null || t != "buttonItem")
@@ -78,7 +119,7 @@ namespace OMAPGMap.Droid
                 }
                 return view;
             }
-            if (position == 4)
+            if (position == 9)
             {
                 if (view == null || t != "radioItem")
                 {
@@ -182,7 +223,7 @@ namespace OMAPGMap.Droid
             var row = int.Parse(button.Tag.ToString());
             switch(row)
             {
-                case 0: //hide everything
+                case 5: //hide everything
                     for (var i = 1; i <= MainActivity.NumPokes; i++)
                     {
                         if(!ServiceLayer.SharedInstance.Settings.PokemonTrash.Contains(i))
@@ -191,19 +232,43 @@ namespace OMAPGMap.Droid
                         }
                     }
                     break;
-                case 1: //reset hidden to default
+                case 6: //reset hidden to default
                     ServiceLayer.SharedInstance.Settings.ResetTrash();
                     break;
-                case 2: //save hidden
+                case 7: //save hidden
                     ServiceLayer.SharedInstance.Settings.SavedHiddenPokemon.Clear();
                     ServiceLayer.SharedInstance.Settings.SavedHiddenPokemon.AddRange(ServiceLayer.SharedInstance.Settings.PokemonTrash);
                     break;
-                case 3: //recall saved hidden
+                case 8: //recall saved hidden
                     ServiceLayer.SharedInstance.Settings.PokemonTrash.Clear();
                     ServiceLayer.SharedInstance.Settings.PokemonTrash.AddRange(ServiceLayer.SharedInstance.Settings.SavedHiddenPokemon);
                     break;
             }
             NotifyDataSetChanged();
+        }
+
+        void S_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        {
+            var sw = sender as Switch;
+            var row = int.Parse(sw.Tag.ToString());
+            switch (row)
+            {
+                case 0:
+                    ServiceLayer.SharedInstance.Settings.Level1Raids = sw.Checked;
+                    break;
+                case 1:
+                    ServiceLayer.SharedInstance.Settings.Level2Raids = sw.Checked;
+                    break;
+                case 2:
+                    ServiceLayer.SharedInstance.Settings.Level3Raids = sw.Checked;
+                    break;
+                case 3:
+                    ServiceLayer.SharedInstance.Settings.Level4Raids = sw.Checked;
+                    break;
+                case 4:
+                    ServiceLayer.SharedInstance.Settings.LegondaryRaids = sw.Checked;
+                    break;
+            }
         }
     }
 }

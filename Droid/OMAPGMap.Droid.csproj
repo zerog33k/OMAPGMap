@@ -636,6 +636,7 @@
     <AndroidResource Include="Resources\mipmap-xhdpi\p382.png" />
     <AndroidResource Include="Resources\mipmap-xhdpi\p383.png" />
     <AndroidResource Include="Resources\mipmap-xhdpi\p201.png" />
+    <AndroidResource Include="Resources\layout\settings_switch_item.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />

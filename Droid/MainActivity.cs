@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using MoreLinq;
 using System.Threading;
 using static Android.Gms.Maps.GoogleMap;
+using Android.Support.V4.Widget;
 
 namespace OMAPGMap.Droid
 {
@@ -62,6 +63,7 @@ namespace OMAPGMap.Droid
 
         private Location userLocation;
         private SaveState currState = null;
+        private ProgressBar progress = null;
 
         readonly string[] PermissionsLocation =
         {
@@ -114,6 +116,7 @@ namespace OMAPGMap.Droid
             }
 
             _mapFragment = FragmentManager.FindFragmentByTag("map") as MapFragment;
+            progress = FindViewById(Resource.Id.progressBar) as ProgressBar;
             if (_mapFragment == null)
             {
                 CameraPosition startCam;
@@ -169,6 +172,8 @@ namespace OMAPGMap.Droid
             var settingsDone = settingsHolder.FindViewById(Resource.Id.settingsDoneButton);
             settingsDone.Click += SettingsDone_Click;
 
+
+            progress.Indeterminate = true;
             settingsListview = FindViewById(Resource.Id.settingsListView) as ListView;
             settingsListview.Adapter = new SettingsAdaptor(this, pokeResourceMap);
 
@@ -228,10 +233,12 @@ namespace OMAPGMap.Droid
         {
             RunOnUiThread(async () =>
             {
+                progress.Visibility = ViewStates.Visible;
                 await ServiceLayer.SharedInstance.LoadData();
                 UpdateMapPokemon(false);
                 UpdateMapGyms(true);
                 UpdateMapRaids(true);
+                progress.Visibility = ViewStates.Gone;
             });
         }
 
@@ -299,6 +306,26 @@ namespace OMAPGMap.Droid
             if (settings.RaidsEnabled)
             {
                 toAdd.AddRange(ServiceLayer.SharedInstance.Raids.Where(r => bounds.Contains(r.Location)).Except(raidsVisible));
+            }
+            if(!settings.Level1Raids)
+            {
+                toAdd = toAdd.Where(r => r.level != 1).ToList();
+            }
+            if (!settings.Level2Raids)
+            {
+                toAdd = toAdd.Where(r => r.level != 2).ToList();
+            }
+            if (!settings.Level3Raids)
+            {
+                toAdd = toAdd.Where(r => r.level != 3).ToList();
+            }
+            if (!settings.Level4Raids)
+            {
+                toAdd = toAdd.Where(r => r.level != 4).ToList();
+            }
+            if (!settings.LegondaryRaids)
+            {
+                toAdd = toAdd.Where(r => r.level != 5).ToList();
             }
             foreach (var r in toAdd)
             {
@@ -479,7 +506,7 @@ namespace OMAPGMap.Droid
 
         void Map_CameraIdle(object sender, EventArgs e)
         {
-            RefreshMapData(false);
+            RefreshMapMarkers(false);
         }
 
         private void RequestLocation()

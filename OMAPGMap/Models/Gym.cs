@@ -45,7 +45,7 @@ namespace OMAPGMap.Models
 
 
 
-    public enum Team { Mystic = 1, Instinct = 2, Valor = 3, None = 0 }
+    public enum Team { Mystic = 1, Instinct = 3, Valor = 2, None = 0 }
 
 
 }
