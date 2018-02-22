@@ -157,7 +157,7 @@ namespace OMAPGMap.Droid
                     await LoadData();
                 } else if(lastUpdate < DateTime.UtcNow.AddSeconds(-20))
                 {
-                    await RefreshMapData(null)
+                    RefreshMapData(null);
                 }
 
             }
