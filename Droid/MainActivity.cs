@@ -64,6 +64,7 @@ namespace OMAPGMap.Droid
         private Location userLocation;
         private SaveState currState = null;
         private ProgressBar progress = null;
+        DateTime lastUpdate;
 
         readonly string[] PermissionsLocation =
         {
@@ -103,11 +104,14 @@ namespace OMAPGMap.Droid
                 Console.WriteLine("saved state recalled");
             }
 
+            lastUpdate = DateTime.UtcNow;
             if(savedInstanceState != null && savedInstanceState.ContainsKey("centerLat") && currState == null)
             {
                 var cLat = savedInstanceState.GetDouble("centerLat");
                 var cLon = savedInstanceState.GetDouble("centerLon");
                 var zoom = savedInstanceState.GetFloat("centerZoom");
+                var update = savedInstanceState.GetLong("lastUpdate");
+                lastUpdate = Utility.FromUnixTime(update);
                 currState = new SaveState()
                 {
                     CurrentCenter = new LatLng(cLat, cLon),
@@ -151,9 +155,11 @@ namespace OMAPGMap.Droid
                 if (currState == null)
                 {
                     await LoadData();
+                } else if(lastUpdate < DateTime.UtcNow.AddSeconds(-20))
+                {
+                    await RefreshMapData(null)
                 }
-                secondTimer = new Timer(HandleTimerCallback, null, 5000, 5000);
-                minuteTimer = new Timer(RefreshMapData, null, 60000, 60000);
+
             }
             else
             {
@@ -183,6 +189,11 @@ namespace OMAPGMap.Droid
         {
             base.OnResume();
             Console.WriteLine("OnResume Called");
+            if(settings.LoggedIn)
+            {
+                secondTimer = new Timer(HandleTimerCallback, null, 5000, 5000);
+                minuteTimer = new Timer(RefreshMapData, null, 60000, 60000);
+            }
             //await Initalize(false);
         }
 
@@ -221,6 +232,7 @@ namespace OMAPGMap.Droid
             outState.PutDouble("centerLat", map.CameraPosition.Target.Latitude);
             outState.PutDouble("centerLon", map.CameraPosition.Target.Longitude);
             outState.PutFloat("centerZoom", map.CameraPosition.Zoom);
+            outState.PutLong("lastUpdate", Utility.ToUnixTime(lastUpdate));
         }
 
         protected override void OnRestoreInstanceState(Bundle savedInstanceState)
@@ -239,6 +251,7 @@ namespace OMAPGMap.Droid
                 UpdateMapGyms(true);
                 UpdateMapRaids(true);
                 progress.Visibility = ViewStates.Gone;
+                lastUpdate = DateTime.UtcNow;
             });
         }
 
@@ -264,7 +277,7 @@ namespace OMAPGMap.Droid
 
             await ServiceLayer.SharedInstance.LoadData();
             progress.Dismiss();
-
+            lastUpdate = DateTime.UtcNow;
             RefreshMapMarkers(true);
         }
 
@@ -367,49 +380,57 @@ namespace OMAPGMap.Droid
 
         private void UpdateMapPokemon(bool reload)
         {
-            var bounds = map.Projection.VisibleRegion.LatLngBounds;
-            List<Pokemon> toRemove = new List<Pokemon>();
-            if(reload)
+            try
             {
-                toRemove.AddRange(PokesVisible);
-            } else 
-            {
-                toRemove.AddRange(PokesVisible.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow));
-            }
-            foreach (var p in toRemove)
-            {
-                if (p.PokeMarker != null)
+                var bounds = map.Projection.VisibleRegion.LatLngBounds;
+                List<Pokemon> toRemove = new List<Pokemon>();
+                if (reload)
                 {
-                    p.PokeMarker.Remove();
-                    p.PokeMarker = null;
+                    toRemove.AddRange(PokesVisible);
                 }
-                PokesVisible.Remove(p);
-            }
-            List<Pokemon> toAdd = new List<Pokemon>();
-            if (settings.NinetyOnlyEnabled)
+                else
+                {
+                    toRemove.AddRange(PokesVisible.Where(p => !bounds.Contains(p.Location) || p.ExpiresDate < DateTime.UtcNow));
+                }
+                foreach (var p in toRemove)
+                {
+                    if (p.PokeMarker != null)
+                    {
+                        p.PokeMarker.Remove();
+                        p.PokeMarker = null;
+                    }
+                    PokesVisible.Remove(p);
+                }
+                List<Pokemon> toAdd = new List<Pokemon>();
+                if (settings.NinetyOnlyEnabled)
+                {
+                    toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => p.iv > 0.9).Except(PokesVisible));
+                }
+                if (settings.PokemonEnabled)
+                {
+                    toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(PokesVisible));
+                }
+
+                var visible = toAdd.Where(p => bounds.Contains(p.Location)).Where(p => p.ExpiresDate > DateTime.UtcNow);
+                foreach (var p in visible)
+                {
+                    AddPokemonMarker(p);
+                }
+                Console.WriteLine($"Adding {visible.Count()} mons to the map - total of {PokesVisible.Count()} on map");
+                var now = DateTime.UtcNow;
+                foreach (var p in PokesVisible)
+                {
+                    var diff = p.ExpiresDate - now;
+                    if (diff.Minutes < 1)
+                    {
+                        p.PokeMarker.Alpha = diff.Seconds / 60.0f;
+                    }
+                }
+            } catch(Exception e)
             {
-                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => p.iv > 0.9).Except(PokesVisible));
-            }
-            if(settings.PokemonEnabled)
-            {
-                toAdd.AddRange(ServiceLayer.SharedInstance.Pokemon.Values.Where(p => !settings.PokemonTrash.Contains(p.pokemon_id)).Except(PokesVisible));
+                Console.WriteLine($"Exception: {e.ToString()}");
             }
 
-            var visible = toAdd.Where(p => bounds.Contains(p.Location));
-            foreach (var p in visible)
-            {
-                AddPokemonMarker(p);
-            }
-            Console.WriteLine($"Adding {visible.Count()} mons to the map - total of {PokesVisible.Count()} on map");
-            var now = DateTime.UtcNow;
-            foreach(var p in PokesVisible)
-            {
-                var diff = p.ExpiresDate - now;
-                if (diff.Minutes < 1)
-                {
-                    p.PokeMarker.Alpha = diff.Seconds / 60.0f;
-                }
-            }
         }
 
 
@@ -845,9 +866,15 @@ namespace OMAPGMap.Droid
 
         private void RefreshMapMarkers(bool force)
         {
-            UpdateMapPokemon(force);
-            UpdateMapGyms(force);
-            UpdateMapRaids(force);
+            try
+            {
+                UpdateMapPokemon(force);
+                UpdateMapGyms(force);
+                UpdateMapRaids(force);
+            } catch(Exception e)
+            {
+                Console.WriteLine($"Exception: {e.ToString()}");
+            }
         }
 
         async void SettingsDone_Click(object sender, EventArgs e)
@@ -855,6 +882,7 @@ namespace OMAPGMap.Droid
             settingsHolder.Visibility = ViewStates.Gone;
             await ServiceLayer.SharedInstance.SaveSettings();
             UpdateMapPokemon(true);
+            UpdateMapRaids(true);
         }
 
         async void Map_InfoWindowLongClick(object sender, InfoWindowLongClickEventArgs e)

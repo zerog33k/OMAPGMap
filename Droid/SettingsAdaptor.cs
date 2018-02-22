@@ -104,16 +104,16 @@ namespace OMAPGMap.Droid
                 b.Tag = position.ToString();
                 switch (position)
                 {
-                    case 0:
+                    case 5:
                         b.Text = "Hide Everything";
                         break;
-                    case 1:
+                    case 6:
                         b.Text = "Reset Default Hidden";
                         break;
-                    case 2:
+                    case 7:
                         b.Text = "Save Current Hidden";
                         break;
-                    case 3:
+                    case 8:
                         b.Text = "Recall Saved Hidden";
                         break;
                 }
