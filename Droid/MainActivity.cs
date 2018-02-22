@@ -185,10 +185,11 @@ namespace OMAPGMap.Droid
 
         }
 
-        protected override void OnResume()
+        protected override async void OnResume()
         {
             base.OnResume();
             Console.WriteLine("OnResume Called");
+            await ServiceLayer.SharedInstance.InitalizeSettings();
             if(settings.LoggedIn)
             {
                 secondTimer = new Timer(HandleTimerCallback, null, 5000, 5000);
