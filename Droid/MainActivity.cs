@@ -65,6 +65,7 @@ namespace OMAPGMap.Droid
         private SaveState currState = null;
         private ProgressBar progress = null;
         DateTime lastUpdate;
+        var currentlyUpdating = false;
 
         readonly string[] PermissionsLocation =
         {
@@ -194,8 +195,11 @@ namespace OMAPGMap.Droid
             {
                 secondTimer = new Timer(HandleTimerCallback, null, 5000, 5000);
                 minuteTimer = new Timer(RefreshMapData, null, 60000, 60000);
+                if (lastUpdate < DateTime.UtcNow.AddSeconds(-20))
+                {
+                    RefreshMapData(null);
+                }
             }
-            //await Initalize(false);
         }
 
 
@@ -246,6 +250,11 @@ namespace OMAPGMap.Droid
         {
             RunOnUiThread(async () =>
             {
+                if(currentlyUpdating)
+                {
+                    return;
+                }
+                currentlyUpdating = true;
                 progress.Visibility = ViewStates.Visible;
                 await ServiceLayer.SharedInstance.LoadData();
                 UpdateMapPokemon(false);
@@ -253,6 +262,7 @@ namespace OMAPGMap.Droid
                 UpdateMapRaids(true);
                 progress.Visibility = ViewStates.Gone;
                 lastUpdate = DateTime.UtcNow;
+                currentlyUpdating = false;
             });
         }
 
@@ -275,11 +285,12 @@ namespace OMAPGMap.Droid
             progress.SetMessage("Loading...");  
             progress.SetCancelable(false);  
             progress.Show();
-
+            currentlyUpdating = true;
             await ServiceLayer.SharedInstance.LoadData();
             progress.Dismiss();
             lastUpdate = DateTime.UtcNow;
             RefreshMapMarkers(true);
+            currentlyUpdating = false;
         }
 
         private void UpdateMapRaids(bool reload)
