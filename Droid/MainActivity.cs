@@ -65,7 +65,7 @@ namespace OMAPGMap.Droid
         private SaveState currState = null;
         private ProgressBar progress = null;
         DateTime lastUpdate;
-        var currentlyUpdating = false;
+        bool currentlyUpdating = false;
 
         readonly string[] PermissionsLocation =
         {
