@@ -40,12 +40,16 @@ namespace OMAPGMap.iOS.Annotations
 				var view = Runtime.GetNSObject<PokemonCalloutView>(NSBundle.MainBundle.LoadNib("PokemonCalloutView", null, null).ValueAt(0));
 				//view.Frame = new CGRect(0, 0, 220, 200);
 				var gender = _pokemon.gender == PokeGender.Male ? "Male" : "Female";
-                if (Map.UserLocation != null)
+                if (Map.UserLocation?.Location != null)
 				{
 					var dist = Map.UserLocation.Location.DistanceFrom(new CLLocation(_pokemon.lat, _pokemon.lon));
 					var distMiles = dist * 0.00062137;
 					view.DistanceLabel.Text = $"{distMiles.ToString("F1")} miles away";
-				}
+				} else 
+                {
+                    view.DistanceLabel.Text = "User location not found";
+                    view.DirectionsButton.Hidden = true;
+                }
 				if (string.IsNullOrEmpty(_pokemon.move1))
 				{
 					view.Stack.RemoveArrangedSubview(view.Move1Label);
@@ -59,7 +63,7 @@ namespace OMAPGMap.iOS.Annotations
 				else
 				{
 					view.Move1Label.Text = $"Move 1: {_pokemon.move1} ({_pokemon.damage1} dps)";
-					view.Move2Label.Text = $"Move 2: {_pokemon.move1} ({_pokemon.damage2} dps)";
+					view.Move2Label.Text = $"Move 2: {_pokemon.move2} ({_pokemon.damage2} dps)";
 					view.IVLabl.Text = $"IV: {_pokemon.atk}atk {_pokemon.def}def {_pokemon.sta}sta";
                     view.DetailsLabel.Text = $"CP: {_pokemon.cp} Level: {_pokemon.level}";
 					var iv = (_pokemon.atk + _pokemon.def + _pokemon.sta) / 45.0f;

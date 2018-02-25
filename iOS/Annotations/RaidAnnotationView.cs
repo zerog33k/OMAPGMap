@@ -91,7 +91,7 @@ namespace OMAPGMap.iOS.Annotations
 				line5.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
 				line5.Text = $"Gym Control: {Enum.GetName(typeof(Team), _raid.team)}";
 				stack.AddArrangedSubview(line5);
-                if (Map.UserLocation != null)
+                if (Map.UserLocation?.Location != null)
 				{
 					var dist = Map.UserLocation.Location.DistanceFrom(new CLLocation(_raid.lat, _raid.lon));
 					var distMiles = dist * 0.00062137;

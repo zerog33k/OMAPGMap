@@ -45,6 +45,11 @@ namespace OMAPGMap.iOS
             locationManager.RequestAlwaysAuthorization();
             locationManager.RequestWhenInUseAuthorization();
             locationManager.LocationsUpdated += LocationManager_LocationsUpdated;
+            locationManager.AuthorizationChanged += (sender, e) => 
+            {
+                currentLocationButton.Hidden = (CLLocationManager.Status == CLAuthorizationStatus.Denied) || (CLLocationManager.Status == CLAuthorizationStatus.Restricted);
+            };
+            currentLocationButton.Hidden = (CLLocationManager.Status == CLAuthorizationStatus.Denied) || (CLLocationManager.Status == CLAuthorizationStatus.Restricted);
             locationManager.StartUpdatingLocation();
             map.ShowsUserLocation = true;
             CLLocationCoordinate2D coords = new CLLocationCoordinate2D(41.2524, -95.9980);
@@ -127,11 +132,15 @@ namespace OMAPGMap.iOS
             };
             currentLocationButton.TouchUpInside += (sender, e) => 
             {
-                if (map.UserLocation != null)
+                if (map.UserLocation.Location != null)
                 {
                     map.SetCenterCoordinate(map.UserLocation.Coordinate, true);
                 }
             };
+            if(!CLLocationManager.LocationServicesEnabled)
+            {
+                currentLocationButton.Hidden = true;
+            }
 
         }   
 

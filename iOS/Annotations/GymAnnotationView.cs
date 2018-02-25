@@ -47,7 +47,7 @@ namespace OMAPGMap.iOS.Annotations
 				line3.Font = UIFont.SystemFontOfSize(13.0f, UIFontWeight.Light);
 				line3.Text = $"Guarding Pokemon: {_gym.pokemon_name}({_gym.pokemon_id})";
 				stack.AddArrangedSubview(line3);
-				if (Map.UserLocation != null)
+                if (Map.UserLocation?.Location != null)
 				{
 					var dist = Map.UserLocation.Location.DistanceFrom(new CLLocation(_gym.lat, _gym.lon));
 					var distMiles = dist * 0.00062137;
