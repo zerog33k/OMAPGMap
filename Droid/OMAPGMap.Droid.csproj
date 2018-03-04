@@ -645,6 +645,11 @@
     <AndroidResource Include="Resources\mipmap-xhdpi\p201.png" />
     <AndroidResource Include="Resources\layout\settings_switch_item.axml" />
     <AndroidResource Include="Resources\mipmap-xhdpi\p384.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\androidnotify.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\androidnotify.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\androidnotify.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\androidnotify.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\androidnotify.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />
