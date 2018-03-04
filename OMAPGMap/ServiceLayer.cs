@@ -39,7 +39,7 @@ namespace OMAPGMap
             BlobCache.ApplicationName = "OMAPGMap.zerogeek.net";
         }
 
-        public Dictionary<string,Pokemon> Pokemon = new Dictionary<string,Pokemon>();
+        public Dictionary<string, Pokemon> Pokemon = new Dictionary<string, Pokemon>();
         public Dictionary<string, Gym> Gyms = new Dictionary<string, Gym>();
         public List<Raid> Raids = new List<Raid>();
         //pokemon, gyms, raids, trash
@@ -147,9 +147,9 @@ namespace OMAPGMap
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var pokes = JsonConvert.DeserializeObject<List<Pokemon>>(content);
-                    foreach(var p in pokes)
+                    foreach (var p in pokes)
                     {
-                        Pokemon.Add(p.id, p);   
+                        Pokemon.Add(p.id, p);
                     }
                     Settings.LastUpdateTimestamp = Pokemon.Values.MaxBy(p => p?.timestamp)?.timestamp ?? lastUpdate;
                     await SaveSettings();
@@ -185,7 +185,7 @@ namespace OMAPGMap
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
@@ -212,7 +212,7 @@ namespace OMAPGMap
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
@@ -223,7 +223,7 @@ namespace OMAPGMap
             var now = DateTime.UtcNow;
 
             var toRemove = Pokemon.Values.Where(p => p.ExpiresDate < now).Select(p => p.id).ToList();
-            foreach(var pid in toRemove)
+            foreach (var pid in toRemove)
             {
                 Pokemon.Remove(pid);
             }
@@ -244,7 +244,11 @@ namespace OMAPGMap
                 var jobj = JObject.FromObject(new
                 {
                     DeviceId = deviceId,
+#if __ANDROID__
+                    Ostype = 2,
+#else
                     Ostype = 1,
+#endif
                     NotifyPokemonStr = str,
                     LocationLat = lat,
                     LocationLon = lon,

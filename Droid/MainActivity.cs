@@ -27,6 +27,9 @@ using MoreLinq;
 using System.Threading;
 using static Android.Gms.Maps.GoogleMap;
 using Android.Support.V4.Widget;
+using Android.Util;
+using Microsoft.AppCenter.Push;
+using Microsoft.AppCenter.Distribute;
 
 namespace OMAPGMap.Droid
 {
@@ -67,6 +70,8 @@ namespace OMAPGMap.Droid
         DateTime lastUpdate;
         bool currentlyUpdating = false;
 
+        private static string firebaseSenderId = "981640041144";
+
         readonly string[] PermissionsLocation =
         {
             Manifest.Permission.AccessCoarseLocation,
@@ -78,7 +83,9 @@ namespace OMAPGMap.Droid
             base.OnCreate(savedInstanceState);
             Console.WriteLine("OnCreate Called");
             Window.RequestFeature(WindowFeatures.NoTitle);
-            AppCenter.Start("7ac229ee-9940-46b8-becc-d2611c48b2ad", typeof(Analytics), typeof(Crashes));
+            AppCenter.Start("7ac229ee-9940-46b8-becc-d2611c48b2ad", typeof(Analytics), typeof(Crashes), typeof(Push), typeof(Distribute));
+
+            Push.SetSenderId(firebaseSenderId);
 
             currState = LastCustomNonConfigurationInstance as SaveState;
             SetContentView(Resource.Layout.Main);
@@ -183,7 +190,19 @@ namespace OMAPGMap.Droid
             progress.Indeterminate = true;
             settingsListview = FindViewById(Resource.Id.settingsListView) as ListView;
             settingsListview.Adapter = new SettingsAdaptor(this, pokeResourceMap);
+            App.Current.LocationServiceConnected += (object sender, ServiceConnectedEventArgs e) =>
+            {
+                Log.Debug("MainActivity", "ServiceConnected Event Raised");
 
+            };
+            App.StartLocationService();
+        
+        }
+
+        protected override void OnNewIntent(Android.Content.Intent intent)
+        {
+            base.OnNewIntent(intent);
+            Push.CheckLaunchedFromNotification(this, intent);
         }
 
         protected override async void OnResume()
@@ -191,6 +210,10 @@ namespace OMAPGMap.Droid
             base.OnResume();
             Console.WriteLine("OnResume Called");
             await ServiceLayer.SharedInstance.InitalizeSettings();
+            if(progress == null)
+            {
+                progress = FindViewById(Resource.Id.progressBar) as ProgressBar;
+            }
             if(settings.LoggedIn)
             {
                 secondTimer = new Timer(HandleTimerCallback, null, 5000, 5000);
@@ -250,19 +273,25 @@ namespace OMAPGMap.Droid
         {
             RunOnUiThread(async () =>
             {
-                if(currentlyUpdating)
+                try
                 {
-                    return;
+                    if (currentlyUpdating)
+                    {
+                        return;
+                    }
+                    currentlyUpdating = true;
+                    progress.Visibility = ViewStates.Visible;
+                    await ServiceLayer.SharedInstance.LoadData();
+                    UpdateMapPokemon(false);
+                    UpdateMapGyms(true);
+                    UpdateMapRaids(true);
+                    progress.Visibility = ViewStates.Gone;
+                    lastUpdate = DateTime.UtcNow;
+                    currentlyUpdating = false;
+                } catch(Exception e)
+                {
+                    Console.WriteLine($"Exception at refreshMap! - {e.ToString()}");
                 }
-                currentlyUpdating = true;
-                progress.Visibility = ViewStates.Visible;
-                await ServiceLayer.SharedInstance.LoadData();
-                UpdateMapPokemon(false);
-                UpdateMapGyms(true);
-                UpdateMapRaids(true);
-                progress.Visibility = ViewStates.Gone;
-                lastUpdate = DateTime.UtcNow;
-                currentlyUpdating = false;
             });
         }
 

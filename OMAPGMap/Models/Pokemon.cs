@@ -55,8 +55,35 @@ namespace OMAPGMap.Models
         {
             return idValue.CompareTo(obj);
         }
+
+        public string UnownLetter {
+            get {
+                var letter = "";
+                if(form != null)
+                {
+                    letter = ((Char)(65 + (form - 1))).ToString();
+                }
+                return letter;
+            }
+        }
+
+        public string Title {
+            get {
+                var info = $"{gender}";
+                if (pokemon_id == 201)
+                {
+                    info = UnownLetter;
+                }
+                var t = $"{name} ({info}) - #{pokemon_id}";
+                if (!string.IsNullOrEmpty(move1))
+                {
+                    t = $"{t} - {(iv * 100).ToString("F1")}%";
+                }
+                return t;
+            }
+        }
     }
 
-    public enum PokeGender { Male = 1, Female = 2}
+    public enum PokeGender { Male = 1, Female = 2, Uknown = 3}
 
 }

@@ -19,16 +19,12 @@ namespace OMAPGMap.Models
         public CLLocationCoordinate2D Coordinate => new CLLocationCoordinate2D(lat, lon);
 
         [Export("title")]
-        public string title 
-        { get 
+        public string title
+        {
+            get
             {
-                var t = $"{name} ({gender}) - #{pokemon_id}";
-                if(!string.IsNullOrEmpty(move1))
-                {
-					t = $"{t} - {(iv * 100).ToString("F1")}%";
-                }
-                return t;
-            } 
+                return title;
+            }
         }
     }
 }
