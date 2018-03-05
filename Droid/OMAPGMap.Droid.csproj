@@ -650,6 +650,8 @@
     <AndroidResource Include="Resources\drawable-xhdpi\androidnotify.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\androidnotify.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\androidnotify.png" />
+    <AndroidResource Include="Resources\layout\settings_header.axml" />
+    <AndroidResource Include="Resources\layout\settings_input_item.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\mipmap-hdpi\" />

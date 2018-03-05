@@ -18,7 +18,8 @@
         android:layout_gravity="center"
         android:backgroundTint="@color/lightgray"
         android:id="@+id/loginHolder"
-        android:backgroundTintMode="src_atop">
+        android:backgroundTintMode="src_atop"
+        android:visibility="gone">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -112,6 +113,34 @@
             android:layout_height="50dp"
             android:id="@+id/settingsButton"
             android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:fadingEdge="vertical"
+            android:background="#B3FFFFFF" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bottomButtons"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="95dp"
+        android:visibility="gone"
+        android:layout_marginBottom="18dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:text="Notify"
+            android:id="@+id/notifyButton"
+            android:layout_marginLeft="8dp"
+            android:fadingEdge="vertical"
+            android:background="#B3FFFFFF" />
+        <Button
+            android:layout_width="wrap_content"
+            android:text="Hide"
+            android:layout_height="38dp"
+            android:id="@+id/hideButton"
             android:layout_marginLeft="8dp"
             android:fadingEdge="vertical"
             android:background="#B3FFFFFF" />

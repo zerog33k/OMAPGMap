@@ -171,6 +171,7 @@ namespace OMAPGMap.Droid
             }
             else
             {
+                loginHolder.Visibility = ViewStates.Visible;
                 password = FindViewById(Resource.Id.password) as EditText;
                 username.RequestFocus();
                 _mapFragment.GetMapAsync(this);
@@ -185,6 +186,11 @@ namespace OMAPGMap.Droid
             settingsHolder = FindViewById(Resource.Id.settingsHolder) as CardView;
             var settingsDone = settingsHolder.FindViewById(Resource.Id.settingsDoneButton);
             settingsDone.Click += SettingsDone_Click;
+
+            var hideButton = FindViewById(Resource.Id.hideButton) as Button;
+            var notifyButton = FindViewById(Resource.Id.notifyButton) as Button;
+            hideButton.Click += HideButton_Click;
+            notifyButton.Click += NotifyButton_Click1;
 
 
             progress.Indeterminate = true;
@@ -564,6 +570,7 @@ namespace OMAPGMap.Droid
             map.SetInfoWindowAdapter(this);
             map.CameraIdle += Map_CameraIdle;
             map.InfoWindowLongClick += Map_InfoWindowLongClick;
+            map.InfoWindowClose += Map_InfoWindowClose;
         }
 
         void Map_CameraIdle(object sender, EventArgs e)
@@ -718,6 +725,7 @@ namespace OMAPGMap.Droid
         private View raidInfo = null;
 
         private Marker currentMarker;
+        private Pokemon currentPokemon;
 
         public View GetInfoContents(Marker marker)
         {
@@ -752,29 +760,23 @@ namespace OMAPGMap.Droid
                 var move2Label = pokemonInfo.FindViewById(Resource.Id.info_move2) as TextView;
                 var ivLabel = pokemonInfo.FindViewById(Resource.Id.info_iv) as TextView;
                 var cpLabel = pokemonInfo.FindViewById(Resource.Id.info_cp_level) as TextView;
-                var poke = ServiceLayer.SharedInstance.Pokemon[id];
-                if(poke == null)
+                currentPokemon = ServiceLayer.SharedInstance.Pokemon[id];
+                if(currentPokemon == null)
                 {
                     return null;
                 }
-                var infoTitle = $"{poke.name} ({poke.gender}) - #{poke.pokemon_id}";
-                if (!string.IsNullOrEmpty(poke.move1))
-                {
-                    var iv = poke.iv * 100;
-                    infoTitle= $"{infoTitle} - {iv.ToString("F1")}%";
-                }
-                title.Text = infoTitle;
+                title.Text = currentPokemon.Title;
                 distLabel.Text = distText;
-                if(!string.IsNullOrEmpty(poke.move1))
+                if(!string.IsNullOrEmpty(currentPokemon.move1))
                 {
                     move1Label.Visibility = ViewStates.Visible;
                     move2Label.Visibility = ViewStates.Visible;
                     ivLabel.Visibility = ViewStates.Visible;
                     cpLabel.Visibility = ViewStates.Visible;
-                    move1Label.Text = $"Move 1: {poke.move1} ({poke.damage1} dps)";
-                    move2Label.Text = $"Move 1: {poke.move2} ({poke.damage2} dps)";
-                    ivLabel.Text = $"IV: {poke.atk}atk {poke.def}def {poke.sta}sta";
-                    cpLabel.Text = $"CP: {poke.cp} Level: {poke.level}";
+                    move1Label.Text = $"Move 1: {currentPokemon.move1} ({currentPokemon.damage1} dps)";
+                    move2Label.Text = $"Move 1: {currentPokemon.move2} ({currentPokemon.damage2} dps)";
+                    ivLabel.Text = $"IV: {currentPokemon.atk}atk {currentPokemon.def}def {currentPokemon.sta}sta";
+                    cpLabel.Text = $"CP: {currentPokemon.cp} Level: {currentPokemon.level}";    
                 } else 
                 {
                     move1Label.Visibility = ViewStates.Gone;
@@ -782,6 +784,10 @@ namespace OMAPGMap.Droid
                     ivLabel.Visibility = ViewStates.Gone;
                     cpLabel.Visibility = ViewStates.Gone;
                 }
+                var buttons = FindViewById(Resource.Id.bottomButtons);
+                var notify = FindViewById(Resource.Id.notifyButton) as Button;
+                notify.Text = ServiceLayer.SharedInstance.Settings.NotifyPokemon.Contains(currentPokemon.pokemon_id) ? "Remove Notify" : "Notify";
+                buttons.Visibility = ViewStates.Visible;
             } else if(t == "raid")
             {
                 if (raidInfo == null)
@@ -943,6 +949,39 @@ namespace OMAPGMap.Droid
                 UpdateMapPokemon(true);
                 await ServiceLayer.SharedInstance.SaveSettings();
             }
+        }
+
+        void Map_InfoWindowClose(object sender, InfoWindowCloseEventArgs e)
+        {
+            var holder = FindViewById(Resource.Id.bottomButtons);
+            holder.Visibility = ViewStates.Gone;
+        }
+
+        async void HideButton_Click(object sender, EventArgs e)
+        {
+            if (settings.PokemonTrash.Where(p => p == currentPokemon.pokemon_id).Count() == 0)
+            {
+                settings.PokemonTrash.Add(currentPokemon.pokemon_id);
+            }
+            UpdateMapPokemon(true);
+            await ServiceLayer.SharedInstance.SaveSettings();
+        }
+
+        async void NotifyButton_Click1(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            if (settings.NotifyPokemon.Where(p => p == currentPokemon.pokemon_id).Count() == 0)
+            {
+                settings.NotifyPokemon.Add(currentPokemon.pokemon_id);
+                button.Text = "Remove Notify";
+            } else 
+            {
+                settings.NotifyPokemon.Remove(currentPokemon.pokemon_id);
+                button.Text = "Notify";
+            }
+
+
+            await ServiceLayer.SharedInstance.SaveSettings();
         }
     }
 
