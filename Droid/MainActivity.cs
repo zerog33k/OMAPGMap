@@ -930,6 +930,11 @@ namespace OMAPGMap.Droid
             await ServiceLayer.SharedInstance.SaveSettings();
             UpdateMapPokemon(true);
             UpdateMapRaids(true);
+            InputMethodManager inputManager = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
+            if (this.CurrentFocus != null)
+            {
+                inputManager.HideSoftInputFromWindow(this.CurrentFocus.WindowToken, HideSoftInputFlags.NotAlways);
+            }
         }
 
         async void Map_InfoWindowLongClick(object sender, InfoWindowLongClickEventArgs e)

@@ -143,6 +143,7 @@ namespace OMAPGMap.Droid
                 }
                 var title = view.FindViewById(Resource.Id.listInputTitle) as TextView;
                 var edit = view.FindViewById(Resource.Id.listInputValue) as EditText;
+                edit.Tag = position.ToString();
                 switch(position)
                 {
                     case 9 :
@@ -325,7 +326,7 @@ namespace OMAPGMap.Droid
             var row = int.Parse(button.Tag.ToString());
             switch(row)
             {
-                case 5: //hide everything
+                case 1: //hide everything
                     for (var i = 1; i <= MainActivity.NumPokes; i++)
                     {
                         if(!settings.PokemonTrash.Contains(i))
@@ -334,14 +335,14 @@ namespace OMAPGMap.Droid
                         }
                     }
                     break;
-                case 6: //reset hidden to default
+                case 2: //reset hidden to default
                     settings.ResetTrash();
                     break;
-                case 7: //save hidden
+                case 3: //save hidden
                     settings.SavedHiddenPokemon.Clear();
                     settings.SavedHiddenPokemon.AddRange(settings.PokemonTrash);
                     break;
-                case 8: //recall saved hidden
+                case 4: //recall saved hidden
                     settings.PokemonTrash.Clear();
                     settings.PokemonTrash.AddRange(settings.SavedHiddenPokemon);
                     break;
@@ -384,12 +385,39 @@ namespace OMAPGMap.Droid
 
         void Igs_Click(object sender, EventArgs e)
         {
-
+            var sw = sender as Switch;
+            var pId = (int)sw.Tag;
+            if (settings.IgnorePokemon.Contains(pId))
+            {
+                settings.IgnorePokemon.Remove(pId);
+            }
+            else
+            {
+                settings.IgnorePokemon.Add(pId);
+            }
         }
 
         void E_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
-
+            var txt = sender as EditText;
+            var row = int.Parse(txt.Tag.ToString());
+            int value = 0;
+            if(!int.TryParse(txt.Text, out value))
+            {
+                return;
+            }
+            switch (row)
+            {
+                case 9:
+                    settings.NotifyDistance = value;
+                    break;
+                case 10:
+                    settings.NotifyMaxDistance = value;
+                    break;
+                case 11:
+                    settings.NotifyLevel = value;
+                    break;
+            }
         }
     }
 }
