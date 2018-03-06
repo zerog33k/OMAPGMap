@@ -19,11 +19,11 @@ namespace OMAPGMap.Models
         }
 
         public bool NotifyEnabled { get; set; } = true;
-        public bool Notify90Enabled { get; set; } = true;
+        public bool Notify90Enabled { get; set; } = false;
         public bool Notify100Enabled { get; set; } = true;
-        public int NotifyDistance { get; set; } = 3;
+        public int NotifyDistance { get; set; } = 2;
         public int NotifyMaxDistance { get; set; } = 20;
-        public int NotifyLevel { get; set; } = 0;
+        public int NotifyLevel { get; set; } = 15;
         public bool LegondaryRaids { get; set; } = true;
         public bool Level4Raids { get; set; } = true;
         public bool Level3Raids { get; set; } = true;
