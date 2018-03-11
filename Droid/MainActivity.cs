@@ -187,6 +187,9 @@ namespace OMAPGMap.Droid
             settingsHolder = FindViewById(Resource.Id.settingsHolder) as CardView;
             var settingsDone = settingsHolder.FindViewById(Resource.Id.settingsDoneButton);
             settingsDone.Click += SettingsDone_Click;
+            var settingsInfo = settingsHolder.FindViewById(Resource.Id.settingsInfoButton);
+            settingsInfo.Click += SettingsInfo_Click;
+
 
             var hideButton = FindViewById(Resource.Id.hideButton) as Button;
             var notifyButton = FindViewById(Resource.Id.notifyButton) as Button;
@@ -264,10 +267,13 @@ namespace OMAPGMap.Droid
         {
             base.OnSaveInstanceState(outState);
             Console.WriteLine("instance state saved");
-            outState.PutDouble("centerLat", map.CameraPosition.Target.Latitude);
-            outState.PutDouble("centerLon", map.CameraPosition.Target.Longitude);
-            outState.PutFloat("centerZoom", map.CameraPosition.Zoom);
-            outState.PutLong("lastUpdate", Utility.ToUnixTime(lastUpdate));
+            if (map != null)
+            {
+                outState.PutDouble("centerLat", map.CameraPosition.Target.Latitude);
+                outState.PutDouble("centerLon", map.CameraPosition.Target.Longitude);
+                outState.PutFloat("centerZoom", map.CameraPosition.Zoom);
+                outState.PutLong("lastUpdate", Utility.ToUnixTime(lastUpdate));
+            }
         }
 
         protected override void OnRestoreInstanceState(Bundle savedInstanceState)
@@ -329,6 +335,11 @@ namespace OMAPGMap.Droid
             }catch(Exception e)
             {
                 Console.WriteLine($"Exception at refreshMap! - {e.ToString()}");
+            }
+            if (notifyPId != null)
+            {
+                var camUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(notifyLat, notifyLon), 16);
+                map.AnimateCamera(camUpdate);
             }
             progress.Dismiss();
             lastUpdate = DateTime.UtcNow;
@@ -945,6 +956,23 @@ namespace OMAPGMap.Droid
             }
         }
 
+        void SettingsInfo_Click(object sender, EventArgs e)
+        {
+            Android.Support.V7.App.AlertDialog.Builder alert = new Android.Support.V7.App.AlertDialog.Builder(this);
+            alert.SetTitle("Settings Info");
+
+            var infoMsg = @"Layer settings: These buttons are used to bulk set pokemon to hidden or not. Saving current hidden will take a snapshot of what you have set to hidden. Useful for when you're looking for a particular type of pokemon.
+
+Push notifications work by following your current location in the background, and sending it to a backend server.
+
+Notification Layers: toggles for what you want to get push notifications for. The Distance will alert you for any pokemon you have enabled ""Notify"" for, regarless of IV. Useful for hunting for candy like Feabas or Wailmer. Max distance is for all IV checked pokemon. If you have 100% or >90% IV enabled, it will alert you on anything under that distance. Unown will always alert when it's less than 20 miles away from you.";
+            alert.SetMessage(infoMsg);
+            alert.SetPositiveButton("Ok", (senderAlert, args) => { });
+
+            Dialog dialog = alert.Create();
+            dialog.Show();
+        }
+
         async void Map_InfoWindowLongClick(object sender, InfoWindowLongClickEventArgs e)
         {
             var marker = e.Marker;
@@ -997,7 +1025,7 @@ namespace OMAPGMap.Droid
             await ServiceLayer.SharedInstance.SaveSettings();
         }
 
-        private string notifyPId;
+        private string notifyPId = null;
         private float notifyLat;
         private float notifyLon;
         private DateTime notifyExpires;
@@ -1053,27 +1081,36 @@ namespace OMAPGMap.Droid
 
         async void ViewFromSnackbar(View fromView)
         {
-            var camUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(notifyLat, notifyLon), 16);
-            map.AnimateCamera(camUpdate);
-            if(!ServiceLayer.SharedInstance.Pokemon.ContainsKey(notifyPId))
+            try
             {
-                progress.Visibility = ViewStates.Visible;
-                await ServiceLayer.SharedInstance.LoadPokemon();
-                progress.Visibility = ViewStates.Gone;
-            }
+                var camUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(notifyLat, notifyLon), 16);
+                map.AnimateCamera(camUpdate);
+                if (!ServiceLayer.SharedInstance.Pokemon.ContainsKey(notifyPId))
+                {
+                    progress.Visibility = ViewStates.Visible;
+                    await ServiceLayer.SharedInstance.LoadPokemon();
+                    progress.Visibility = ViewStates.Gone;
+                }
 
-            if(!settings.PokemonEnabled)
+                if (!settings.PokemonEnabled)
+                {
+                    settings.PokemonEnabled = true;
+                }
+                this.UpdateMapPokemon(false);
+                var thisPoke = PokesVisible.Where(p => p.id == notifyPId).FirstOrDefault();
+                if (thisPoke == null && ServiceLayer.SharedInstance.Pokemon.ContainsKey(notifyPId))
+                {
+                    thisPoke = ServiceLayer.SharedInstance.Pokemon[notifyPId];
+                    AddPokemonMarker(thisPoke);
+                }
+                if (thisPoke != null)
+                {
+                    thisPoke.PokeMarker.ShowInfoWindow();
+                }
+            } catch(Exception e2)
             {
-                settings.PokemonEnabled = true; 
+                Console.WriteLine($"error with viewing from snackbar - {e2.ToString()}");
             }
-            this.UpdateMapPokemon(false);
-            var thisPoke = PokesVisible.Where(p => p.id == notifyPId).FirstOrDefault();
-            if(thisPoke == null && ServiceLayer.SharedInstance.Pokemon.ContainsKey(notifyPId))
-            {
-                thisPoke = ServiceLayer.SharedInstance.Pokemon[notifyPId];
-                AddPokemonMarker(thisPoke);
-            }
-            thisPoke.PokeMarker.ShowInfoWindow();
         }
     }
 

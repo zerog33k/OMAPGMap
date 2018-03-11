@@ -141,6 +141,7 @@ namespace OMAPGMap.Droid
                 {
                     e = view.FindViewById(Resource.Id.listInputValue) as EditText;
                 }
+                e.InputType = Android.Text.InputTypes.NumberVariationNormal;
                 var title = view.FindViewById(Resource.Id.listInputTitle) as TextView;
                 var edit = view.FindViewById(Resource.Id.listInputValue) as EditText;
                 edit.Tag = position.ToString();
