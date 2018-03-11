@@ -637,7 +637,7 @@ namespace OMAPGMap.Droid
                 img.SetImageResource(pokeResourceMap[poke.pokemon_id]);
             }catch(Exception){}
             var imgTitle = mapMarker.FindViewById(Resource.Id.marker_text) as TextView;
-            imgTitle.Text = poke.ExpiresDate.AddHours(-6.0).ToShortTimeString();
+            imgTitle.Text = poke.ExpiresDate.AddHours(-5.0).ToShortTimeString();
             if(poke.iv > 0.99)
             {
                 var purple = Resources.GetDrawable(Resource.Drawable.rounded_corner_purple);
@@ -695,7 +695,7 @@ namespace OMAPGMap.Droid
             }
             var imgTitle = mapMarker.FindViewById(Resource.Id.marker_raid_text) as TextView;
 
-            imgTitle.Text = displayTime.AddHours(-6.0).ToShortTimeString();
+            imgTitle.Text = displayTime.AddHours(-5.0).ToShortTimeString();
             mapMarker.Measure(0, 0);
             mapMarker.Layout(0, 0, mapMarker.MeasuredWidth, mapMarker.MeasuredHeight);
             mapMarker.BuildDrawingCache();
@@ -1024,7 +1024,13 @@ namespace OMAPGMap.Droid
 
                 if(notifyExpires < DateTime.UtcNow && clicked)
                 {
-                    
+                    Android.Support.V7.App.AlertDialog.Builder alert = new Android.Support.V7.App.AlertDialog.Builder(this);
+                    alert.SetTitle("Pokemon Expired!");
+                    alert.SetMessage("Looks like the pokemon despawned");
+                    alert.SetPositiveButton("Ok", (senderAlert, args) => { });
+
+                    Dialog dialog = alert.Create();
+                    dialog.Show();
                 } else if (clicked) //zoom to it
                 {
                     if(map != null)
