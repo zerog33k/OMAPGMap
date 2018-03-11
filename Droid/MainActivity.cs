@@ -30,6 +30,7 @@ using Android.Support.V4.Widget;
 using Android.Util;
 using Microsoft.AppCenter.Push;
 using Microsoft.AppCenter.Distribute;
+using Android.Support.Design.Widget;
 
 namespace OMAPGMap.Droid
 {
@@ -1000,9 +1001,8 @@ namespace OMAPGMap.Droid
         private float notifyLat;
         private float notifyLon;
         private DateTime notifyExpires;
-        private Toast currentToast;
 
-        async void PushNotificationRecieved(object sender, PushNotificationReceivedEventArgs e)
+        void PushNotificationRecieved(object sender, PushNotificationReceivedEventArgs e)
         {
             try
             {
@@ -1032,20 +1032,12 @@ namespace OMAPGMap.Droid
                         var camUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(notifyLat, notifyLon), 16);
                         map.AnimateCamera(camUpdate);
                     }
-                } else //display toast
+                } else //display snackbar
                 {
-                    var toastLayout = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.custom_toast, null);
-                    var msg = toastLayout.FindViewById(Resource.Id.toast_text) as TextView;
-                    var button = toastLayout.FindViewById(Resource.Id.toast_button) as Button;
-                    button.Click += ViewFromToast;
-                    msg.Text = message;
-                    currentToast = new Toast(this.ApplicationContext);
-                    currentToast.SetGravity(GravityFlags.Bottom, 0, 0);
-                    currentToast.Duration = ToastLength.Long;
-                    currentToast.View = toastLayout;
-                    currentToast.Show();
+                    var snackbar = Snackbar.Make(FindViewById(Resource.Id.map), message, Snackbar.LengthLong);
+                    snackbar.SetAction("Go To It!", ViewFromSnackbar);
+                    snackbar.Show();
                 }
-
 
             } catch(Exception e2)
             {
@@ -1053,9 +1045,8 @@ namespace OMAPGMap.Droid
             }
         }
 
-        async void ViewFromToast(object sender, EventArgs e)
+        async void ViewFromSnackbar(View fromView)
         {
-            currentToast.Duration = ToastLength.Short;
             var camUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(notifyLat, notifyLon), 16);
             map.AnimateCamera(camUpdate);
             if(!ServiceLayer.SharedInstance.Pokemon.ContainsKey(notifyPId))
