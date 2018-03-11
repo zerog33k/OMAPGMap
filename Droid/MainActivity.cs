@@ -1035,7 +1035,7 @@ namespace OMAPGMap.Droid
                 } else //display snackbar
                 {
                     var snackbar = Snackbar.Make(FindViewById(Resource.Id.map), message, Snackbar.LengthLong);
-                    snackbar.SetAction("Go To It!", ViewFromSnackbar);
+                    snackbar.SetAction("Show me!", ViewFromSnackbar);
                     snackbar.Show();
                 }
 
