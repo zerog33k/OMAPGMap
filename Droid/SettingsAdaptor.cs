@@ -55,7 +55,7 @@ namespace OMAPGMap.Droid
             {
                 view = context.LayoutInflater.Inflate(Resource.Layout.settings_header, null);
                 var title = view.FindViewById(Resource.Id.settingsHeader) as TextView;
-                title.Text = "Layer Layers";
+                title.Text = "Layer Settings";
                 return view;
             }
             else if (position < 5)

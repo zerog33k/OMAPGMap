@@ -86,7 +86,7 @@ namespace OMAPGMap.Droid
             AppCenter.Start("7ac229ee-9940-46b8-becc-d2611c48b2ad", typeof(Analytics), typeof(Crashes), typeof(Push), typeof(Distribute));
 
             Push.SetSenderId(firebaseSenderId);
-
+            Push.PushNotificationReceived += PushNotificationRecieved;
             currState = LastCustomNonConfigurationInstance as SaveState;
             SetContentView(Resource.Layout.Main);
 
@@ -297,6 +297,7 @@ namespace OMAPGMap.Droid
                 } catch(Exception e)
                 {
                     Console.WriteLine($"Exception at refreshMap! - {e.ToString()}");
+                    currentlyUpdating = false;
                 }
             });
         }
@@ -321,7 +322,13 @@ namespace OMAPGMap.Droid
             progress.SetCancelable(false);  
             progress.Show();
             currentlyUpdating = true;
-            await ServiceLayer.SharedInstance.LoadData();
+            try
+            {
+                await ServiceLayer.SharedInstance.LoadData();
+            }catch(Exception e)
+            {
+                Console.WriteLine($"Exception at refreshMap! - {e.ToString()}");
+            }
             progress.Dismiss();
             lastUpdate = DateTime.UtcNow;
             RefreshMapMarkers(true);
@@ -987,6 +994,89 @@ namespace OMAPGMap.Droid
 
 
             await ServiceLayer.SharedInstance.SaveSettings();
+        }
+
+        private string notifyPId;
+        private float notifyLat;
+        private float notifyLon;
+        private DateTime notifyExpires;
+        private Toast currentToast;
+
+        async void PushNotificationRecieved(object sender, PushNotificationReceivedEventArgs e)
+        {
+            try
+            {
+                var clicked = e.Message == null;
+                var message = "";
+                if(!clicked)
+                {
+                    message = $"{e.Title} - {e.Message}";
+                }
+
+                notifyPId = e.CustomData["pokemon_id"];
+                var latStr = e.CustomData["lat"];
+                var lonStr = e.CustomData["lon"];
+                var expiresStr = e.CustomData["expires"];
+                notifyLat = float.Parse(latStr);
+                notifyLon = float.Parse(lonStr);
+                var expires = long.Parse(expiresStr);
+                notifyExpires = Utility.FromUnixTime(expires);
+
+                if(notifyExpires < DateTime.UtcNow && clicked)
+                {
+                    
+                } else if (clicked) //zoom to it
+                {
+                    if(map != null)
+                    {
+                        var camUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(notifyLat, notifyLon), 16);
+                        map.AnimateCamera(camUpdate);
+                    }
+                } else //display toast
+                {
+                    var toastLayout = ((LayoutInflater)GetSystemService(Context.LayoutInflaterService)).Inflate(Resource.Layout.custom_toast, null);
+                    var msg = toastLayout.FindViewById(Resource.Id.toast_text) as TextView;
+                    var button = toastLayout.FindViewById(Resource.Id.toast_button) as Button;
+                    button.Click += ViewFromToast;
+                    msg.Text = message;
+                    currentToast = new Toast(this.ApplicationContext);
+                    currentToast.SetGravity(GravityFlags.Bottom, 0, 0);
+                    currentToast.Duration = ToastLength.Long;
+                    currentToast.View = toastLayout;
+                    currentToast.Show();
+                }
+
+
+            } catch(Exception e2)
+            {
+                Console.WriteLine($"error with the notification recieved - {e2.ToString()}");
+            }
+        }
+
+        async void ViewFromToast(object sender, EventArgs e)
+        {
+            currentToast.Duration = ToastLength.Short;
+            var camUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(notifyLat, notifyLon), 16);
+            map.AnimateCamera(camUpdate);
+            if(!ServiceLayer.SharedInstance.Pokemon.ContainsKey(notifyPId))
+            {
+                progress.Visibility = ViewStates.Visible;
+                await ServiceLayer.SharedInstance.LoadPokemon();
+                progress.Visibility = ViewStates.Gone;
+            }
+
+            if(!settings.PokemonEnabled)
+            {
+                settings.PokemonEnabled = true; 
+            }
+            this.UpdateMapPokemon(false);
+            var thisPoke = PokesVisible.Where(p => p.id == notifyPId).FirstOrDefault();
+            if(thisPoke == null && ServiceLayer.SharedInstance.Pokemon.ContainsKey(notifyPId))
+            {
+                thisPoke = ServiceLayer.SharedInstance.Pokemon[notifyPId];
+                AddPokemonMarker(thisPoke);
+            }
+            thisPoke.PokeMarker.ShowInfoWindow();
         }
     }
 
